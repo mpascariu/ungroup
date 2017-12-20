@@ -1,0 +1,59 @@
+---
+title: "`pclm` Installation"
+author: "Marius D. Pascariu and Maciej J. Danko"
+date: "December 8, 2017"
+output: 
+  pdf_document:
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{pclm Installation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+The package can be installed from two different sources, `CRAN` or `GitHub`. Most people would choose the first option (see below).
+
+# Install stable varsion from `CRAN`
+
+The `pclm` package can be installed from [`CRAN`](https://cran.r-project.org) as follows:
+
+1. Make sure you have the most recent version of R
+2. Run the following code in your R console 
+
+```{r, eval=FALSE}
+install.packages("pclm")
+```
+
+## For Linux users only
+
+Note that `pclm` package depends on `rgl` in order to provide better graphics. Prior to installing `pclm` on a Linux operating system, the `rgl` package can be installed as follow:
+
+```{r, eval=FALSE}
+sudo apt-get install r-cran-rgl
+```
+
+You migth need to install manually other related packages:
+
+
+```{r, eval=FALSE}
+sudo apt-get install libfreetype6-dev
+sudo apt-get install libftgl-dev
+sudo apt-get install mesa-common-dev 
+sudo apt-get install libglu1-mesa-dev
+```
+
+# Install development version from `GitHub`
+The latest version can be installed from [`GitHub`](https://github.com/mpascariu/pclm) as follows:
+
+```{r, eval=FALSE}
+# install.packages("devtools")
+devtools::install_github("mpascariu/pclm")
+```
+
+In this case you will need to have `devtools` package already installed in order to allow R to connect to GitHub. Otherwise uncomment the fist line and install it.
+
+

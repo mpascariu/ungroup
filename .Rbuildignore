@@ -1,0 +1,10 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^data-raw$
+^checks$
+^LICENSE$
+^.git$
+^\.travis\.yml$
+^CODE_OF_CONDUCT.md$
+^CONTRIBUTING.md$
+^appveyor\.yml$

@@ -1,0 +1,36 @@
+.Rproj.user
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+pclm.Rproj
+
+# Example code in package build process
+*-Ex.R
+checks/
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+vignettes/*.R
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# knitr and R markdown default cache directories
+/*_cache/
+/cache/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+
+

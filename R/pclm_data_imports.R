@@ -1,0 +1,44 @@
+
+#' Imports
+#' 
+#' @importFrom stats optimise qnorm quantile fitted aggregate
+#' @importFrom utils tail
+#' @importFrom MortalitySmooth MortSmooth_bbase
+#' @importFrom graphics axis barplot legend lines plot abline par
+#' @import pbapply
+#' @import rgl
+#' @name foo_imports
+#' @keywords internal
+#' 
+NULL
+
+#' Test Dataset in the Package
+#' 
+#' Dataset containing death counts (Dx) and exposures (Ex)  by age for a 
+#' certain population between 1980 and 2014. The data-set is provided for 
+#' testing purposes only and might be altered and outdated. Download actual 
+#' demographic data free of charge from HMD. Once a username and a password is 
+#' created on the \href{http://www.mortality.org}{website} the 
+#' \href{https://cran.r-project.org/web/packages/MortalityLaws/index.html}{MortalityLaws} 
+#' R package can be used to extract data in R format.
+#' @source \href{http://www.mortality.org}{Human Mortality Database}
+#' @name pclm.data 
+#' 
+"pclm.data"
+
+
+#' Print function for \code{pclm.data}
+#' 
+#' @param x An \code{pclm.data} object
+#' @inheritParams base::print
+#' @keywords internal
+#' @export
+print.pclm.data <- function(x, ...) {
+  cat("\npclm Test Dataset\n")
+  cat(" Series   : Death counts and Exposures by age (Dx & Ex)\n")
+  cat(" Years    : 1980 - 2014\n")
+  cat(" Ages     : 0 - 110\n")
+  cat(" Format   : List containg 2 data frames\n")
+  cat(" Source   : Human Mortality Database\n")
+  cat(" Download : December 8, 2017")
+}
