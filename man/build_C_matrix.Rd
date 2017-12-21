@@ -4,7 +4,7 @@
 \alias{build_C_matrix}
 \title{Build Composition Matrices}
 \usage{
-build_C_matrix(x, y, nlast, out.step, pclm.type)
+build_C_matrix(x, y, nlast, offset, out.step, pclm.type)
 }
 \arguments{
 \item{x}{Vector containing the starting values of the input intervals/bins.
@@ -14,6 +14,10 @@ For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 \item{y}{Vector with counts to be ungrouped. It must have the same dimension as \code{x}.}
 
 \item{nlast}{Length of the last interval. In the example above \code{nlast} would be 5.}
+
+\item{offset}{Optional offset term to calculate smooth mortality rates. 
+A vector of the same length as x and y. See \emph{Rizzi et al.(2015)} for 
+further details.}
 
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}

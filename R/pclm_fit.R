@@ -11,27 +11,25 @@
 pclm.fit <- function(x, y, nlast, offset, out.step, 
                      lambda, kr, deg, diff, max.iter, tol, pclm.type){
   # Some preparations
-  ny    <- if (pclm.type == "1D") length(y) else ncol(y)
-  CM    <- build_C_matrix(x, y, nlast, out.step, pclm.type)
-  C     <- if (!is.null(offset)) CM$C %*% diag(as.vector(unlist(offset))) else CM$C
-  BSB   <- build_B_spline_basis(x = list(CM$gx, 1:ny), kr, deg, diff, lambda, pclm.type)
-  B     <- BSB$B
-  P     <- BSB$P 
-  y     <- as.vector(unlist(y))
-  nx    <- dim(B)[2] 
-  beta0 <- rep(log(sum(y) / length(y)), nx)
-  eta   <- B %*% beta0
-  gamma <- exp(eta)
+  CM  <- build_C_matrix(x, y, nlast, offset, out.step, pclm.type)
+  BM  <- build_B_spline_basis(x = CM$xy, kr, deg, diff, lambda, pclm.type)
+  C   <- CM$C
+  B   <- BM$B
+  y_  <- as.vector(unlist(y))
+  ny_ <- length(y_)
   
   # Perform the iterations
+  beta0 <- rep(log(sum(y_) / ny_), times = ncol(B))
+  eta   <- B %*% beta0
+  gamma <- exp(eta)
   for (it in 1:max.iter) {
     gamma0 <- gamma
     mu     <- c(C %*% gamma)
     w      <- as.vector(mu)
     Q      <- (C * ((1 / mu) %*% t(gamma)) ) %*% B
-    z      <- y - mu + C %*% (gamma * eta)
+    z      <- y_ - mu + C %*% (gamma * eta)
     QwQ    <- t(Q) %*% (w * Q) 
-    QwQP   <- QwQ + P
+    QwQP   <- QwQ + BM$P
     beta   <- solve(QwQP, t(Q) %*% z)
     eta    <- B %*% beta
     gamma  <- exp(eta)
@@ -44,10 +42,10 @@ pclm.fit <- function(x, y, nlast, offset, out.step,
   # Regression diagnostics
   H     <- solve(QwQP, QwQ)
   trace <- sum(diag(H))
-  ok    <- y > 0
-  dev   <- 2 * sum(y[ok] * log(y[ok] / mu[ok]))
+  ok    <- y_ > 0
+  dev   <- 2 * sum(y_[ok] * log(y_[ok] / mu[ok]))
   AIC   <- dev + 2 * trace
-  BIC   <- dev + log(length(y)) * trace
+  BIC   <- dev + log(ny_) * trace
   fit   <- as.numeric(exp(eta))
   out   <- as.list(environment())
   return(out)
@@ -62,7 +60,7 @@ pclm.confidence <- function(X, ci.level) {
     H0    <- solve(QwQP)       # vcov matrix Bayesian approach
     H1    <- H0 %*% QwQ %*% H0 # vcov matrix sandwich estimator
     s.e.  <- sqrt(diag(B %*% H1 %*% t(B)))
-    psi2  <- dev / (length(y) - trace) # overdispersion
+    psi2  <- dev / (ny_ - trace) # overdispersion
     # Confidence intervals
     qn    <- qnorm(1 - ci.level/2)
     lower <- as.numeric(exp(eta - qn*s.e.))
@@ -126,31 +124,28 @@ optimize.smoothing.par <- function(x, y, nlast, offset, out.step,
 #' Build Composition Matrices
 #' @inheritParams pclm.fit
 #' @keywords internal
-build_C_matrix <- function(x, y, nlast, out.step, pclm.type) {
+build_C_matrix <- function(x, y, nlast, offset, out.step, pclm.type) {
   # Build C matrix in the age direction
   nx <- length(x)
-  CA <- NULL
-  if (!is.null(nx)) {
-    gx       <- seq(min(x), max(x) + nlast - out.step, by = out.step)
-    g.units  <- c(diff(x), nlast)/out.step
-    g.number <- sum(g.units)
-    CA       <- matrix(0, nrow = nx, ncol = g.number)
-    r.names  <- paste0("[", x,",", c(x[-1], rev(x)[1] + nlast), ")")
-    dimnames(CA) <- list(r.names, gx)
-    xr       <- c(x[-1], max(x) + nlast)
-    for (j in 1:nx) CA[j, which(gx >= x[j] & gx < xr[j])] = 1
-  }
+  ny <- if (pclm.type == "1D") length(y) else ncol(y)
+  gx <- seq(min(x), max(x) + nlast - out.step, by = out.step)
+  gu <- c(diff(x), nlast)/out.step
+  CA <- matrix(0, nrow = nx, ncol = sum(gu), dimnames = list(x, gx))
+  xr <- c(x[-1], max(x) + nlast)
+  for (j in 1:nx) CA[j, which(gx >= x[j] & gx < xr[j])] <- 1
+  
   # Build C matrix in the year direction
   C  <- CA
   CY <- NULL
   if (pclm.type == "2D") {
-    ny <- ncol(y)
     CY <- diag(1, ncol = ny, nrow = ny) 
-    dimnames(CY) <- list(1:ny, 1:ny)
-    C  <- CY %x% CA
+    C  <- CY %x% CA # Kronecker product
   }
+  xy <- list(gx, 1:ny)
+  if (!is.null(offset)) C <- C %*% diag(as.vector(unlist(offset)))
+  
   # Output
-  out <- as.list(environment())
+  out <- list(C = C, xy = xy)
   return(out)
 }
 
@@ -160,14 +155,10 @@ build_C_matrix <- function(x, y, nlast, out.step, pclm.type) {
 #' pclm estimation
 #' @param x List containing the two numeric vectors for the abscissa of data.
 #' @inheritParams pclm.fit
-#' @examples 
-#' \dontrun{
-#' # check examples in build_C_matrix function
-#' }
 #' @seealso \code{\link{MortSmooth_bbase}}
 #' @keywords internal
 build_B_spline_basis <- function(x, kr, deg, diff, lambda, pclm.type) {
-  vsn  <- 0.5 # very small number
+  vsn  <- 0.1 # very small number
   # B-spline basis for age
   X    <- x[[1]]
   ndx1 <- max(2, trunc(length(X)/kr)) # at least 2 knots
@@ -194,7 +185,7 @@ build_B_spline_basis <- function(x, kr, deg, diff, lambda, pclm.type) {
     P  <- P1 + P2  
   } 
   # output
-  out <- as.list(environment())
+  out <- list(B = B, P = P)
   return(out)
 }
 

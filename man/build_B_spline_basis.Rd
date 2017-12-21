@@ -34,11 +34,6 @@ Construct B-spline basis
 This is an internal function which constructs B-spline basis to be used in 
 pclm estimation
 }
-\examples{
-\dontrun{
-# check examples in build_C_matrix function
-}
-}
 \seealso{
 \code{\link{MortSmooth_bbase}}
 }
