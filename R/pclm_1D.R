@@ -18,7 +18,7 @@
 #' For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 #' \code{x} will be defined by the vector: \code{c(0, 5, 10)}.
 #' @param y Vector with counts to be ungrouped. It must have the same dimension as \code{x}.
-#' @param nlast Length of the last interval. In the example above \code{nlast = 5}.
+#' @param nlast Length of the last interval. In the example above \code{nlast} would be 5.
 #' @param offset Optional offset term to calculate smooth mortality rates. 
 #' A vector of the same length as x and y. See \emph{Rizzi et al.(2015)} for 
 #' further details.
@@ -90,13 +90,13 @@
 #' @export
 pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
                  ci.level = 0.05, out.step = 1, control = list()){
-  # Check input and start the clock
-  nlast   <- validate.nlast(x, nlast, out.step)
+  # Check input
   control <- do.call("pclm.control", control)
   input   <- c(as.list(environment())) # save all the input for later use
-  if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
   pclm.input.check(input, "1D")
-  # Preliminary 
+  input$nlast <- validate.nlast(x, nlast, out.step)
+  # Preliminary; start the clock
+  if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
   I   <- create.artificial.bin(input) # ***
   Par <- with(control, c(lambda = lambda, kr = kr, deg = deg))
   # Deal with offset term

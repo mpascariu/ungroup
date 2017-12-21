@@ -15,7 +15,7 @@ For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 \item{y}{data.frame with counts to be ungrouped. The number of rows 
 should be equal with the length of \code{x}.}
 
-\item{nlast}{Length of the last interval. In the example above \code{nlast = 5}.}
+\item{nlast}{Length of the last interval. In the example above \code{nlast} would be 5.}
 
 \item{offset}{Optional offset term to calculate smooth mortality rates. 
 A vector of the same length as x and y. See \emph{Rizzi et al.(2015)} for 

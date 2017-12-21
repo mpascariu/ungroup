@@ -89,14 +89,14 @@ optimize.smoothing.par <- function(x, y, nlast, offset, out.step,
     # Objective functions ---
     FN <- function(L, K, D) {
       L <- round(L, 2)
-      # print(list(L = L, K = K, D = D))
+      print(c(L = L, K = K, D = D))
       pclm.fit(x, y, nlast, offset, out.step, lambda = L, kr = K, deg = D, 
                diff, max.iter, tol, pclm.type)[[paste(opt.method)]]
     }
     F_D <- function(x) FN(L = ifelse(is.na(Par[1]), 1, Par[1]), 
                           K = ifelse(is.na(Par[2]), 8, Par[2]), D = x)
     F_K <- function(x) FN(L = ifelse(is.na(Par[1]), 1, Par[1]), K = x, D = Par[3])
-    F_L <- function(x) FN(L = x, K = Par[2], D = Par[3])
+    F_L <- function(x) FN(L = exp(x), K = Par[2], D = Par[3])
     # ---
     if (is.na(deg)) { # Step 1. Find deg over integer values
       i      <- int.deg[1]:int.deg[2]
@@ -109,8 +109,8 @@ optimize.smoothing.par <- function(x, y, nlast, offset, out.step,
       Par[2] <- i[res == min(res)][1]
     }
     if (is.na(lambda)) { # Step 3. Find lambda (continuos)
-      opt    <- optimise(f = F_L, interval = int.lambda, tol = 0.01)
-      Par[1] <- round(opt$minimum, 2)
+      opt    <- optimise(f = F_L, interval = log(int.lambda), tol = 0.01)
+      Par[1] <- round(exp(opt$minimum), 2)
     }
     
     if (Par[1] == int.lambda[2]) {
@@ -199,7 +199,6 @@ build_B_spline_basis <- function(x, kr, deg, diff, lambda, pclm.type) {
 }
 
 
-
 #' Create an additional bin with a small value at the end. 
 #' Improves convergence.
 #' @param i A list of input values corresponding to pclm or pclm2D
@@ -224,7 +223,6 @@ create.artificial.bin <- function(i, vy = 1, vo = 1.01){
     return(out)
   })
 }
-
 
 
 #' Delete from results the last group added artificially in pclm and pclm2D 
@@ -307,11 +305,11 @@ frac <- function(x) {
   x - trunc(x)
 }
 
+
 #' Check if 'nlast' needs to be adjusted in order to accommodate out.step
 #' @inheritParams pclm
 #' @keywords internal
 validate.nlast <- function(x, nlast, out.step) {
-  if (out.step > 1 || out.step < 0.1) stop("'out.step' must be between 0.1 and 1.", call. = F)
   len <- max(x) - min(x) + nlast
   N   <- len/out.step
   if (frac(N) != 0) {

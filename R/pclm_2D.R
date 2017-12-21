@@ -47,12 +47,12 @@
 pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
                    out.step = 1, control = list()) {
   # Check input
-  nlast   <- validate.nlast(x, nlast, out.step)
   control <- do.call("pclm.control", control)
   input   <- as.list(environment())
-  if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
   pclm.input.check(input, "2D")
+  input$nlast <- validate.nlast(x, nlast, out.step)
   # Preliminary
+  if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
   I   <- create.artificial.bin(input)
   Par <- with(control, c(lambda = lambda, kr = kr, deg = deg))
   # Deal with offset term

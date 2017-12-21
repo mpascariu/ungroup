@@ -13,7 +13,7 @@ For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 
 \item{y}{Vector with counts to be ungrouped. It must have the same dimension as \code{x}.}
 
-\item{nlast}{Length of the last interval. In the example above \code{nlast = 5}.}
+\item{nlast}{Length of the last interval. In the example above \code{nlast} would be 5.}
 
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}

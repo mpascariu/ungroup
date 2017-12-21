@@ -14,7 +14,7 @@ For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 
 \item{y}{Vector with counts to be ungrouped. It must have the same dimension as \code{x}.}
 
-\item{nlast}{Length of the last interval. In the example above \code{nlast = 5}.}
+\item{nlast}{Length of the last interval. In the example above \code{nlast} would be 5.}
 
 \item{offset}{Optional offset term to calculate smooth mortality rates. 
 A vector of the same length as x and y. See \emph{Rizzi et al.(2015)} for 
@@ -27,7 +27,7 @@ Values between 0.1 and 1 are accepted. Default: 1.}
 If \code{lambda = NA} an algorithm will find the optimal values.}
 
 \item{kr}{Knot ratio. Number of internal intervals used for defining 1 knot in 
-B-spline basis construction. See \code{\link{MortSmooth_bbase}}. Default: 6.
+B-spline basis construction. See \code{\link{MortSmooth_bbase}}. Default: 7.
 If \code{ndx = NA} an algorithm will find the optimal values.}
 
 \item{deg}{Degree of the splines needed to create equally-spaced B-splines 

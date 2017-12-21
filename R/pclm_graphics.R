@@ -23,8 +23,7 @@ plot.pclm <- function(x,
   lw   <- x$ci$lower
   up   <- x$ci$upper
   Ex   <- x$input$offset
-  cond <- length(Y) == length(Ex)
-  if (cond) mx <- Y/Ex
+  if (length(Y) == length(Ex)) mx <- Y/Ex
   BI <- x$bin.definition$input
   BO <- x$bin.definition$output
   n1 <- BI$length
@@ -43,8 +42,9 @@ plot.pclm <- function(x,
   if (is.null(Ex)) { # Histogram
     if (missing(ylab)) ylab = "Counts (y)"
     if (missing(ylim)) ylim = c(0, max(Y/n1, fv/n2) * 1.3)
-    if (missing(col))  col = c("gold2", 2, 4)
-    if (missing(legend.position)) legend.position = ifelse(cond, "topright", "topleft")
+    if (missing(col))  col  = c("gold2", 2, 4)
+    L2 = max(c(Y/n1)[1:3]) >= max(rev(c(Y/n1))[1:3])
+    if (missing(legend.position)) legend.position = ifelse(L2, "topright", "topleft")
     
     barplot(height = Y/n1, width = n1, space = 0, 
             border = 'white', col = col[1],

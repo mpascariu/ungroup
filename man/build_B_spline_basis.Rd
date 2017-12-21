@@ -12,7 +12,7 @@ build_B_spline_basis(x, kr, deg, diff, lambda, pclm.type)
 \item{x}{List containing the two numeric vectors for the abscissa of data.}
 
 \item{kr}{Knot ratio. Number of internal intervals used for defining 1 knot in 
-B-spline basis construction. See \code{\link{MortSmooth_bbase}}. Default: 6.
+B-spline basis construction. See \code{\link{MortSmooth_bbase}}. Default: 7.
 If \code{ndx = NA} an algorithm will find the optimal values.}
 
 \item{deg}{Degree of the splines needed to create equally-spaced B-splines 

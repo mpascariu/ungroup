@@ -5,7 +5,7 @@
 \title{Auxiliary for Controlling \code{pclm} and \code{pclm2D} Fitting}
 \usage{
 pclm.control(lambda     = 1,
-             kr         = 6,
+             kr         = 7,
              deg        = 3,
              int.lambda = c(1, 100),
              int.kr     = c(4, 10),
@@ -20,7 +20,7 @@ pclm.control(lambda     = 1,
 If \code{lambda = NA} an algorithm will find the optimal values.}
 
 \item{kr}{Knot ratio. Number of internal intervals used for defining 1 knot in 
-B-spline basis construction. See \code{\link{MortSmooth_bbase}}. Default: 6.
+B-spline basis construction. See \code{\link{MortSmooth_bbase}}. Default: 7.
 If \code{ndx = NA} an algorithm will find the optimal values.}
 
 \item{deg}{Degree of the splines needed to create equally-spaced B-splines 
