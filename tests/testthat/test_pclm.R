@@ -52,8 +52,6 @@ M1 <- pclm(x, y, nlast)
 M2 <- pclm(x, y, nlast, out.step = 0.5)
 M3 <- pclm(x, y, nlast, out.step = 0.5,
            control = list(lambda = NA, kr = NA, deg = NA))
-
-M4 <- pclm(x, y, nlast, offset)
 M4 <- pclm(x, y, nlast, offset, out.step = 0.4,
            control = list(lambda = 1, kr = 8, deg = 3))
 M5 <- pclm(x, y, nlast, offset, out.step = 0.4,
@@ -65,46 +63,60 @@ summary(M3)
 summary(M4)
 summary(M5)
 
-expect_warning(pclm(x, y, nlast, offset, out.step = 0.32))
-# par(mfrow = c(1,3))
-test_pclm_1D(M1)
-test_pclm_1D(M2)
-test_pclm_1D(M3)
-test_pclm_1D(M4)
-test_pclm_1D(M5)
+for (i in 1:5) test_pclm_1D(get(paste0("M", i)))
 
 # ----------------------------------------------
 # PCLM-2D
 Dx     <- pclm.data$Dx
 Ex     <- pclm.data$Ex
-x      <- c(0, 1, seq(5, 85, by = 5))
-nlast  <- 26
 n      <- c(diff(x), nlast)
 Ex$gr  <- Dx$gr <- rep(x, n)
-y      <- aggregate(Dx[, 1:35], by = list(Dx$gr), FUN = "sum")[, -1]
-offset <- aggregate(Ex[, 1:35], by = list(Ex$gr), FUN = "sum")[, -1]
+y2      <- aggregate(Dx[, 1:35], by = list(Dx$gr), FUN = "sum")[, -1]
+offset2 <- aggregate(Ex[, 1:35], by = list(Ex$gr), FUN = "sum")[, -1]
 
-P1 <- pclm2D(x, y, nlast)
-P2 <- pclm2D(x, y, nlast, offset)
-# P3 <- pclm2D(x, y, nlast, control = list(lambda = NA))
-# P4 <- pclm2D(x, y, nlast, control = list(kr = NA))
-# P5 <- pclm2D(x, y, nlast, control = list(lambda = NA, kr = NA, deg = NA))
+P1 <- pclm2D(x, y2, nlast)
+P2 <- pclm2D(x, y2, nlast, offset2)
 
 summary(P1)             
 summary(P2)             
-# summary(P3)
-# summary(P4)             
-# summary(P3)             
-# plot(P1, xlab = "Age", ylab = "Year", zlab = "Death counts")
-# plot(P2)
-# plot(P3)
+
+for (i in 1:2) test_pclm_2D(get(paste0("P", i)))
+
 
 # ----------------------------------------------
-# RUN TESTS
-test_pclm_2D(P1)
-test_pclm_2D(P2)
+# Test error messages
+
+expect_error(pclm(x = c(NA, x), y, nlast))
+expect_error(pclm(x = c(1, x), y, nlast))
+expect_error(pclm(x = c(1, x), c(y, NA), nlast))
+expect_error(pclm(x = c(x, 90), c(y, -10), nlast))
+expect_error(pclm(x, y, nlast = -10))
+expect_error(pclm(x, y, nlast, c(offset, 1)))
+expect_error(pclm(x, y, nlast, ci.level = -0.05))
+expect_error(pclm(x, y, nlast, out.step = -1))
+expect_error(pclm(x, y, nlast, control = c(a = 1))) #****
+expect_error(pclm(x, y, nlast, control = list(lambda = c(0, 1))))
+expect_error(pclm(x, y, nlast, control = list(lambda = -1)))
+expect_error(pclm(x, y, nlast, control = list(kr = -1.5)))
+expect_error(pclm(x, y, nlast, control = list(deg = -1.5)))
+expect_error(pclm(x, y, nlast, control = list(opt.method = "AAIC")))
+expect_error(pclm(x, y, nlast, control = list(max.iter = 5)))
+expect_error(pclm(x, y, nlast, control = list(tol = -.1)))
+
+expect_error(pclm2D(c(x, 90), y2, nlast))
+expect_error(pclm2D(x, y, nlast))
+expect_error(pclm2D(x, y2, nlast, rbind(offset, 0)))
+
+# ----------------------------------------------
+# Test warnings
+expect_warning(pclm(x, y, nlast, offset, out.step = 0.32))
+
+# ----------------------------------------------
+# Test data
 
 expect_output(print(pclm.data))
+
+
 
 
 

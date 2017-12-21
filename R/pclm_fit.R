@@ -127,7 +127,6 @@ optimize.smoothing.par <- function(x, y, nlast, offset, out.step,
 build_C_matrix <- function(x, y, nlast, offset, out.step, pclm.type) {
   # Build C matrix in the age direction
   nx <- length(x)
-  ny <- if (pclm.type == "1D") length(y) else ncol(y)
   gx <- seq(min(x), max(x) + nlast - out.step, by = out.step)
   gu <- c(diff(x), nlast)/out.step
   CA <- matrix(0, nrow = nx, ncol = sum(gu), dimnames = list(x, gx))
@@ -135,9 +134,12 @@ build_C_matrix <- function(x, y, nlast, offset, out.step, pclm.type) {
   for (j in 1:nx) CA[j, which(gx >= x[j] & gx < xr[j])] <- 1
   
   # Build C matrix in the year direction
-  C  <- CA
-  CY <- NULL
-  if (pclm.type == "2D") {
+  if (pclm.type == "1D") {
+    ny <- length(y)
+    CY <- NULL
+    C  <- CA
+  } else {
+    ny <- ncol(y)
     CY <- diag(1, ncol = ny, nrow = ny) 
     C  <- CY %x% CA # Kronecker product
   }

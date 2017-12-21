@@ -108,37 +108,27 @@ plot.pclm2D <- function(x, color = c(1, 2), alpha = c(1, .5),
                         xlab = "x-axis", ylab = "y-axis", zlab = "z-axis", 
                         main = "", sub = "", ...) {
   # Prepare input values
+  len  <- sort(rep(x$bin.definition$input$length, 2))
+  loc  <- x$bin.definition$input$location
   y    <- x$input$y
   Ex   <- x$input$offset
-  cond <- is.null(Ex)
-  Z    <- if (cond) y else y/Ex
+  n    <- ncol(y)
+  Z    <- if (is.null(Ex)) y else y/Ex
   Z    <- as.data.frame(Z)
-  n    <- ncol(Z)
   Z$ID <- 1:nrow(Z)
   Z    <- rbind(Z, Z)
   Z    <- as.matrix(Z[sort(Z$ID), 1:n])
-  bi   <- x$bin.definition$input
-  if (cond) {
-    len <- sort(rep(bi$length, 2))
-    Z   <- sweep(Z, 1, len, FUN = "/")
-  } else {
-    Z <- log(Z)
-  }
-  loc  <- bi$location
+  Z    <- if (is.null(Ex)) sweep(Z, 1, len, FUN = "/") else log(Z)
   X    <- sort(c(loc[1,], loc[2,]))
   Y    <- n:1
   
   # Prepare fitted values
   out.step <- x$input$out.step
-  Z_  <- as.matrix(fitted(x))
   len_ <- x$bin.definition$output$length
-  if (cond) {
-    Z_   <- sweep(Z_, 1, len_, FUN = "/")
-  } else {
-    Z_ <- log(Z_)
-  }
-  X_  <- 1:nrow(Z_) * out.step
-  Y_  <- ncol(Z_):1
+  Z_   <- as.matrix(fitted(x))
+  Z_   <- if (is.null(Ex)) sweep(Z_, 1, len_, FUN = "/") else log(Z_)
+  X_   <- 1:nrow(Z_) * out.step
+  Y_   <- ncol(Z_):1
   
   # Plot
   if (!par('new')) open3d()

@@ -9,7 +9,7 @@
                         "\nName       : Penalized Composite Link Model for Efficient Estimation",
                         "\n             of Smooth Distributions from Coarsely Binned Data",
                         "\nAuthors    : M.D. Pascariu, S. Rizzi, and M.J. Danko",
-                        "\nLast Update: December 21, 2017")
+                        "\nLast Update: December 22, 2017")
 }
 
 
@@ -39,16 +39,12 @@ pclm.input.check <- function(X, pclm.type) {
     if (nlast <= 0) {
       stop("'nlast' must be greater than 0", call. = F)
     }
-    if (ci.level <= 0 || ci.level >= 0.5) {
-      stop("'ci.level' must take values in the (0, 0.5) interval", call. = F)
+    if (ci.level <= 0 || ci.level >= 1) {
+      stop("'ci.level' must take values in the (0, 1) interval", call. = F)
     }
     if (out.step > 1 || out.step < 0.1) {
       stop("'out.step' must be between 0.1 and 1", call. = F)
     }
-    if (!is.list(control)) {
-      stop("'control' must be a list. See 'pclm.control'.", call. = F)
-    }
-    
     if (pclm.type == "1D") {
       if (length(x) != length(y)) {
         stop("lenght of 'x' and 'y' must be equal", call. = F)

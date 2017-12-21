@@ -91,9 +91,9 @@
 pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
                  ci.level = 0.05, out.step = 1, control = list()){
   # Check input
-  control <- do.call("pclm.control", control)
-  input   <- c(as.list(environment())) # save all the input for later use
-  pclm.input.check(input, "1D")
+  control     <- do.call("pclm.control", control)
+  input       <- c(as.list(environment())) # save all the input for later use
+                 pclm.input.check(input, "1D")
   input$nlast <- validate.nlast(x, nlast, out.step)
   # Preliminary; start the clock
   if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
