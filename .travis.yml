@@ -1,18 +1,17 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-sudo: false
+sudo: true
 cache: packages
 
 matrix:
   include:
     - os: linux
-      dist: trusty
-      sudo: required
     - os: osx
 
 r_packages:
   - covr
+  - rgl
 
 after_success:
   - Rscript -e 'covr::codecov()'
