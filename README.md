@@ -31,7 +31,7 @@ You can track (and contribute to) the development of `pclm` at https://github.co
 3. Install the development version of devtools.
 
    ```R
-   devtools::install_github("mpascariu/pclm")
+   devtools::install_github("mpascariu/pclm", dependencies = TRUE)
    ```
 
 ## Reference
