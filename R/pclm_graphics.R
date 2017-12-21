@@ -14,7 +14,7 @@
 #' # See complete examples in pclm help page
 #' @export
 plot.pclm <- function(x,
-                      xlab, ylab, xlim, ylim, type, 
+                      xlab, ylab, ylim, type, 
                       lwd, col, legend, legend.position, ...) {
   # input data
   X    <- x$input$x
@@ -25,17 +25,17 @@ plot.pclm <- function(x,
   Ex   <- x$input$offset
   cond <- length(Y) == length(Ex)
   if (cond) mx <- Y/Ex
-  bins.in  <- x$bin.definition$input
-  bins.out <- x$bin.definition$output
-  n1   <- bins.in$length
-  n2   <- bins.out$length
-  t1   <- with(bins.in, c(breaks[1, ], max(breaks)))
-  t2   <- with(bins.out, c(breaks[1, ], max(breaks)))
-  N    <- length(fv)
+  BI <- x$bin.definition$input
+  BO <- x$bin.definition$output
+  n1 <- BI$length
+  n2 <- BO$length
+  N  <- BO$n
+  b1 <- BI$breaks[1,1]
+  t1 <- with(BI, c(b1, breaks[2, ]))
+  t2 <- with(BO, c(b1, breaks[2, ]))
   
   # Graphical parameters
   if (missing(xlab)) xlab = "(x)"
-  if (missing(xlim)) xlim = range(t1)
   if (missing(type)) type = "s"
   if (missing(lwd))  lwd = 2
   if (missing(legend)) legend = c("Input values", "Fitted values", "Conf. intervals")
@@ -48,16 +48,16 @@ plot.pclm <- function(x,
     
     barplot(height = Y/n1, width = n1, space = 0, 
             border = 'white', col = col[1],
-            xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim)
-    lines(x = t1, y = c(Y/n1, 0), type = type)
-    lines(x = t2, y = c(lw/n2, 0), type = type, col = col[3])  
-    lines(x = t2, y = c(up/n2, 0), type = type, col = col[3])  
-    lines(x = t2, y = c(fv/n2, 0), type = type, col = col[2], lwd = lwd)
+            xlab = xlab, ylab = ylab, ylim = ylim)
+    lines(x = t1 - b1, y = c(Y/n1, 0), type = type)
+    lines(x = t2 - b1, y = c(lw/n2, 0), type = type, col = col[3])  
+    lines(x = t2 - b1, y = c(up/n2, 0), type = type, col = col[3])  
+    lines(x = t2 - b1, y = c(fv/n2, 0), type = type, col = col[2], lwd = lwd)
     legend(legend.position, legend = legend,
            bty = 'n', pch = c(15, NA, NA), 
            lty = c(NA, 1, 1), lwd = c(NA, lwd, lwd),
            col = col, text.col = "grey40", pt.cex = 2.3)
-    axis(1)
+    axis(1, labels = t1, at = t1 - b1)
   } else {# mx plot
     if (missing(ylab)) ylab = "y / offset   (Log scale)"
     if (missing(ylim)) ylim = c(min(fv) * 0.50, max(fv) * 2)
@@ -65,13 +65,12 @@ plot.pclm <- function(x,
     if (missing(legend.position)) legend.position = "topleft"
     
     plot(t2, c(fv, fv[N]), type = type, log = 'y', col = col[2],
-         xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim,
+         xlab = xlab, ylab = ylab, ylim = ylim,
          axes = F)
     if (length(Y) == length(Ex)) {
       lines(c(X, max(t1)), c(mx, max(mx)), type = "s", lwd = lwd + 1, col = col[1])
     }
     abline(v = c(X, max(t1)), col = "white", lwd = lwd)
-    axis(2)
     lines(x = t2, y = c(lw, lw[N]), type = type, col = col[3])
     lines(x = t2, y = c(up, up[N]), type = type, col = col[3])
     lines(x = t2, y = c(fv, fv[N]), type = type, col = col[2], lwd = lwd)
@@ -79,6 +78,7 @@ plot.pclm <- function(x,
            bty = 'n', lty = 1, lwd = lwd,
            col = col, text.col = "grey40")
     axis(1)
+    axis(2)
   }
 }
 

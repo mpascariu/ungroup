@@ -73,28 +73,6 @@ pclm.confidence <- function(X, ci.level) {
   })
 }
 
-#' Validate input values
-#' 
-#' @param X A list with input arguments provided in \code{\link{pclm}} function
-#' @inheritParams pclm.fit
-#' @keywords internal
-pclm.input.check <- function(X, pclm.type) {
-  with(X, {
-    L0 <- is.null(offset)
-    if (pclm.type == "1D" ) {
-      L2 <- length(offset) == length(y)
-      L3 <- length(offset) == (length(x[1]:max((x + nlast))) - 1)
-    } else {
-      L2 <- all(dim(offset) == dim(y))
-      L3 <- nrow(offset) == (length(x[1]:max((x + nlast))) - 1)
-    }
-    
-    if (!L0) {
-      if (L2 & L3) stop(paste("\n'offset' should have the same dimension as 'y'"), call. = F)
-      # others to come...
-    }
-  })
-}
 
 #' Optimize Smoothing Parameters
 #' This function optimize searches of \code{lambda, kr} and \code{deg}. 
@@ -279,22 +257,22 @@ delete.artificial.bin <- function(M){
 #' @inheritParams pclm
 #' @keywords internal
 map.bins <- function(x, nlast, out.step) {
-  step       <- c(diff(x), nlast)
-  xl         <- rev(rev(c(0, cumsum(step)))[-1]) + 1
-  xr         <- xl + step - 1
-  len        <- xr - xl + 1
-  N          <- length(xl)
-  delta      <- x[1] - xl[1]
-  breaksL    <- round(xl + delta, 3)
-  breaksR    <- round(xr, 3)
-  breaksR[N] <- xr[N] + 1 + delta
+  step  <- c(diff(x), nlast)
+  xl    <- rev(rev(c(0, cumsum(step)))[-1]) + 1
+  xr    <- xl + step - 1
+  N     <- length(xl)
+  delta <- x[1] - xl[1]
+  bl    <- round(xl + delta, 3)
+  br    <- c(bl[-1], xr[N] + 1 + delta)
   
-  GN     <- paste0("[", breaksL,",", c(breaksL[-1], breaksR[N]), ")") # group names
-  breaks <- matrix(c(breaksL, breaksR), nrow = 2, byrow = T, 
-                   dimnames = list(c("left", "right"), rep("", N)))
-  loc    <- matrix(c(xl, xr), nrow = 2, byrow = T, 
-                   dimnames = list(c("left", "right"), rep("", N)))
-  input  <- list(n = N, length = len, names = GN, breaks = breaks, location = loc)
+  dnames <- list(c("left", "right"), rep("", N))
+  breaks <- matrix(c(bl, br), nrow = 2, byrow = T, dimnames = dnames)
+  loc    <- matrix(c(xl, xr), nrow = 2, byrow = T, dimnames = dnames)
+  input  <- list(n = N, 
+                 length = xr - xl + 1, 
+                 names  = paste0("[", bl,",", br, ")"), 
+                 breaks = breaks, 
+                 location = loc)
   output <- NULL
   if (!is.null(out.step)) {
     X <- range(breaks)

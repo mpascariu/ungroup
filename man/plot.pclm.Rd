@@ -4,7 +4,7 @@
 \alias{plot.pclm}
 \title{Generic Plot for pclm Class}
 \usage{
-\method{plot}{pclm}(x, xlab, ylab, xlim, ylim, type, lwd, col, legend,
+\method{plot}{pclm}(x, xlab, ylab, ylim, type, lwd, col, legend,
   legend.position, ...)
 }
 \arguments{
@@ -13,12 +13,6 @@
 \item{xlab}{a label for the x axis, defaults to a description of \code{x}.}
 
 \item{ylab}{a label for the y axis, defaults to a description of \code{y}.}
-
-\item{xlim}{the x limits (x1, x2) of the plot.  Note that \code{x1 > x2}
-    is allowed and leads to a \sQuote{reversed axis}.
-
-    The default value, \code{NULL}, indicates that the range of the
-    \link{finite} values to be plotted should be used.}
 
 \item{ylim}{the y limits of the plot.}
 
