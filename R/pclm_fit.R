@@ -89,7 +89,7 @@ optimize.smoothing.par <- function(x, y, nlast, offset, out.step,
     # Objective functions ---
     FN <- function(L, K, D) {
       L <- round(L, 2)
-      print(c(L = L, K = K, D = D))
+      # print(c(L = L, K = K, D = D))
       pclm.fit(x, y, nlast, offset, out.step, lambda = L, kr = K, deg = D, 
                diff, max.iter, tol, pclm.type)[[paste(opt.method)]]
     }
