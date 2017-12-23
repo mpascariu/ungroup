@@ -46,13 +46,14 @@ plot.pclm <- function(x,
     L2 = max(c(Y/n1)[1:3]) >= max(rev(c(Y/n1))[1:3])
     if (missing(legend.position)) legend.position = ifelse(L2, "topright", "topleft")
     
+    f <- function(x) c(x, x[length(x)])
     barplot(height = Y/n1, width = n1, space = 0, 
             border = 'white', col = col[1],
             xlab = xlab, ylab = ylab, ylim = ylim)
-    lines(x = t1 - b1, y = c(Y/n1, 0), type = type)
-    lines(x = t2 - b1, y = c(lw/n2, 0), type = type, col = col[3])  
-    lines(x = t2 - b1, y = c(up/n2, 0), type = type, col = col[3])  
-    lines(x = t2 - b1, y = c(fv/n2, 0), type = type, col = col[2], lwd = lwd)
+    lines(x = t1 - b1, y = f(Y/n1), type = type)
+    lines(x = t2 - b1, y = f(lw/n2), type = type, col = col[3])  
+    lines(x = t2 - b1, y = f(up/n2), type = type, col = col[3])  
+    lines(x = t2 - b1, y = f(fv/n2), type = type, col = col[2], lwd = lwd)
     legend(legend.position, legend = legend,
            bty = 'n', pch = c(15, NA, NA), 
            lty = c(NA, 1, 1), lwd = c(NA, lwd, lwd),

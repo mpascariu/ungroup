@@ -12,18 +12,18 @@ build_B_spline_basis(x, kr, deg, diff, lambda, pclm.type)
 \item{x}{List containing the two numeric vectors for the abscissa of data.}
 
 \item{kr}{Knot ratio. Number of internal intervals used for defining 1 knot in 
-B-spline basis construction. See \code{\link{MortSmooth_bbase}}. Default: 7.
+B-spline basis construction. See \code{\link{MortSmooth_bbase}}.
 If \code{ndx = NA} an algorithm will find the optimal values.}
 
 \item{deg}{Degree of the splines needed to create equally-spaced B-splines 
-basis over an abscissa of data. Default: 3. If \code{deg = NA} an algorithm 
+basis over an abscissa of data. If \code{deg = NA} an algorithm 
 will find the optimal values.}
 
 \item{diff}{An integer indicating the order of differences of the components 
 of PCLM coefficients. If not sure what it means leave untouched. 
 Default value: 3.}
 
-\item{lambda}{Smoothing parameter to be used in pclm estimation. Default: 1.
+\item{lambda}{Smoothing parameter to be used in pclm estimation.
 If \code{lambda = NA} an algorithm will find the optimal values.}
 
 \item{pclm.type}{Type of PCLM model. Options: \code{"1D", "2D"} for 

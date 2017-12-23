@@ -76,21 +76,24 @@ offset2 <- aggregate(Ex[, 1:35], by = list(Ex$gr), FUN = "sum")[, -1]
 
 P1 <- pclm2D(x, y2, nlast)
 P2 <- pclm2D(x, y2, nlast, offset2)
-
+P3 <- pclm2D(x, y2, nlast, 
+             control = list(lambda = NA, int.lambda = c(1, 1.1)))
 summary(P1)             
 summary(P2)             
 
-for (i in 1:2) test_pclm_2D(get(paste0("P", i)))
+for (i in 1:3) test_pclm_2D(get(paste0("P", i)))
 
 
 # ----------------------------------------------
 # Test error messages
 
+expect_error(pclm(x = c("a", x), y, nlast))
 expect_error(pclm(x = c(NA, x), y, nlast))
 expect_error(pclm(x = c(1, x), y, nlast))
 expect_error(pclm(x = c(1, x), c(y, NA), nlast))
 expect_error(pclm(x = c(x, 90), c(y, -10), nlast))
 expect_error(pclm(x, y, nlast = -10))
+expect_error(pclm(x, y, nlast = c(1, 100)))
 expect_error(pclm(x, y, nlast, c(offset, 1)))
 expect_error(pclm(x, y, nlast, ci.level = -0.05))
 expect_error(pclm(x, y, nlast, out.step = -1))

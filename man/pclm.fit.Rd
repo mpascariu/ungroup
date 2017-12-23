@@ -4,8 +4,8 @@
 \alias{pclm.fit}
 \title{Fit PCLM Models}
 \usage{
-pclm.fit(x, y, nlast, offset, out.step, lambda, kr, deg, diff, max.iter, tol,
-  pclm.type)
+pclm.fit(x, y, nlast, offset, out.step, show, lambda, kr, deg, diff, max.iter,
+  tol, pclm.type)
 }
 \arguments{
 \item{x}{Vector containing the starting values of the input intervals/bins.
@@ -23,23 +23,25 @@ further details.}
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}
 
-\item{lambda}{Smoothing parameter to be used in pclm estimation. Default: 1.
+\item{show}{Logical value. Indicates whether a progress bar should be shown or not.
+Default: \code{TRUE}.}
+
+\item{lambda}{Smoothing parameter to be used in pclm estimation.
 If \code{lambda = NA} an algorithm will find the optimal values.}
 
 \item{kr}{Knot ratio. Number of internal intervals used for defining 1 knot in 
-B-spline basis construction. See \code{\link{MortSmooth_bbase}}. Default: 7.
+B-spline basis construction. See \code{\link{MortSmooth_bbase}}.
 If \code{ndx = NA} an algorithm will find the optimal values.}
 
 \item{deg}{Degree of the splines needed to create equally-spaced B-splines 
-basis over an abscissa of data. Default: 3. If \code{deg = NA} an algorithm 
+basis over an abscissa of data. If \code{deg = NA} an algorithm 
 will find the optimal values.}
 
 \item{diff}{An integer indicating the order of differences of the components 
 of PCLM coefficients. If not sure what it means leave untouched. 
 Default value: 3.}
 
-\item{max.iter}{Maximal number of iterations used in fitting procedure.
-Default: 100.}
+\item{max.iter}{Maximal number of iterations used in fitting procedure.}
 
 \item{tol}{Tolerance in PCLM fitting procedure.}
 

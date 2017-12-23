@@ -47,44 +47,42 @@
 pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
                    out.step = 1, control = list()) {
   # Check input
-  control     <- do.call("pclm.control", control)
+  control     <- do.call("pclm2D.control", control)
   input       <- as.list(environment())
                  pclm.input.check(input, "2D")
   input$nlast <- validate.nlast(x, nlast, out.step)
-  # Preliminary
-  if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
+  
+  # Preliminary; start the clock
+  if (show) {pb = startpb(0, 100); on.exit(closepb(pb), add = T); setpb(pb, 1)}
   I   <- create.artificial.bin(input)
   Par <- with(control, c(lambda = lambda, kr = kr, deg = deg))
+  
   # Deal with offset term
-  if (show) {setpb(pb, 10); cat("   Ungrouping 'offset'")}
   if (!is.null(offset)) {
-    pclmEx <- pclm2D(I$x, y = I$offset, I$nlast, offset = NULL, show = F, 
-                     ci.level, out.step, control)
+    if (show) { setpb(pb, 5); cat("   Ungrouping offset")}
+    pclmEx <- pclm2D(x = I$x, y = I$offset, I$nlast, offset = NULL, 
+                     show = F, ci.level, out.step, control)
     I$offset <- fitted(pclmEx)
   }
-  if (show) {setpb(pb, 25); cat("   Optimizing parameters")}
+  
+  # If smoothing parameters are not provided in input, find them automatically.
   if (any(is.na(Par))) { 
-    # If smoothing parameters are not provided in input, find them automatically.
     # IF 'out.step < 1' the algorithm can becomes slow (several minutes slow).
-    Par <- optimize.smoothing.par(I$x, I$y, I$nlast, I$offset, 
+    Par <- optimize.smoothing.par(I$x, I$y, I$nlast, I$offset, show,
                                   out.step, control, pclm.type = "2D")
   }
-  if (show) {setpb(pb, 75); cat("   Ungrouping data      ")}
+  
   # solve the PCLM 
-  M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, 
+  M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, show,
                               lambda = Par[1], kr = Par[2], deg = Par[3], 
                               diff, max.iter, tol, pclm.type = "2D"))
-  M[c("s.e.", "lower", "upper")] <- pclm.confidence(M, ci.level)
-  if (show) {setpb(pb, 90); cat("    Prepare output     ")}
-  ny <- ncol(y)
-  M$fit   <- matrix(M$fit, ncol = ny)
-  M$upper <- matrix(M$upper, ncol = ny)
-  M$lower <- matrix(M$lower, ncol = ny)
-  M$s.e.  <- matrix(M$s.e., ncol = ny)
-  M       <- delete.artificial.bin(M) # ***
-  G       <- map.bins(x, nlast, out.step)
-  D_names <- list(G$output$names, colnames(y))
-  dimnames(M$fit) = dimnames(M$lower) = dimnames(M$upper) = dimnames(M$s.e.) <- D_names
+  cn    <- c("fit", "lower", "upper", "s.e.")
+  M[cn] <- pclm.confidence(M, ci.level, pclm.type = "2D")
+  M     <- delete.artificial.bin(M) # ***
+  G     <- map.bins(x, nlast, out.step)
+  dn    <- list(G$output$names, colnames(y))
+  dimnames(M$fit) = dimnames(M$lower) = dimnames(M$upper) = dimnames(M$s.e.) <- dn
+  
   # Output
   gof <- list(AIC = M$AIC, BIC = M$BIC, standard.errors = M$s.e.)
   ci  <- list(upper = M$upper, lower = M$lower)
@@ -92,8 +90,7 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
               smoothPar = Par, bin.definition = G)
   out      <- structure(class = "pclm2D", out)
   out$call <- match.call()
-  if (show) {setpb(pb, 99); cat("                       ")}
-  if (show) {setpb(pb, 100); message("\n   Process completed.")}
+  if (show) setpb(pb, 100)
   return(out)
 }
 

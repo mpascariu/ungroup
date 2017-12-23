@@ -34,7 +34,7 @@ pclm.input.check <- function(X, pclm.type) {
       stop("'y' contains negative values. The counts are always positive.", call. = F)
     }
     if (length(nlast) != 1) {
-      stop("lenght(nlast) must be 1", call. = F)
+      stop("length(nlast) must be 1", call. = F)
     }
     if (nlast <= 0) {
       stop("'nlast' must be greater than 0", call. = F)
@@ -47,7 +47,7 @@ pclm.input.check <- function(X, pclm.type) {
     }
     if (pclm.type == "1D") {
       if (length(x) != length(y)) {
-        stop("lenght of 'x' and 'y' must be equal", call. = F)
+        stop("length of 'x' and 'y' must be equal", call. = F)
       }
       if (!is.null(offset) & length(offset) != length(y)) {
         stop(paste("'offset' must have the same length as 'y'"), call. = F)
@@ -72,14 +72,15 @@ pclm.input.check <- function(X, pclm.type) {
     if (!(length(lambda) == 1)) {
       stop("'lambda' must be of length 1", call. = F)
     }
-    if (!is.na(lambda) & lambda < 1) {
-      stop("'lambda' must be a positive scalar greater or equal to 1", call. = F)
+    if (!is.na(lambda) & lambda < 0) {
+      stop("'lambda' must be a positive scalar", call. = F)
     }
     if (!is.na(kr)) {
       if (kr <= 0 || frac(kr) != 0) stop("'kr' must be a positive integer", call. = F)
     }
     if (!is.na(deg)) {
-      if (deg <= 0 || frac(deg) != 0) stop("'deg' must be a positive integer", call. = F)
+      if (deg < 2 || frac(deg) != 0) 
+        stop("'deg' must be a positive integer greater or equal than 2", call. = F)
     }
     if (!(opt.method[1] %in% c('BIC','AIC'))) {
       stop("'AIC' or 'BIC' should be used as opt.method", call. = F)
@@ -92,3 +93,4 @@ pclm.input.check <- function(X, pclm.type) {
     }
   })
 }
+

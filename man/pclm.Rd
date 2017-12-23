@@ -90,14 +90,13 @@ M2 <- pclm(x, y, nlast, out.step = 0.5)
 plot(M2)
 
 # Example 3 ----------------------
-# Optimise smoothing parameters
+# Do not optimise smoothing parameters; choose your own. Faster.
 M3 <- pclm(x, y, nlast, out.step = 0.5, 
-           control = list(lambda = NA, kr = NA, deg = NA))
+           control = list(lambda = 100, kr = 10, deg = 10))
 plot(M3)
 
-# Looking at BIC we can see a small improvement.
 summary(M2)
-summary(M3)
+summary(M3) # not the smallest BIC here, but sometimes is not important.
 
 # Example 4 -----------------------
 # Grouped x & grouped offset (estimate death rates)

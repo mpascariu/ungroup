@@ -9,7 +9,7 @@ The optimization process works in steps. Simultaneous optimization was
 tested and found inefficient. Methods tested: "Nelder-Mead" (optim) 
 and "PORT routines" (nlminb).}
 \usage{
-optimize.smoothing.par(x, y, nlast, offset, out.step, control, pclm.type)
+optimize.smoothing.par(x, y, nlast, offset, show, out.step, control, pclm.type)
 }
 \arguments{
 \item{x}{Vector containing the starting values of the input intervals/bins.
@@ -23,6 +23,9 @@ For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 \item{offset}{Optional offset term to calculate smooth mortality rates. 
 A vector of the same length as x and y. See \emph{Rizzi et al.(2015)} for 
 further details.}
+
+\item{show}{Logical value. Indicates whether a progress bar should be shown or not.
+Default: \code{TRUE}.}
 
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}

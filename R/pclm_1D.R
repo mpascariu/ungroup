@@ -73,14 +73,13 @@
 #' plot(M2)
 #' 
 #' # Example 3 ----------------------
-#' # Optimise smoothing parameters
+#' # Do not optimise smoothing parameters; choose your own. Faster.
 #' M3 <- pclm(x, y, nlast, out.step = 0.5, 
-#'            control = list(lambda = NA, kr = NA, deg = NA))
+#'            control = list(lambda = 100, kr = 10, deg = 10))
 #' plot(M3)
 #' 
-#' # Looking at BIC we can see a small improvement.
 #' summary(M2)
-#' summary(M3)
+#' summary(M3) # not the smallest BIC here, but sometimes is not important.
 #' 
 #' # Example 4 -----------------------
 #' # Grouped x & grouped offset (estimate death rates)
@@ -95,33 +94,37 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   input       <- c(as.list(environment())) # save all the input for later use
                  pclm.input.check(input, "1D")
   input$nlast <- validate.nlast(x, nlast, out.step)
+  
   # Preliminary; start the clock
-  if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
+  if (show) {pb = startpb(0, 100); on.exit(closepb(pb), add = T); setpb(pb, 1)}
   I   <- create.artificial.bin(input) # ***
   Par <- with(control, c(lambda = lambda, kr = kr, deg = deg))
+  
   # Deal with offset term
-  if (show) { setpb(pb, 10); cat("   Ungrouping 'offset'")}
   if (!is.null(offset)) {
-    pclmEx <- pclm(I$x, y = I$offset, I$nlast, offset = NULL, 
+    if (show) { setpb(pb, 5); cat("   Ungrouping offset")}
+    pclmEx <- pclm(x = I$x, y = I$offset, I$nlast, offset = NULL, 
                    show = F, ci.level, out.step, control)
     I$offset <- fitted(pclmEx)
   }
-  if (show) {setpb(pb, 25); cat("   Optimizing parameters")}
+  
+  # If smoothing parameters are not provided in input, find them automatically.
   if (any(is.na(Par))) {
-    # If smoothing parameters are not provided in input, find them automatically.
-    Par <- optimize.smoothing.par(I$x, I$y, I$nlast, I$offset, 
+    Par <- optimize.smoothing.par(I$x, I$y, I$nlast, I$offset, show,
                                   out.step, control, pclm.type = "1D")
   }
-  if (show) {setpb(pb, 75); cat("   Ungrouping data      ")}
+  
   # solve the PCLM 
-  M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, 
+  M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, show,
                               lambda = Par[1], kr = Par[2], deg = Par[3],
                               diff, max.iter, tol, pclm.type = "1D"))
-  M[c("s.e.", "lower", "upper")] <- pclm.confidence(M, ci.level)
-  if (show) {setpb(pb, 90); cat("    Prepare output     ")}
-  M <- delete.artificial.bin(M) # ***
-  G <- map.bins(x, nlast, out.step)
-  names(M$fit) = names(M$lower) = names(M$upper) = names(M$s.e.) <- G$output$names
+  cn    <- c("fit", "lower", "upper", "s.e.")
+  M[cn] <- pclm.confidence(M, ci.level, pclm.type = "1D")
+  M     <- delete.artificial.bin(M) # ***
+  G     <- map.bins(x, nlast, out.step)
+  dn    <- G$output$names
+  names(M$fit) = names(M$lower) = names(M$upper) = names(M$s.e.) <- dn
+  
   # Output
   gof <- list(AIC = M$AIC, BIC = M$BIC, standard.errors = M$s.e.)
   ci  <- list(upper = M$upper, lower = M$lower)
@@ -129,8 +132,7 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
               smoothPar = Par, bin.definition = G)
   out      <- structure(class = "pclm", out)
   out$call <- match.call()
-  if (show) {setpb(pb, 99); cat("                       ")}
-  if (show) {setpb(pb, 100); message("\n   Process completed.")}
+  if (show) setpb(pb, 100)
   return(out)  
 }
 
