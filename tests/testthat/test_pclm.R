@@ -51,7 +51,7 @@ nlast <- 26 # the size of the last interval
 M1 <- pclm(x, y, nlast)
 M2 <- pclm(x, y, nlast, out.step = 0.5)
 M3 <- pclm(x, y, nlast, out.step = 0.5,
-           control = list(lambda = NA, kr = NA, deg = NA))
+           control = list(lambda = NA, kr = 6, deg = NA))
 M4 <- pclm(x, y, nlast, offset, out.step = 0.4,
            control = list(lambda = 1, kr = 8, deg = 3))
 M5 <- pclm(x, y, nlast, offset, out.step = 0.4,

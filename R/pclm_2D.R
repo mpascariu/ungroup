@@ -53,7 +53,7 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
   input$nlast <- validate.nlast(x, nlast, out.step)
   
   # Preliminary; start the clock
-  if (show) {pb = startpb(0, 100); on.exit(closepb(pb), add = T); setpb(pb, 1)}
+  if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
   I   <- create.artificial.bin(input)
   Par <- with(control, c(lambda = lambda, kr = kr, deg = deg))
   
@@ -68,8 +68,8 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
   # If smoothing parameters are not provided in input, find them automatically.
   if (any(is.na(Par))) { 
     # IF 'out.step < 1' the algorithm can becomes slow (several minutes slow).
-    Par <- optimize.smoothing.par(I$x, I$y, I$nlast, I$offset, show,
-                                  out.step, control, pclm.type = "2D")
+    Par <- optimize_par(I$x, I$y, I$nlast, I$offset, show,
+                         out.step, control, pclm.type = "2D")
   }
   
   # solve the PCLM 

@@ -9,7 +9,7 @@
                         "\nName       : Penalized Composite Link Model for Efficient Estimation",
                         "\n             of Smooth Distributions from Coarsely Binned Data",
                         "\nAuthors    : M.D. Pascariu, S. Rizzi, and M.J. Danko",
-                        "\nLast Update: December 22, 2017")
+                        "\nLast Update: December 25, 2017")
 }
 
 

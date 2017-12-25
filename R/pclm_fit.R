@@ -13,44 +13,45 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
   if (show) {pb = startpb(0, 100); setpb(pb, 50); cat("   Ungrouping data      ")}
   # Some preparations
   CM  <- build_C_matrix(x, y, nlast, offset, out.step, pclm.type)
-  BM  <- build_B_spline_basis(x = CM$xy, kr, deg, diff, lambda, pclm.type)
+  BM  <- build_B_spline_basis(CM$gx, CM$gy, kr, deg, diff, lambda, pclm.type)
   C   <- CM$C
   B   <- BM$B
   y_  <- as.vector(unlist(y))
   ny_ <- length(y_)
   
   # Perform the iterations
-  beta0 <- rep(log(sum(y_) / ny_), times = ncol(B))
-  eta   <- B %*% beta0
-  gamma <- exp(eta)
+  eta <- B %*% rep(log(sum(y_) / ny_), times = ncol(B))
+  mu  <- exp(eta)
+  
   for (it in 1:max.iter) {
-    gamma0 <- gamma
-    mu     <- c(C %*% gamma)
-    w      <- as.vector(mu)
-    Q      <- (C * ((1 / mu) %*% t(gamma)) ) %*% B
-    z      <- y_ - mu + C %*% (gamma * eta)
-    QwQ    <- t(Q) %*% (w * Q) 
-    QwQP   <- QwQ + BM$P
-    beta   <- solve(QwQP, t(Q) %*% z)
-    eta    <- B %*% beta
-    gamma  <- exp(eta)
-    da     <- max(abs(gamma - gamma0))
+    mu0  <- mu
+    muA  <- c(C %*% mu)  # mu aggregated
+    z    <- (y_ - muA) + C %*% (mu * log(mu))
+    W    <- C * ((1/muA) %*% t(mu))
+    Q    <- t(W %*% B) # This is the slow line that slows down the algorithm
+    Qz   <- Q %*% z
+    QmQ  <- Q %*% (muA * t(Q))
+    QmQP <- QmQ + BM$P
+    eta  <- B %*% solve(QmQP, Qz)
+    mu   <- exp(eta)
+    da   <- max(abs(mu - mu0)/abs(mu))
     if (show) setpb(pb, min(50 + it, 97))
-    if (da < tol & it > 4) break
+    if (da < tol && it >= 4) break
   }
-  # if (it == max.iter) warning("The maximal number of iteration has been reached. ",
-  #                             "Maybe it is a good idea to increase it. ",
-  #                             "See 'pclm.control'.", call. = F)
+  if (it == max.iter) {
+    warning("The maximal number of iteration has been reached. ",
+            "Maybe it is a good idea to increase 'max.iter'. ", call. = F)
+  }
   # Regression diagnostics
-  H     <- solve(QwQP, QwQ)
+  H     <- solve(QmQP, QmQ)
   trace <- sum(diag(H))
   y_[y_ == 0] <- 10^-4
-  dev   <- 2 * sum(y_ * log(y_ / mu), na.rm = TRUE)
+  dev   <- 2 * sum(y_ * log(y_ / muA), na.rm = TRUE)
   AIC   <- dev + 2 * trace
   BIC   <- dev + log(ny_) * trace
-  fit   <- as.numeric(exp(eta))
-  if (show) {setpb(pb, 98); cat("                       ")}
+  fit   <- as.numeric(mu)
   out   <- as.list(environment())
+  if (show) {setpb(pb, 98); cat("                       ")}
   return(out)
 }
 
@@ -60,8 +61,8 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
 #' @keywords internal
 pclm.confidence <- function(X, ci.level, pclm.type) {
   with(X, {
-    H0    <- solve(QwQP)       # vcov matrix Bayesian approach
-    H1    <- H0 %*% QwQ %*% H0 # vcov matrix sandwich estimator
+    H0    <- solve(QmQP)       # vcov matrix Bayesian approach
+    H1    <- H0 %*% QmQ %*% H0 # vcov matrix sandwich estimator
     s.e.  <- sqrt(diag(B %*% H1 %*% t(B)))
     psi2  <- dev / (ny_ - trace) # overdispersion
     # Confidence intervals
@@ -79,65 +80,6 @@ pclm.confidence <- function(X, ci.level, pclm.type) {
     #output
     out <- list(fit = fit, lower = lower, upper = upper, s.e. = s.e.)
     return(out)
-  })
-}
-
-
-#' Optimize Smoothing Parameters
-#' This function optimize searches of \code{lambda, kr} and \code{deg}. 
-#' See \code{\link{pclm.control}} to see what is their meaning. 
-#' The optimization process works in steps. Simultaneous optimization was 
-#' tested and found inefficient. Methods tested: "Nelder-Mead" (optim) 
-#' and "PORT routines" (nlminb).
-#' @inheritParams pclm
-#' @keywords internal
-optimize.smoothing.par <- function(x, y, nlast, offset, show, 
-                                   out.step, control, pclm.type) {
-  with(control, {
-    # Objective functions
-    Par <- c(lambda, kr, deg)
-    FN <- function(L, K, D) {
-      L <- round(L, 2)
-      # print(c(L = L, K = K, D = D))
-      pclm.fit(x, y, nlast, offset, out.step, show = F, 
-               lambda = L, kr = K, deg = D, 
-               diff, max.iter, tol, pclm.type)[[paste(opt.method)]]
-    }
-    F_D <- function(x) FN(L = ifelse(is.na(Par[1]), int.lambda[1], Par[1]), 
-                          K = ifelse(is.na(Par[2]), int.kr[1], Par[2]), 
-                          D = x)
-    F_K <- function(x) FN(L = ifelse(is.na(Par[1]), int.lambda[1], Par[1]), 
-                          K = x, 
-                          D = Par[3])
-    F_L <- function(x) FN(L = exp(x), K = Par[2], D = Par[3])
-    if (show) pb = startpb(0, 100)
-    # Step 1. Find deg over integer values
-    if (is.na(deg)) { 
-      if (show) {setpb(pb, 20); cat("   Optimizing deg    ")}
-      i      <- int.deg[1]:int.deg[2]
-      res    <- apply(matrix(i), 1, F_D)
-      Par[3] <- i[res == min(res)][1]
-    }
-    # Step 2. Find kr over integer values
-    if (is.na(kr)) { 
-      if (show) {setpb(pb, 30); cat("   Optimizing kr     ")}
-      i      <- int.kr[1]:int.kr[2]
-      res    <- apply(matrix(i), 1, F_K)
-      Par[2] <- i[res == min(res)][1]
-    }
-    # Step 3. Find lambda (continuos)
-    if (is.na(lambda)) { 
-      if (show) {setpb(pb, 40); cat("   Optimizing lambda  ")}
-      tol <- if (pclm.type == "1D") 1e-05 else 1
-      opt    <- optimise(f = F_L, interval = log(int.lambda), tol = tol)
-      Par[1] <- round(exp(opt$minimum), 2)
-    }
-    if (Par[1] == int.lambda[2]) {
-      warning(paste0("'lambda' has reached the upper limit of ", int.lambda[2],
-                    ". Maybe it is a good idea to extend interval. ",
-                    "See 'int.lambda' argument in 'pclm.control'."), call. = F)
-    } 
-    return(Par)
   })
 }
 
@@ -164,11 +106,11 @@ build_C_matrix <- function(x, y, nlast, offset, out.step, pclm.type) {
     CY <- diag(1, ncol = ny, nrow = ny) 
     C  <- CY %x% CA # Kronecker product
   }
-  xy <- list(gx, 1:ny)
+  gy <- 1:ny
   if (!is.null(offset)) C <- C %*% diag(as.vector(unlist(offset)))
   
   # Output
-  out <- list(C = C, xy = xy)
+  out <- as.list(environment())
   return(out)
 }
 
@@ -176,41 +118,54 @@ build_C_matrix <- function(x, y, nlast, offset, out.step, pclm.type) {
 #' Construct B-spline basis
 #' This is an internal function which constructs B-spline basis to be used in 
 #' pclm estimation
-#' @param x List containing the two numeric vectors for the abscissa of data.
+#' @param X vector with ages
+#' @param Y vector with years
 #' @inheritParams pclm.fit
 #' @seealso \code{\link{MortSmooth_bbase}}
 #' @keywords internal
-build_B_spline_basis <- function(x, kr, deg, diff, lambda, pclm.type) {
-  vsn  <- 0.1 # very small number
+build_B_spline_basis <- function(X, Y, kr, deg, diff, lambda, pclm.type) {
   # B-spline basis for age
-  X    <- x[[1]]
-  ndx1 <- max(2, trunc(length(X)/kr)) # at least 2 knots
-  BA   <- MortSmooth_bbase(x = X, xl = min(X - vsn), xr = max(X + vsn), 
-                           ndx = ndx1, deg) 
-  # B-spline basis for year
-  Y    <- x[[2]]
-  ndx2 <- max(2, trunc(length(Y)/kr))
-  BY   <- MortSmooth_bbase(x = Y, xl = min(Y - vsn), xr = max(Y + vsn), 
-                           ndx = ndx2, deg)
-  # Penalties
-  DA  <- diff(diag(ncol(BA)), diff = diff)
-  DY  <- diff(diag(ncol(BY)), diff = diff)
-  tDA <- t(DA) %*% DA
-  tDY <- t(DY) %*% DY
+  nX   <- trunc(length(X)/kr)
+  xl   <- min(X)
+  xr   <- max(X)
+  xmax <- xr + 0.01 * (xr - xl)
+  xmin <- xl - 0.01 * (xr - xl)
+  BX   <- MortSmooth_bbase(x = X, xmin, xmax, nX, deg) 
+  cX   <- ncol(BX)
+  dX   <- diag(cX)
+  DX   <- diff(dX, diff = diff)
+  tDX  <- t(DX) %*% DX
+  # mX   <- matrix(1, ncol = cX, nrow = 1)
+  # kBX  <- (mX %x% BX) * (BX %x% mX) # tensors product of B-splines
   
+  # B-spline basis for year
+  nY   <- trunc(length(Y)/kr)
+  yl   <- min(Y)
+  yr   <- max(Y)
+  ymax <- yr + 0.01 * (yr - yl)
+  ymin <- yl - 0.01 * (yr - yl)
+  BY   <- MortSmooth_bbase(x = Y, ymin, ymax, nY, deg)
+  cY   <- ncol(BY)
+  dY   <- diag(cY)
+  DY   <- diff(dY, diff = diff)
+  tDY  <- t(DY) %*% DY
+  # mY   <- matrix(1, ncol = cY, nrow = 1)
+  # kBY  <- (mY %x% BY) * (BY %x% mY)
+  
+  # Penalties
   if (pclm.type == "1D") {
-    B <- BA 
-    P <- (1 + lambda) * tDA
+    B <- BX 
+    P <- lambda * tDX
   } else {
-    B  <- BY %x% BA
-    P1 <- (1 + lambda) * (diag(ncol(BY)) %x% tDA)
-    P2 <- (1 + lambda) * (tDY %x% diag(ncol(BA)))
-    P  <- P1 + P2  
+    B  <- BY %x% BX
+    Px <- dY %x% tDX
+    Py <- tDY %x% dX
+    P  <- lambda * (Px + Py) 
   } 
   # output
-  out <- list(B = B, P = P)
+  out <- as.list(environment())
   return(out)
-}
+} 
 
 
 #' Create an additional bin with a small value at the end. 

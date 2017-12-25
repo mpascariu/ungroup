@@ -38,8 +38,7 @@ basis over an abscissa of data. If \code{deg = NA} an algorithm
 will find the optimal values.}
 
 \item{diff}{An integer indicating the order of differences of the components 
-of PCLM coefficients. If not sure what it means leave untouched. 
-Default value: 3.}
+of PCLM coefficients. Default value: 2.}
 
 \item{max.iter}{Maximal number of iterations used in fitting procedure.}
 

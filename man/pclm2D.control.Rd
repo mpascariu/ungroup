@@ -7,13 +7,13 @@
 pclm2D.control(lambda     = 1,
                kr         = 7,
                deg        = 3,
-               int.lambda = c(0.01, 100),
-               int.kr     = c(4, 10),
-               int.deg    = c(2, 5),
+               int.lambda = c(0, 100),
+               int.kr     = 4:10,
+               int.deg    = 2:5,
                diff       = 2,
                opt.method = "BIC",
                max.iter   = 1e+2,
-               tol        = 1e-5)
+               tol        = 1e-3)
 }
 \arguments{
 \item{lambda}{Smoothing parameter to be used in pclm estimation.
@@ -30,18 +30,18 @@ will find the optimal values.}
 \item{int.lambda}{If \code{lambda} is optimized an interval to be searched 
 needs to be specified. Format: vector containing the end-points.}
 
-\item{int.kr}{If \code{kr} is optimized an interval to be searched 
-needs to be specified. Format: vector containing the end-points.
-Default: \code{c(4, 10)}. \code{kr < 5} might slow down considerably
+\item{int.kr}{If \code{kr} is optimized, an interval to be searched 
+needs to be specified. Format: vector containing the possible values.
+Default: \code{4:10}. \code{kr < 4} might slow down considerably
 the algorithm in the case of \code{pclm2D} or 'overfit' in the case 
 of \code{pclm}. Fell free to play around with it.}
 
-\item{int.deg}{If \code{deg} is optimized an interval to be searched 
-needs to be specified. Format: vector containing the end-points.}
+\item{int.deg}{If \code{deg} is optimized, an interval to be searched 
+needs to be specified. Format: vector containing the the possible values.
+Default: \code{2:5}.}
 
 \item{diff}{An integer indicating the order of differences of the components 
-of PCLM coefficients. If not sure what it means leave untouched. 
-Default value: 3.}
+of PCLM coefficients. Default value: 2.}
 
 \item{opt.method}{Selection criterion of the model.
 Possible values are \code{"AIC"} and \code{"BIC"}. Default: \code{"BIC"}.}
@@ -52,16 +52,6 @@ Possible values are \code{"AIC"} and \code{"BIC"}. Default: \code{"BIC"}.}
 }
 \description{
 Auxiliary for Controlling \code{pclm2D} Fitting
-}
-\references{
-\enumerate{
-\item{Rizzi S, Gampe J, Eilers PHC. \href{https://doi.org/10.1093/aje/kwv020}{
-Efficient estimation of smooth distributions from coarsely grouped data.} 
-American Journal of Epidemiology, Volume 182, Issue 2, 15 July 2015, Pages 138-147.}
-\item{Rizzi S, Thinggaard M, Engholm G, et al. \href{https://doi.org/10.1186/s12874-016-0157-8}{
-Comparison of non-parametric methods for ungrouping coarsely aggregated data.} 
-BMC Medical Research Methodology. 2016;16:59.}
-}
 }
 \seealso{
 \code{\link{pclm2D}}

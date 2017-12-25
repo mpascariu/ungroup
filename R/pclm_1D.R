@@ -96,7 +96,7 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   input$nlast <- validate.nlast(x, nlast, out.step)
   
   # Preliminary; start the clock
-  if (show) {pb = startpb(0, 100); on.exit(closepb(pb), add = T); setpb(pb, 1)}
+  if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
   I   <- create.artificial.bin(input) # ***
   Par <- with(control, c(lambda = lambda, kr = kr, deg = deg))
   
@@ -110,8 +110,8 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   
   # If smoothing parameters are not provided in input, find them automatically.
   if (any(is.na(Par))) {
-    Par <- optimize.smoothing.par(I$x, I$y, I$nlast, I$offset, show,
-                                  out.step, control, pclm.type = "1D")
+    Par <- optimize_par1D(I$x, I$y, I$nlast, I$offset, show,
+                         out.step, control, pclm.type = "1D")
   }
   
   # solve the PCLM 

@@ -6,10 +6,12 @@
 This is an internal function which constructs B-spline basis to be used in 
 pclm estimation}
 \usage{
-build_B_spline_basis(x, kr, deg, diff, lambda, pclm.type)
+build_B_spline_basis(X, Y, kr, deg, diff, lambda, pclm.type)
 }
 \arguments{
-\item{x}{List containing the two numeric vectors for the abscissa of data.}
+\item{X}{vector with ages}
+
+\item{Y}{vector with years}
 
 \item{kr}{Knot ratio. Number of internal intervals used for defining 1 knot in 
 B-spline basis construction. See \code{\link{MortSmooth_bbase}}.
@@ -20,8 +22,7 @@ basis over an abscissa of data. If \code{deg = NA} an algorithm
 will find the optimal values.}
 
 \item{diff}{An integer indicating the order of differences of the components 
-of PCLM coefficients. If not sure what it means leave untouched. 
-Default value: 3.}
+of PCLM coefficients. Default value: 2.}
 
 \item{lambda}{Smoothing parameter to be used in pclm estimation.
 If \code{lambda = NA} an algorithm will find the optimal values.}
