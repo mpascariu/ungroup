@@ -17,12 +17,12 @@ plot.pclm <- function(x,
                       xlab, ylab, ylim, type, 
                       lwd, col, legend, legend.position, ...) {
   # input data
-  X    <- x$input$x
-  Y    <- x$input$y
-  fv   <- fitted(x)
-  lw   <- x$ci$lower
-  up   <- x$ci$upper
-  Ex   <- x$input$offset
+  X  <- x$input$x
+  Y  <- x$input$y
+  fv <- fitted(x)
+  lw <- x$ci$lower
+  up <- x$ci$upper
+  Ex <- x$input$offset
   if (length(Y) == length(Ex)) mx <- Y/Ex
   BI <- x$bin.definition$input
   BO <- x$bin.definition$output

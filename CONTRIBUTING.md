@@ -1,4 +1,4 @@
-## Contributing to the PACKAGE (pclm)
+## Contributing to the PACKAGE (ungroup)
 
 The goal of this guide is to help you contribute to the PACKAGE as quickly and as easily possible. The guide is divided into two main pieces:
 

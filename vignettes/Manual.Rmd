@@ -30,12 +30,12 @@ The `pclm` R package introduces a versatile method for ungrouping histograms (bi
 # Package Structure  
 The package has 2 top level functions `pclm` and `pclm2D` an auxiliary function `pclm.control`, several generic functions (`plot`, `summary`, `fitted`) and a test dataset (`pclm.data`).
 
-All functions are documented in the standard way, which means that once you load the package using `library(pclm)` you can just type for example `?pclm` to see the help file.
+All functions are documented in the standard way, which means that once you load the package using `library(ungroup)` you can just type for example `?pclm` to see the help file.
 
 
 ```{r}
 # Load the package
-library(pclm)
+library(ungroup)
 ```
 
 # Univariate Penalized Composite Link Model (PCLM)

@@ -22,23 +22,23 @@ NULL
 #' \href{https://cran.r-project.org/web/packages/MortalityLaws/index.html}{MortalityLaws} 
 #' R package can be used to extract data in R format.
 #' @source \href{http://www.mortality.org}{Human Mortality Database}
-#' @name pclm.data 
+#' @name ungroup.data 
 #' 
-"pclm.data"
+"ungroup.data"
 
 
-#' Print function for \code{pclm.data}
+#' Print function for \code{ungroup.data}
 #' 
-#' @param x An \code{pclm.data} object
+#' @param x An \code{ungroup.data} object
 #' @inheritParams base::print
 #' @keywords internal
 #' @export
-print.pclm.data <- function(x, ...) {
-  cat("\npclm Test Dataset\n")
+print.ungroup.data <- function(x, ...) {
+  cat("\nungroup Test Dataset\n")
   cat(" Series   : Death counts and Exposures by age (Dx & Ex)\n")
   cat(" Years    : 1980 - 2014\n")
   cat(" Ages     : 0 - 110\n")
   cat(" Format   : List containg 2 data frames\n")
   cat(" Source   : Human Mortality Database\n")
-  cat(" Download : December 8, 2017")
+  cat(" Download : January 12, 2018")
 }

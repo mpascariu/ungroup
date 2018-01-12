@@ -2,7 +2,7 @@
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  install.packages("pclm")
+#  install.packages("ungroup")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  sudo apt-get install r-cran-rgl

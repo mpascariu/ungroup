@@ -25,9 +25,9 @@ hmdEx <- as.data.frame(matrix(subset(HMD_Ex, Year %in% yr)$Total, nrow = 111))
 dimnames(hmdDx) = dimnames(hmdEx) <- list(0:110, yr)
 
 out <- list(Dx = round(hmdDx, 0), Ex = round(hmdEx, 0))
-pclm.data <- structure(class = "pclm.data", out)
+ungroup.data <- structure(class = "ungroup.data", out)
 
-devtools::use_data(pclm.data, overwrite = TRUE)
+devtools::use_data(ungroup.data, overwrite = TRUE)
 
 
 

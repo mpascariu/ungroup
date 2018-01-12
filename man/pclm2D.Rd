@@ -63,8 +63,8 @@ trajectories of coarsely grouped distributions and time trends.
 }
 \examples{
 # Input data
-Dx <- pclm.data$Dx
-Ex <- pclm.data$Ex
+Dx <- ungroup.data$Dx
+Ex <- ungroup.data$Ex
 
 # Aggregate data
 x      <- c(0, 1, seq(5, 85, by = 5))

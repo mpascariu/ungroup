@@ -1,4 +1,4 @@
 library(testthat)
-library(pclm)
+library(ungroup)
 
-test_check("pclm")
+test_check("ungroup")

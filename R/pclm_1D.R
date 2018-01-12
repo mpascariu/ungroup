@@ -50,6 +50,9 @@
 #' \item{Rizzi S, Thinggaard M, Engholm G, et al. \href{https://doi.org/10.1186/s12874-016-0157-8}{
 #' Comparison of non-parametric methods for ungrouping coarsely aggregated data.} 
 #' BMC Medical Research Methodology. 2016;16:59.}
+#' \item{Eilers PHC. \href{https://doi.org/10.1177/1471082X0700700302}{
+#' Ill-posed problems with counts, the composite link model and penalized 
+#' likelihood.} Statistical Modelling, Volume 7, Issue 3, 1 October 2007, Pages 239-254.}
 #' }
 #' @examples
 #' # Data  

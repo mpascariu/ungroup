@@ -1,6 +1,6 @@
 rm(list = ls())
 library(testthat)
-library(pclm)
+library(ungroup)
 
 # ----------------------------------------------
 # Tests 
@@ -67,8 +67,8 @@ for (i in 1:5) test_pclm_1D(get(paste0("M", i)))
 
 # ----------------------------------------------
 # PCLM-2D
-Dx     <- pclm.data$Dx
-Ex     <- pclm.data$Ex
+Dx     <- ungroup.data$Dx
+Ex     <- ungroup.data$Ex
 n      <- c(diff(x), nlast)
 Ex$gr  <- Dx$gr <- rep(x, n)
 y2      <- aggregate(Dx[, 1:35], by = list(Dx$gr), FUN = "sum")[, -1]
@@ -117,7 +117,7 @@ expect_warning(pclm(x, y, nlast, offset, out.step = 0.32))
 # ----------------------------------------------
 # Test data
 
-expect_output(print(pclm.data))
+expect_output(print(ungroup.data))
 
 
 

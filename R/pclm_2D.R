@@ -14,8 +14,8 @@
 #' @seealso \code{\link{plot.pclm2D}}
 #' @examples 
 #' # Input data
-#' Dx <- pclm.data$Dx
-#' Ex <- pclm.data$Ex
+#' Dx <- ungroup.data$Dx
+#' Ex <- ungroup.data$Ex
 #' 
 #' # Aggregate data
 #' x      <- c(0, 1, seq(5, 85, by = 5))

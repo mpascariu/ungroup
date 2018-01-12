@@ -28,7 +28,7 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
     muA  <- c(C %*% mu)  # mu aggregated
     z    <- (y_ - muA) + C %*% (mu * log(mu))
     W    <- C * ((1/muA) %*% t(mu))
-    Q    <- t(W %*% B) # This is the slow line that slows down the algorithm
+    Q    <- t(W %*% B) # This is the line that slows down the algorithm in pclm2D
     Qz   <- Q %*% z
     QmQ  <- Q %*% (muA * t(Q))
     QmQP <- QmQ + BM$P
@@ -124,46 +124,35 @@ build_C_matrix <- function(x, y, nlast, offset, out.step, pclm.type) {
 #' @seealso \code{\link{MortSmooth_bbase}}
 #' @keywords internal
 build_B_spline_basis <- function(X, Y, kr, deg, diff, lambda, pclm.type) {
-  # B-spline basis for age
-  nX   <- trunc(length(X)/kr)
-  xl   <- min(X)
-  xr   <- max(X)
-  xmax <- xr + 0.01 * (xr - xl)
-  xmin <- xl - 0.01 * (xr - xl)
-  BX   <- MortSmooth_bbase(x = X, xmin, xmax, nX, deg) 
-  cX   <- ncol(BX)
-  dX   <- diag(cX)
-  DX   <- diff(dX, diff = diff)
-  tDX  <- t(DX) %*% DX
-  # mX   <- matrix(1, ncol = cX, nrow = 1)
-  # kBX  <- (mX %x% BX) * (BX %x% mX) # tensors product of B-splines
+  # B-spline basis 
+  bsb <- function(Z, kr, deg, diff) {
+    zl   <- min(Z)
+    zr   <- max(Z)
+    zmin <- zl - 0.01 * (zr - zl)
+    zmax <- zr + 0.01 * (zr - zl)
+    ndx  <- trunc(length(Z)/kr) # number of internal knots
+    B    <- MortSmooth_bbase(x = Z, zmin, zmax, ndx, deg) 
+    dg   <- diag(ncol(B))
+    D    <- diff(dg, diff = diff)
+    tD   <- t(D) %*% D
+    list(B = B, tD = tD, dg = dg)
+  }
   
-  # B-spline basis for year
-  nY   <- trunc(length(Y)/kr)
-  yl   <- min(Y)
-  yr   <- max(Y)
-  ymax <- yr + 0.01 * (yr - yl)
-  ymin <- yl - 0.01 * (yr - yl)
-  BY   <- MortSmooth_bbase(x = Y, ymin, ymax, nY, deg)
-  cY   <- ncol(BY)
-  dY   <- diag(cY)
-  DY   <- diff(dY, diff = diff)
-  tDY  <- t(DY) %*% DY
-  # mY   <- matrix(1, ncol = cY, nrow = 1)
-  # kBY  <- (mY %x% BY) * (BY %x% mY)
+  BA <- bsb(X, kr, deg, diff) # for ages
+  BY <- bsb(Y, kr, deg, diff) # for years
   
   # Penalties
   if (pclm.type == "1D") {
-    B <- BX 
-    P <- lambda * tDX
+    B <- BA$B 
+    P <- lambda * BA$tD
   } else {
-    B  <- BY %x% BX
-    Px <- dY %x% tDX
-    Py <- tDY %x% dX
+    B  <- BY$B %x% BA$B
+    Px <- BY$dg %x% BA$tD
+    Py <- BY$tD %x% BA$dg
     P  <- lambda * (Px + Py) 
   } 
   # output
-  out <- as.list(environment())
+  out <- list(B = B, P = P)
   return(out)
 } 
 
@@ -178,17 +167,10 @@ create.artificial.bin <- function(i, vy = 1, vo = 1.01){
   with(i, {
     x     <- c(x, max(x) + nlast)
     nlast <- out.step
-    L     <- !is.null(offset)
-    
-    if (is.vector(y)) {
-      y <- c(y, vy)
-      if (L) offset <- c(offset, vo)
-    } else {
-      y <- rbind(y, vy)
-      if (L) offset <- rbind(offset, vo)
-    }
-    
-    out  <- list(x = x, y = y, nlast = nlast, offset = offset)
+    fn    <- if (is.vector(y)) c else rbind
+    y     <- fn(y, vy)
+    if (!is.null(offset)) offset <- fn(offset, vo)
+    out   <- list(x = x, y = y, nlast = nlast, offset = offset)
     return(out)
   })
 }
@@ -287,8 +269,8 @@ validate.nlast <- function(x, nlast, out.step) {
     vos <- suggest.valid.out.step(len)
     warning("'nlast' has been adjusted in order to obtain ", n.bins, 
             " bins of equal length as specified in 'out.step = ", out.step,
-            "'. Now 'nlast = ", new.nlast, "'. The impact in results is insignificant.",
-            " However, if the adjustment is not acceptable",
+            "'. Now 'nlast = ", new.nlast, "'. The impact in results should be",
+            " insignificant. However, if the adjustment is not acceptable",
             " try out one of the following 'out.step' values: ", 
             paste(vos, collapse = ", "), ".", call. = F)
   } else {

@@ -14,12 +14,12 @@ This repository contains a versatile method for ungrouping histograms (binned co
 
    ```R
    # The package is not on CRAN yet. Install from GitHub (see below). 
-   # install.packages("pclm")
+   # install.packages("ungroup")
    ```
 
-## Updating to the latest version of `pclm`
+## Updating to the latest version of `ungroup` package
 
-You can track (and contribute to) the development of `pclm` at https://github.com/mpascariu/pclm. To install it:
+You can track (and contribute to) the development of `ungroup` at https://github.com/mpascariu/ungroup. To install it:
 
 1. Install the release version of `devtools` from CRAN with `install.packages("devtools")`.
 
@@ -31,8 +31,16 @@ You can track (and contribute to) the development of `pclm` at https://github.co
 3. Install the development version of devtools.
 
    ```R
-   devtools::install_github("mpascariu/pclm", dependencies = TRUE)
+   devtools::install_github("mpascariu/ungroup", dependencies = TRUE)
    ```
 
 ## Reference
-[Silvia Rizzi](http://findresearcher.sdu.dk:8080/portal/en/person/srizzi), [Jutta Gampe](http://www.demogr.mpg.de/en/institute/staff_directory_1899/jutta_gampe_655.htm) and Paul H. C. Eilers - (2015) - [Efficient Estimation of Smooth Distributions From Coarsely Grouped Data](https://doi.org/10.1093/aje/kwv020) - Am J Epidemiol  182 (2): 138-147.
+[Rizzi S](http://findresearcher.sdu.dk:8080/portal/en/person/srizzi), [Gampe J](http://www.demogr.mpg.de/en/institute/staff_directory_1899/jutta_gampe_655.htm) and Eilers PHC. 2015. [Efficient Estimation of Smooth Distributions From Coarsely Grouped Data](https://doi.org/10.1093/aje/kwv020) - American Journal of Epidemiology, Volume 182, Issue 2, Pages 138-147.
+Eilers PHC. 2007. [Ill-posed problems with counts, the composite link model and penalized likelihood.](https://doi.org/10.1177/1471082X0700700302) Statistical Modelling, Volume 7, Issue 3, Pages 239-254.
+
+
+
+
+
+
+
