@@ -19,7 +19,7 @@ NULL
 #' testing purposes only and might be altered and outdated. Download actual 
 #' demographic data free of charge from HMD. Once a username and a password is 
 #' created on the \href{http://www.mortality.org}{website} the 
-#' \href{https://cran.r-project.org/web/packages/MortalityLaws/index.html}{MortalityLaws} 
+#' \href{https://CRAN.R-project.org/package=MortalityLaws}{MortalityLaws} 
 #' R package can be used to extract data in R format.
 #' @source \href{http://www.mortality.org}{Human Mortality Database}
 #' @name ungroup.data 

@@ -17,7 +17,7 @@ certain population between 1980 and 2014. The data-set is provided for
 testing purposes only and might be altered and outdated. Download actual 
 demographic data free of charge from HMD. Once a username and a password is 
 created on the \href{http://www.mortality.org}{website} the 
-\href{https://cran.r-project.org/web/packages/MortalityLaws/index.html}{MortalityLaws} 
+\href{https://CRAN.R-project.org/package=MortalityLaws}{MortalityLaws} 
 R package can be used to extract data in R format.
 }
 \keyword{datasets}
