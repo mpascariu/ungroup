@@ -55,7 +55,7 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
   # Preliminary; start the clock
   if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
   I   <- create.artificial.bin(input)
-  Par <- with(control, c(lambda = lambda, kr = kr, deg = deg))
+  Par <- with(control, c(lambda, kr = kr, deg = deg))
   
   # Deal with offset term
   if (!is.null(offset)) {
@@ -68,13 +68,12 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
   # If smoothing parameters are not provided in input, find them automatically.
   if (any(is.na(Par))) { 
     # IF 'out.step < 1' the algorithm can becomes slow (several minutes slow).
-    Par <- optimize_par(I$x, I$y, I$nlast, I$offset, show,
-                         out.step, control, pclm.type = "2D")
+    Par <- optimize_par2D(I$x, I$y, I$nlast, I$offset, show, out.step, control)
   }
   
   # solve the PCLM 
   M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, show,
-                              lambda = Par[1], kr = Par[2], deg = Par[3], 
+                              lambda = Par[1:2], kr = Par[3], deg = Par[4], 
                               diff, max.iter, tol, pclm.type = "2D"))
   cn    <- c("fit", "lower", "upper", "s.e.")
   M[cn] <- pclm.confidence(M, ci.level, pclm.type = "2D")
@@ -141,9 +140,9 @@ print.summary.pclm2D <- function(x, ...) {
     cat("\nNumber of input groups     :", dim.y[1], "x", dim.y[2])
     cat("\nNumber of fitted values    :", dim.f[1], "x", dim.f[2])
     cat("\nDimension of estimate bins :", out.step, "x 1")
-    cat("\nSmoothing parameter lambda :", L[1])
-    cat("\nB-splines intervals/knot   :", L[2])
-    cat("\nB-splines degree           :", L[3])
+    cat("\nSmoothing parameter lambda :", L[1], "x", L[2])
+    cat("\nB-splines intervals/knot   :", L[3])
+    cat("\nB-splines degree           :", L[4])
     cat("\nAIC                        :", AIC)
     cat("\nBIC                        :", BIC)
   })

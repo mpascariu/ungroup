@@ -51,33 +51,36 @@ nlast <- 26 # the size of the last interval
 M1 <- pclm(x, y, nlast)
 M2 <- pclm(x, y, nlast, out.step = 0.5)
 M3 <- pclm(x, y, nlast, out.step = 0.5,
-           control = list(lambda = NA, kr = 6, deg = NA))
+           control = list(lambda = NA, kr = 6, deg = 3))
 M4 <- pclm(x, y, nlast, offset, out.step = 0.4,
            control = list(lambda = 1, kr = 8, deg = 3))
-M5 <- pclm(x, y, nlast, offset, out.step = 0.4,
-           control = list(lambda = NA, kr = NA, deg = NA))
 
 summary(M1)
 summary(M2)
 summary(M3)
 summary(M4)
-summary(M5)
 
-for (i in 1:5) test_pclm_1D(get(paste0("M", i)))
+for (i in 1:4) test_pclm_1D(get(paste0("M", i)))
 
 # ----------------------------------------------
 # PCLM-2D
-Dx     <- ungroup.data$Dx
-Ex     <- ungroup.data$Ex
+
+Dx     <- ungroup.data$Dx[, 15:35]
+Ex     <- ungroup.data$Ex[, 15:35]
 n      <- c(diff(x), nlast)
 Ex$gr  <- Dx$gr <- rep(x, n)
-y2      <- aggregate(Dx[, 1:35], by = list(Dx$gr), FUN = "sum")[, -1]
-offset2 <- aggregate(Ex[, 1:35], by = list(Ex$gr), FUN = "sum")[, -1]
+y2      <- aggregate(Dx[, 1:20], by = list(Dx$gr), FUN = "sum")[, -1]
+offset2 <- aggregate(Ex[, 1:20], by = list(Ex$gr), FUN = "sum")[, -1]
+# y2      <- aggregate(Dx[, 1:35], by = list(Dx$gr), FUN = "sum")[, -1]
+# offset2 <- aggregate(Ex[, 1:35], by = list(Ex$gr), FUN = "sum")[, -1]
 
 P1 <- pclm2D(x, y2, nlast)
 P2 <- pclm2D(x, y2, nlast, offset2)
 P3 <- pclm2D(x, y2, nlast, 
-             control = list(lambda = NA, int.lambda = c(1, 1.1)))
+             control = list(lambda = c(NA, NA), max.iter = 100))
+
+
+plot(P3)
 summary(P1)             
 summary(P2)             
 

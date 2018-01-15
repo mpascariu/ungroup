@@ -3,11 +3,9 @@
 #' 
 #' @usage 
 #' pclm.control(lambda     = NA,
-#'              kr         = NA,
-#'              deg        = NA,
-#'              int.lambda = c(0, 10^5),
-#'              int.kr     = 4:10,
-#'              int.deg    = 2:5,
+#'              kr         = 6,
+#'              deg        = 3,
+#'              int.lambda = c(0.1, 1e+5),
 #'              diff       = 2,
 #'              opt.method = "BIC",
 #'              max.iter   = 1e+3,
@@ -16,20 +14,10 @@
 #' If \code{lambda = NA} an algorithm will find the optimal values.
 #' @param kr Knot ratio. Number of internal intervals used for defining 1 knot in 
 #' B-spline basis construction. See \code{\link{MortSmooth_bbase}}.
-#' If \code{ndx = NA} an algorithm will find the optimal values.
 #' @param deg Degree of the splines needed to create equally-spaced B-splines 
-#' basis over an abscissa of data. If \code{deg = NA} an algorithm 
-#' will find the optimal values.
+#' basis over an abscissa of data.
 #' @param int.lambda If \code{lambda} is optimized an interval to be searched 
 #' needs to be specified. Format: vector containing the end-points.
-#' @param int.kr If \code{kr} is optimized, an interval to be searched 
-#' needs to be specified. Format: vector containing the possible values.
-#' Default: \code{4:10}. \code{kr < 4} might slow down considerably
-#' the algorithm in the case of \code{pclm2D} or 'overfit' in the case 
-#' of \code{pclm}. Fell free to play around with it.
-#' @param int.deg If \code{deg} is optimized, an interval to be searched 
-#' needs to be specified. Format: vector containing the the possible values.
-#' Default: \code{2:5}.
 #' @param diff An integer indicating the order of differences of the components 
 #' of PCLM coefficients. Default value: 2.
 #' @param opt.method Selection criterion of the model.
@@ -40,11 +28,9 @@
 #' @seealso \code{\link{pclm}}
 #' @export
 pclm.control <- function(lambda = NA,
-                         kr = NA,
-                         deg = NA,
-                         int.lambda = c(0, 10^5),
-                         int.kr = 4:10,
-                         int.deg = 2:5,
+                         kr = 6,
+                         deg = 3,
+                         int.lambda = c(0.1, 1e+5),
                          diff = 2,
                          opt.method = "BIC",
                          max.iter = 1e+3, 
@@ -57,12 +43,10 @@ pclm.control <- function(lambda = NA,
 #' Auxiliary for Controlling \code{pclm2D} Fitting
 #' 
 #' @usage 
-#' pclm2D.control(lambda     = 1,
+#' pclm2D.control(lambda     = c(1, 1),
 #'                kr         = 7,
 #'                deg        = 3,
-#'                int.lambda = c(0, 100),
-#'                int.kr     = 4:10,
-#'                int.deg    = 2:5,
+#'                int.lambda = c(0.1, 1e+3),
 #'                diff       = 2,
 #'                opt.method = "BIC",
 #'                max.iter   = 1e+2,
@@ -70,12 +54,10 @@ pclm.control <- function(lambda = NA,
 #' @inheritParams pclm.control
 #' @seealso \code{\link{pclm2D}}
 #' @export
-pclm2D.control <- function(lambda = 1,
+pclm2D.control <- function(lambda = c(1, 1),
                            kr = 7,
                            deg = 3,
-                           int.lambda = c(0, 100),
-                           int.kr = 4:10,
-                           int.deg = 2:5,
+                           int.lambda = c(0.1, 1e+3),
                            diff = 2,
                            opt.method = "BIC",
                            max.iter = 1e+2, 

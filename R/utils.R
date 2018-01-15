@@ -69,10 +69,10 @@ pclm.input.check <- function(X, pclm.type) {
   
   # Validate input in pclm.control
   with(X$control, {
-    if (!(length(lambda) == 1)) {
-      stop("'lambda' must be of length 1", call. = F)
-    }
-    if (!is.na(lambda) & lambda < 0) {
+    # if (!(length(lambda) == 1)) {
+    #   stop("'lambda' must be of length 1", call. = F)
+    # }
+    if (!is.na(lambda) && lambda < 0) {
       stop("'lambda' must be a positive scalar", call. = F)
     }
     if (!is.na(kr)) {

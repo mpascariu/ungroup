@@ -2,9 +2,9 @@
 % Please edit documentation in R/pclm_optim.R
 \name{optimize_par1D}
 \alias{optimize_par1D}
-\title{Optimize Smoothing Parameters - 2nd method}
+\title{Optimize Smoothing Parameters}
 \usage{
-optimize_par1D(x, y, nlast, offset, show, out.step, control, pclm.type)
+optimize_par1D(x, y, nlast, offset, show, out.step, control)
 }
 \arguments{
 \item{x}{Vector containing the starting values of the input intervals/bins.
@@ -28,6 +28,6 @@ Values between 0.1 and 1 are accepted. Default: 1.}
 \item{control}{List with additional parameters. See \code{\link{pclm.control}}.}
 }
 \description{
-Optimize Smoothing Parameters - 2nd method
+Optimize Smoothing Parameters
 }
 \keyword{internal}

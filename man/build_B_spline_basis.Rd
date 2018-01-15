@@ -14,12 +14,10 @@ build_B_spline_basis(X, Y, kr, deg, diff, lambda, pclm.type)
 \item{Y}{vector with years}
 
 \item{kr}{Knot ratio. Number of internal intervals used for defining 1 knot in 
-B-spline basis construction. See \code{\link{MortSmooth_bbase}}.
-If \code{ndx = NA} an algorithm will find the optimal values.}
+B-spline basis construction. See \code{\link{MortSmooth_bbase}}.}
 
 \item{deg}{Degree of the splines needed to create equally-spaced B-splines 
-basis over an abscissa of data. If \code{deg = NA} an algorithm 
-will find the optimal values.}
+basis over an abscissa of data.}
 
 \item{diff}{An integer indicating the order of differences of the components 
 of PCLM coefficients. Default value: 2.}

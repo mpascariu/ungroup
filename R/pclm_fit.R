@@ -140,16 +140,17 @@ build_B_spline_basis <- function(X, Y, kr, deg, diff, lambda, pclm.type) {
   
   BA <- bsb(X, kr, deg, diff) # for ages
   BY <- bsb(Y, kr, deg, diff) # for years
+  L  <- sqrt(lambda)
   
   # Penalties
   if (pclm.type == "1D") {
     B <- BA$B 
-    P <- lambda * BA$tD
+    P <- L * BA$tD
   } else {
     B  <- BY$B %x% BA$B
     Px <- BY$dg %x% BA$tD
     Py <- BY$tD %x% BA$dg
-    P  <- lambda * (Px + Py) 
+    P  <- L[1] * Px + L[2] * Py 
   } 
   # output
   out <- list(B = B, P = P)

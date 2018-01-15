@@ -4,12 +4,10 @@
 \alias{pclm2D.control}
 \title{Auxiliary for Controlling \code{pclm2D} Fitting}
 \usage{
-pclm2D.control(lambda     = 1,
+pclm2D.control(lambda     = c(1, 1),
                kr         = 7,
                deg        = 3,
-               int.lambda = c(0, 100),
-               int.kr     = 4:10,
-               int.deg    = 2:5,
+               int.lambda = c(0.1, 1e+3),
                diff       = 2,
                opt.method = "BIC",
                max.iter   = 1e+2,
@@ -20,25 +18,13 @@ pclm2D.control(lambda     = 1,
 If \code{lambda = NA} an algorithm will find the optimal values.}
 
 \item{kr}{Knot ratio. Number of internal intervals used for defining 1 knot in 
-B-spline basis construction. See \code{\link{MortSmooth_bbase}}.
-If \code{ndx = NA} an algorithm will find the optimal values.}
+B-spline basis construction. See \code{\link{MortSmooth_bbase}}.}
 
 \item{deg}{Degree of the splines needed to create equally-spaced B-splines 
-basis over an abscissa of data. If \code{deg = NA} an algorithm 
-will find the optimal values.}
+basis over an abscissa of data.}
 
 \item{int.lambda}{If \code{lambda} is optimized an interval to be searched 
 needs to be specified. Format: vector containing the end-points.}
-
-\item{int.kr}{If \code{kr} is optimized, an interval to be searched 
-needs to be specified. Format: vector containing the possible values.
-Default: \code{4:10}. \code{kr < 4} might slow down considerably
-the algorithm in the case of \code{pclm2D} or 'overfit' in the case 
-of \code{pclm}. Fell free to play around with it.}
-
-\item{int.deg}{If \code{deg} is optimized, an interval to be searched 
-needs to be specified. Format: vector containing the the possible values.
-Default: \code{2:5}.}
 
 \item{diff}{An integer indicating the order of differences of the components 
 of PCLM coefficients. Default value: 2.}

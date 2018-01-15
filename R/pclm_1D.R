@@ -113,8 +113,7 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   
   # If smoothing parameters are not provided in input, find them automatically.
   if (any(is.na(Par))) {
-    Par <- optimize_par1D(I$x, I$y, I$nlast, I$offset, show,
-                         out.step, control, pclm.type = "1D")
+    Par <- optimize_par1D(I$x, I$y, I$nlast, I$offset, show, out.step, control)
   }
   
   # solve the PCLM 
