@@ -28,7 +28,7 @@ You can track (and contribute to) the development of `ungroup` at https://github
     * **Mac**: Install `Xcode` from the Mac App Store.
     * **Linux**: Install a compiler and various development libraries (details vary across different flavors of Linux).
 
-3. Install the development version of devtools.
+3. Install the development version of `ungroup`.
 
    ```R
    devtools::install_github("mpascariu/ungroup", dependencies = TRUE)
