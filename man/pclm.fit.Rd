@@ -40,7 +40,8 @@ of PCLM coefficients. Default value: 2.}
 
 \item{max.iter}{Maximal number of iterations used in fitting procedure.}
 
-\item{tol}{Tolerance in PCLM fitting procedure.}
+\item{tol}{Relative tolerance in PCLM fitting procedure. Default: 0.1\% i.e. 
+the estimated aggregate bins should be in the 0.1\% error margin.}
 
 \item{pclm.type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
 univariate and two-dimensional model respectively.}

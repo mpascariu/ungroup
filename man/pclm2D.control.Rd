@@ -10,7 +10,7 @@ pclm2D.control(lambda     = c(1, 1),
                int.lambda = c(0.1, 1e+3),
                diff       = 2,
                opt.method = "BIC",
-               max.iter   = 1e+2,
+               max.iter   = 1e+3,
                tol        = 1e-3)
 }
 \arguments{
@@ -34,7 +34,8 @@ Possible values are \code{"AIC"} and \code{"BIC"}. Default: \code{"BIC"}.}
 
 \item{max.iter}{Maximal number of iterations used in fitting procedure.}
 
-\item{tol}{Tolerance in PCLM fitting procedure.}
+\item{tol}{Relative tolerance in PCLM fitting procedure. Default: 0.1\% i.e. 
+the estimated aggregate bins should be in the 0.1\% error margin.}
 }
 \description{
 Auxiliary for Controlling \code{pclm2D} Fitting

@@ -11,7 +11,7 @@ pclm.control(lambda     = NA,
              diff       = 2,
              opt.method = "BIC",
              max.iter   = 1e+3,
-             tol        = 1e-5)
+             tol        = 1e-3)
 }
 \arguments{
 \item{lambda}{Smoothing parameter to be used in pclm estimation.
@@ -34,7 +34,8 @@ Possible values are \code{"AIC"} and \code{"BIC"}. Default: \code{"BIC"}.}
 
 \item{max.iter}{Maximal number of iterations used in fitting procedure.}
 
-\item{tol}{Tolerance in PCLM fitting procedure.}
+\item{tol}{Relative tolerance in PCLM fitting procedure. Default: 0.1\% i.e. 
+the estimated aggregate bins should be in the 0.1\% error margin.}
 }
 \value{
 List with control parameters.

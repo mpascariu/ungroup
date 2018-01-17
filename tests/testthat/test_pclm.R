@@ -34,7 +34,7 @@ test_pclm_2D <- function(M) {
     expect_identical(dim(fv), dim(lower))
     expect_identical(dim(upper), dim(lower))
     if (is.null(M$input$offset)) {
-      expect_identical(round(sum(fv), 1), round(sum(M$input$y), 1))
+      expect_true(abs(sum(fv) - sum(M$input$y)) < 1)
     }
   })
 }
@@ -75,17 +75,16 @@ offset2 <- aggregate(Ex[, 1:20], by = list(Ex$gr), FUN = "sum")[, -1]
 # offset2 <- aggregate(Ex[, 1:35], by = list(Ex$gr), FUN = "sum")[, -1]
 
 P1 <- pclm2D(x, y2, nlast)
-P2 <- pclm2D(x, y2, nlast, offset2)
+P2 <- pclm2D(x, y2, nlast, offset2, control = list(max.iter = 200))
 P3 <- pclm2D(x, y2, nlast, 
-             control = list(lambda = c(NA, NA), max.iter = 100))
-
-
-plot(P3)
+             control = list(lambda = c(NA, NA), max.iter = 200))
+# plot(P1)
+# plot(P2)
+# plot(P3)
 summary(P1)             
 summary(P2)             
 
 for (i in 1:3) test_pclm_2D(get(paste0("P", i)))
-
 
 # ----------------------------------------------
 # Test error messages

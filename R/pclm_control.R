@@ -9,7 +9,7 @@
 #'              diff       = 2,
 #'              opt.method = "BIC",
 #'              max.iter   = 1e+3,
-#'              tol        = 1e-5)
+#'              tol        = 1e-3)
 #' @param lambda Smoothing parameter to be used in pclm estimation.
 #' If \code{lambda = NA} an algorithm will find the optimal values.
 #' @param kr Knot ratio. Number of internal intervals used for defining 1 knot in 
@@ -23,7 +23,8 @@
 #' @param opt.method Selection criterion of the model.
 #' Possible values are \code{"AIC"} and \code{"BIC"}. Default: \code{"BIC"}.
 #' @param max.iter Maximal number of iterations used in fitting procedure.
-#' @param tol Tolerance in PCLM fitting procedure.
+#' @param tol Relative tolerance in PCLM fitting procedure. Default: 0.1\% i.e. 
+#' the estimated aggregate bins should be in the 0.1\% error margin.
 #' @return List with control parameters.
 #' @seealso \code{\link{pclm}}
 #' @export
@@ -34,7 +35,7 @@ pclm.control <- function(lambda = NA,
                          diff = 2,
                          opt.method = "BIC",
                          max.iter = 1e+3, 
-                         tol = 1e-5){
+                         tol = 1e-3){
   out <- c(as.list(environment()))
   return(out)
 }
@@ -49,7 +50,7 @@ pclm.control <- function(lambda = NA,
 #'                int.lambda = c(0.1, 1e+3),
 #'                diff       = 2,
 #'                opt.method = "BIC",
-#'                max.iter   = 1e+2,
+#'                max.iter   = 1e+3,
 #'                tol        = 1e-3)
 #' @inheritParams pclm.control
 #' @seealso \code{\link{pclm2D}}
@@ -60,7 +61,7 @@ pclm2D.control <- function(lambda = c(1, 1),
                            int.lambda = c(0.1, 1e+3),
                            diff = 2,
                            opt.method = "BIC",
-                           max.iter = 1e+2, 
+                           max.iter = 1e+3, 
                            tol = 1e-3){
   out <- c(as.list(environment()))
   return(out)

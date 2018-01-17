@@ -24,9 +24,24 @@ optimize_par2D <- function(x, y, nlast, offset, show, out.step, control) {
     # Find lambda (continuos)
     if (any(is.na(lambda))) { 
       if (show) {setpb(pb, 40); cat("   Optimizing lambda  ")}
-      ipar = log(int.lambda + .000001)
-      opt <- nlminb(start = log(c(50, 50)), objective = fn,
-                    lower = ipar[1], upper = ipar[2])
+      # The following two 'if's will help me define constraints in the optimization algorithm.
+      # If one of the lambdas is specified, the algorithm will search only for the missing one.
+      L1_lw = L1_up = L1 <- lambda[1] 
+      L2_lw = L2_up = L2 <- lambda[2] 
+      if (is.na(lambda[1])) {
+        L1_lw <- log(int.lambda)[1]
+        L1_up <- log(int.lambda)[2]
+        L1    <- log(mean(int.lambda))
+      }
+      if (is.na(lambda[2])) {
+        L2_lw <- log(int.lambda)[1]
+        L2_up <- log(int.lambda)[2]
+        L2    <- log(mean(int.lambda))
+      } 
+      
+      opt <- nlminb(start = c(L1, L2), objective = fn, 
+                    lower = c(L1_lw, L2_lw), 
+                    upper = c(L1_up, L2_up))
       Par[1:2] <- round(exp(opt$par), 6)
     }
     if (Par[1] == int.lambda[2]) {
@@ -46,7 +61,7 @@ optimize_par1D <- function(x, y, nlast, offset, show, out.step, control) {
   with(control, {
     Par <- c(lambda, kr, deg)
     fn <- function(L) {
-      L = exp(round(L, 2))
+      L = exp(round(L, 6))
       pclm.fit(x, y, nlast, offset, out.step, show = F, 
                lambda = L, kr, deg, diff, max.iter, tol, 
                pclm.type = "1D")[[paste(opt.method)]]
@@ -56,8 +71,8 @@ optimize_par1D <- function(x, y, nlast, offset, show, out.step, control) {
     # Find lambda (continuos)
     if (is.na(lambda)) { 
       if (show) {setpb(pb, 40); cat("   Optimizing lambda  ")}
-      opt    <- optimise(f = fn, interval = log(int.lambda + .00001), tol = 1e-05)
-      Par[1] <- round(exp(opt$minimum), 2)
+      opt    <- optimise(f = fn, interval = log(int.lambda), tol = 1e-05)
+      Par[1] <- round(exp(opt$minimum), 6)
     }
     if (Par[1] == int.lambda[2]) {
       warning(paste0("'lambda' has reached the upper limit of ", int.lambda[2],

@@ -12,8 +12,9 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
                      lambda, kr, deg, diff, max.iter, tol, pclm.type){
   if (show) {pb = startpb(0, 100); setpb(pb, 50); cat("   Ungrouping data      ")}
   # Some preparations
-  CM  <- build_C_matrix(x, y, nlast, offset, out.step, pclm.type)
-  BM  <- build_B_spline_basis(CM$gx, CM$gy, kr, deg, diff, lambda, pclm.type)
+  CM  <- build_C_matrix(x, y, nlast, offset, out.step, pclm.type) # composition matrix
+  BM  <- build_B_spline_basis(CM$gx, CM$gy, kr, deg, diff, pclm.type) # B-spline
+  P   <- build_P_matrix(BM$BA, BM$BY, lambda, pclm.type) # penalty
   C   <- CM$C
   B   <- BM$B
   y_  <- as.vector(unlist(y))
@@ -22,23 +23,26 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
   # Perform the iterations
   eta <- B %*% rep(log(sum(y_) / ny_), times = ncol(B))
   mu  <- exp(eta)
+  muA <- c(C %*% mu)  # mu aggregated
+  d   <- 1000
   
   for (it in 1:max.iter) {
-    mu0  <- mu
-    muA  <- c(C %*% mu)  # mu aggregated
-    z    <- (y_ - muA) + C %*% (mu * log(mu))
     W    <- C * ((1/muA) %*% t(mu))
+    z    <- (y_ - muA) + C %*% (mu * log(mu))
     Q    <- t(W %*% B) # This is the line that slows down the algorithm in pclm2D
     Qz   <- Q %*% z
     QmQ  <- Q %*% (muA * t(Q))
-    QmQP <- QmQ + BM$P
+    QmQP <- QmQ + P
     eta  <- B %*% solve(QmQP, Qz)
     mu   <- exp(eta)
-    da   <- max(abs(mu - mu0)/abs(mu))
-    if (show) setpb(pb, min(50 + it, 97))
-    if (da < tol && it >= 4) break
+    muA  <- c(C %*% mu)
+    d0   <- d
+    d    <- mean(abs(y_ - muA)/y_)
+    dd   <- abs(d - d0)/d * 100
+    if (show) setpb(pb, min(50 + it, 95))
+    if ((d < tol || dd < 0.1) && it >= 4) break
   }
-  if (it == max.iter) {
+  if (show && it == max.iter) {
     warning("The maximal number of iteration has been reached. ",
             "Maybe it is a good idea to increase 'max.iter'. ", call. = F)
   }
@@ -123,7 +127,7 @@ build_C_matrix <- function(x, y, nlast, offset, out.step, pclm.type) {
 #' @inheritParams pclm.fit
 #' @seealso \code{\link{MortSmooth_bbase}}
 #' @keywords internal
-build_B_spline_basis <- function(X, Y, kr, deg, diff, lambda, pclm.type) {
+build_B_spline_basis <- function(X, Y, kr, deg, diff, pclm.type) {
   # B-spline basis 
   bsb <- function(Z, kr, deg, diff) {
     zl   <- min(Z)
@@ -138,24 +142,30 @@ build_B_spline_basis <- function(X, Y, kr, deg, diff, lambda, pclm.type) {
     list(B = B, tD = tD, dg = dg)
   }
   
-  BA <- bsb(X, kr, deg, diff) # for ages
-  BY <- bsb(Y, kr, deg, diff) # for years
+  BA  <- bsb(X, kr, deg, diff) # for ages
+  BY  <- bsb(Y, kr, deg, diff) # for years
+  B   <- if (pclm.type == "1D") BA$B else BY$B %x% BA$B
+  out <- as.list(environment())
+  return(out)
+} 
+
+
+#' Construct Penalty Matrix
+#' @param BA B-spline basis object for age axis
+#' @param BY B-spline basis object for year axis
+#' @inheritParams pclm.fit
+#' @keywords internal
+build_P_matrix <- function(BA, BY, lambda, pclm.type){
   L  <- sqrt(lambda)
-  
-  # Penalties
   if (pclm.type == "1D") {
-    B <- BA$B 
     P <- L * BA$tD
   } else {
-    B  <- BY$B %x% BA$B
     Px <- BY$dg %x% BA$tD
     Py <- BY$tD %x% BA$dg
     P  <- L[1] * Px + L[2] * Py 
-  } 
-  # output
-  out <- list(B = B, P = P)
-  return(out)
-} 
+  }
+  return(P)
+}
 
 
 #' Create an additional bin with a small value at the end. 

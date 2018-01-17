@@ -35,7 +35,7 @@ plot.pclm <- function(x,
   
   # Graphical parameters
   if (missing(xlab)) xlab = "(x)"
-  if (missing(type)) type = "s"
+  if (missing(type)) type = "l"
   if (missing(lwd))  lwd = 2
   if (missing(legend)) legend = c("Input values", "Fitted values", "Conf. intervals")
   
@@ -50,7 +50,7 @@ plot.pclm <- function(x,
     barplot(height = Y/n1, width = n1, space = 0, 
             border = 'white', col = col[1],
             xlab = xlab, ylab = ylab, ylim = ylim)
-    lines(x = t1 - b1, y = f(Y/n1), type = type)
+    lines(x = t1 - b1, y = f(Y/n1), type = "s")
     lines(x = t2 - b1, y = f(lw/n2), type = type, col = col[3])  
     lines(x = t2 - b1, y = f(up/n2), type = type, col = col[3])  
     lines(x = t2 - b1, y = f(fv/n2), type = type, col = col[2], lwd = lwd)

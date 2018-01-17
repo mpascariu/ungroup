@@ -1,7 +1,7 @@
 
 #' Imports
 #' 
-#' @importFrom stats optimise qnorm quantile fitted aggregate
+#' @importFrom stats optimise qnorm quantile fitted aggregate nlminb
 #' @importFrom utils tail
 #' @importFrom MortalitySmooth MortSmooth_bbase
 #' @importFrom graphics axis barplot legend lines plot abline par
@@ -40,5 +40,5 @@ print.ungroup.data <- function(x, ...) {
   cat(" Ages     : 0 - 110\n")
   cat(" Format   : List containg 2 data frames\n")
   cat(" Source   : Human Mortality Database\n")
-  cat(" Download : January 12, 2018")
+  cat(" Download : January 17, 2018")
 }
