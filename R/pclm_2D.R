@@ -127,7 +127,7 @@ summary.pclm2D <- function(object, ...) {
   cl    <- object$call
   AIC   <- round(object$goodness.of.fit$AIC, 2)
   BIC   <- round(object$goodness.of.fit$BIC, 2)
-  L     <- object$smoothPar
+  L     <- round(object$smoothPar, 2)
   dim.y <- dim(object$input$y)
   dim.f <- dim(fitted(object))
   out.step <- object$input$out.step

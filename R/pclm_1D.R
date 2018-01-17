@@ -162,7 +162,7 @@ summary.pclm <- function(object, ...) {
   cl    <- object$call
   AIC   <- round(object$goodness.of.fit$AIC, 2)
   BIC   <- round(object$goodness.of.fit$BIC, 2)
-  L     <- object$smoothPar
+  L     <- round(object$smoothPar)
   dim.y <- length(object$input$y)
   dim.f <- length(fitted(object))
   out.step <- object$input$out.step

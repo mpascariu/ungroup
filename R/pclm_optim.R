@@ -24,10 +24,11 @@ optimize_par2D <- function(x, y, nlast, offset, show, out.step, control) {
     # Find lambda (continuos)
     if (any(is.na(lambda))) { 
       if (show) {setpb(pb, 40); cat("   Optimizing lambda  ")}
-      # The following two 'if's will help me define constraints in the optimization algorithm.
-      # If one of the lambdas is specified, the algorithm will search only for the missing one.
-      L1_lw = L1_up = L1 <- lambda[1] 
-      L2_lw = L2_up = L2 <- lambda[2] 
+      # The following two 'if's will help me define constraints in the 
+      # optimization algorithm. If one of the lambdas is specified, the 
+      # algorithm will search only for the missing one.
+      L1_lw = L1_up = L1 <- log(lambda[1]) 
+      L2_lw = L2_up = L2 <- log(lambda[2]) 
       if (is.na(lambda[1])) {
         L1_lw <- log(int.lambda)[1]
         L1_up <- log(int.lambda)[2]
@@ -52,6 +53,7 @@ optimize_par2D <- function(x, y, nlast, offset, show, out.step, control) {
     return(Par)
   })
 }
+
 
 #' Optimize Smoothing Parameters
 #' @inheritParams pclm
