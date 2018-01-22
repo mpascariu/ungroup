@@ -29,7 +29,7 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
   for (it in 1:max.iter) {
     W    <- C * ((1/muA) %*% t(mu))
     z    <- (y_ - muA) + C %*% (mu * log(mu))
-    Q    <- t(W %*% B) # This is the line that slows down the algorithm in pclm2D
+    Q    <- tMatMult(W, B)
     Qz   <- Q %*% z
     QmQ  <- Q %*% (muA * t(Q))
     QmQP <- QmQ + P
