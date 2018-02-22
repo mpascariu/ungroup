@@ -40,5 +40,5 @@ print.ungroup.data <- function(x, ...) {
   cat(" Ages     : 0 - 110\n")
   cat(" Format   : List containg 2 data frames\n")
   cat(" Source   : Human Mortality Database\n")
-  cat(" Download : January 17, 2018")
+  cat(" Download : February 22, 2018")
 }

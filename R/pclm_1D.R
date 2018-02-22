@@ -87,7 +87,7 @@
 #' # Example 4 -----------------------
 #' # Grouped x & grouped offset (estimate death rates)
 #' M4 <- pclm(x, y, nlast, offset)
-#' plot(M4, type = "s")
+#' plot(M4)
 #' 
 #' @export
 pclm <- function(x, y, nlast, offset = NULL, show = TRUE,

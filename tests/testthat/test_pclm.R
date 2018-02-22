@@ -101,6 +101,7 @@ expect_error(pclm(x, y, nlast, ci.level = -0.05))
 expect_error(pclm(x, y, nlast, out.step = -1))
 expect_error(pclm(x, y, nlast, control = c(a = 1))) #****
 expect_error(pclm(x, y, nlast, control = list(lambda = c(0, 1))))
+expect_error(pclm(x, y, nlast, control = list(lambda = 1:5)))
 expect_error(pclm(x, y, nlast, control = list(lambda = -1)))
 expect_error(pclm(x, y, nlast, control = list(kr = -1.5)))
 expect_error(pclm(x, y, nlast, control = list(deg = -1.5)))

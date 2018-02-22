@@ -101,7 +101,7 @@ summary(M3) # not the smallest BIC here, but sometimes is not important.
 # Example 4 -----------------------
 # Grouped x & grouped offset (estimate death rates)
 M4 <- pclm(x, y, nlast, offset)
-plot(M4, type = "s")
+plot(M4)
 
 }
 \references{
