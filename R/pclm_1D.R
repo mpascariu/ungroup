@@ -188,6 +188,7 @@ print.summary.pclm <- function(x, ...) {
     cat("\nB-splines degree           :", L[3])
     cat("\nAIC                        :", AIC)
     cat("\nBIC                        :", BIC)
+    cat("\n")
   })
 }
 
