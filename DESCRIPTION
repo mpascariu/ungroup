@@ -7,7 +7,8 @@ Authors@R: c(
   person("Marius D.", "Pascariu", role = c("aut", "cre"), 
          email = "rpascariu@outlook.com"),
   person("Silvia", "Rizzi", role = "aut"),
-  person("Maciej", "Danko", role = "aut"))
+  person("Maciej", "Danko", role = "aut"),
+  person("Schoeley", "Jonas", role = "aut"))
 Maintainer: Marius D. Pascariu <rpascariu@outlook.com>
 Description: Versatile method for ungrouping histograms (binned count data) 
  assuming that counts are Poisson distributed and that the underlying sequence 
@@ -26,10 +27,15 @@ Description: Versatile method for ungrouping histograms (binned count data)
 License: GPL-3
 LazyData: TRUE
 Depends: R (>= 3.1.2)
+LinkingTo:
+  Rcpp,
+  RcppEigen
 Imports:
   MortalitySmooth,
   pbapply,
-  rgl
+  rgl,
+  Rcpp,
+  RcppEigen
 Suggests:
   MortalityLaws,
   knitr,
@@ -39,4 +45,3 @@ URL: https://github.com/mpascariu/pclm
 BugReports: https://github.com/mpascariu/pclm/issues
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
-
