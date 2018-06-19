@@ -5,11 +5,8 @@
 #' @name onAttach
 #' @keywords internal
 ".onAttach" <- function(lib, pkg){
-  packageStartupMessage("\nR Package  : ungroup",
-                        "\nName       : Penalized Composite Link Model for Efficient Estimation",
-                        "\n             of Smooth Distributions from Coarsely Binned Data",
-                        "\nAuthors    : M.D. Pascariu, S. Rizzi, and M.J. Danko",
-                        "\nLast Update: January 17, 2018")
+  packageStartupMessage("\nungroup    : PCLM for Estimation of Smooth Distributions from Coarsely Binned Data",
+                        "\nLast Update: June 19, 2018\n")
 }
 
 
@@ -69,11 +66,9 @@ pclm.input.check <- function(X, pclm.type) {
   
   # Validate input in pclm.control
   with(X$control, {
-    if (pclm.type == "1D") {
-      if (!(length(lambda) == 1)) stop("'lambda' must be of length 1", call. = F)
-    } else {
-      if (!(length(lambda) == 2)) stop("'lambda' must be of length 2", call. = F)
-    }
+    # if (!(length(lambda) == 1)) {
+    #   stop("'lambda' must be of length 1", call. = F)
+    # }
     if (!is.na(lambda) && lambda < 0) {
       stop("'lambda' must be a positive scalar", call. = F)
     }

@@ -7,6 +7,9 @@
 #' @importFrom graphics axis barplot legend lines plot abline par
 #' @import pbapply
 #' @import rgl
+#' @import Rcpp
+#' @import RcppEigen
+#' @useDynLib ungroup
 #' @name foo_imports
 #' @keywords internal
 #' 
@@ -40,5 +43,5 @@ print.ungroup.data <- function(x, ...) {
   cat(" Ages     : 0 - 110\n")
   cat(" Format   : List containg 2 data frames\n")
   cat(" Source   : Human Mortality Database\n")
-  cat(" Download : February 22, 2018")
+  cat(" Download : January 17, 2018")
 }

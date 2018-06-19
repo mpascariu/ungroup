@@ -4,7 +4,7 @@
 .RData
 .Ruserdata
 .DS_Store
-pclm.Rproj
+ungroup.Rproj
 
 # Example code in package build process
 *-Ex.R

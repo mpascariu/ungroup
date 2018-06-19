@@ -107,19 +107,8 @@ length(fitted(M2))
 For controlling the PCLM fitting process `pclm.control` provides several options. The list of arguments needs to be specified using the `control` argument. For example, if we want to optimize the smoothing parameters in order to obtain a fit characterized by the small `AIC` level we can write:
 
 ```{r, eval=FALSE}
-# Optimise smoothing parameters: lambda, kr and deg
+# Optimise smoothing parameter: lambda, kr and deg
 M3 <- pclm(x, y, nlast, control = list(lambda = NA, 
-                                       kr = NA, 
-                                       deg = NA, 
-                                       opt.method = 'AIC'))
-```
-
-If we want to optimize only the degree of the splines needed to create equally-spaced B-splines basis we can set `deg = NA` and assign a fixed value to the other smoothing parameters (`lambda` and `kr`).
-
-```{r, eval=FALSE}
-M4 <- pclm(x, y, nlast, control = list(lambda = 5, 
-                                       kr = 5, 
-                                       deg = NA, 
                                        opt.method = 'AIC'))
 ```
 

@@ -47,16 +47,8 @@ fitted(M2)[1:6]
 length(fitted(M2))
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  # Optimise smoothing parameters: lambda, kr and deg
+#  # Optimise smoothing parameter: lambda, kr and deg
 #  M3 <- pclm(x, y, nlast, control = list(lambda = NA,
-#                                         kr = NA,
-#                                         deg = NA,
-#                                         opt.method = 'AIC'))
-
-## ---- eval=FALSE---------------------------------------------------------
-#  M4 <- pclm(x, y, nlast, control = list(lambda = 5,
-#                                         kr = 5,
-#                                         deg = NA,
 #                                         opt.method = 'AIC'))
 
 ## ---- message=FALSE, results='hide'--------------------------------------

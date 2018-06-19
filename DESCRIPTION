@@ -2,12 +2,13 @@ Package: ungroup
 Type: Package
 Title: Penalized Composite Link Model for Efficient Estimation of 
  Smooth Distributions from Coarsely Binned Data
-Version: 0.8.4
+Version: 0.9.0
 Authors@R: c(
   person("Marius D.", "Pascariu", role = c("aut", "cre"), 
          email = "rpascariu@outlook.com"),
   person("Silvia", "Rizzi", role = "aut"),
-  person("Maciej", "Danko", role = "aut"))
+  person("Maciej", "Danko", role = "aut"),
+  person("Jonas", "Schoeley", role = "ctb"))
 Maintainer: Marius D. Pascariu <rpascariu@outlook.com>
 Description: Versatile method for ungrouping histograms (binned count data) 
  assuming that counts are Poisson distributed and that the underlying sequence 
@@ -29,7 +30,12 @@ Depends: R (>= 3.1.2)
 Imports:
   MortalitySmooth,
   pbapply,
-  rgl
+  rgl,
+  Rcpp,
+  RcppEigen
+LinkingTo:
+  Rcpp,
+  RcppEigen
 Suggests:
   MortalityLaws,
   knitr,

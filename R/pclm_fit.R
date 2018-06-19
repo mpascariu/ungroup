@@ -17,30 +17,30 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
   P   <- build_P_matrix(BM$BA, BM$BY, lambda, pclm.type) # penalty
   C   <- CM$C
   B   <- BM$B
+  sB  <- asSparseMat(B) # C++ code
   y_  <- as.vector(unlist(y))
   ny_ <- length(y_)
   
   # Perform the iterations
   eta <- B %*% rep(log(sum(y_) / ny_), times = ncol(B))
   mu  <- exp(eta)
-  muA <- c(C %*% mu)  # mu aggregated
+  muA <- c(C %*% mu)  
   d   <- 1000
-  
   for (it in 1:max.iter) {
-    W    <- C * ((1/muA) %*% t(mu))
-    z    <- (y_ - muA) + C %*% (mu * log(mu))
-    Q    <- t(W %*% B) # This is the line that slows down the algorithm in pclm2D
-    Qz   <- Q %*% z
+    W    <- (C * ((1/muA) %*% t(mu)))
+    z    <- (y_ - muA) + C %*% (mu * eta)
+    Q    <- SparseProd(asSparseMat(W) , sB)  # C++ code
+    Q    <- t(as.matrix(Q))
     QmQ  <- Q %*% (muA * t(Q))
     QmQP <- QmQ + P
-    eta  <- B %*% solve(QmQP, Qz)
+    eta  <- B %*% solve(QmQP, Q %*% z)
     mu   <- exp(eta)
     muA  <- c(C %*% mu)
     d0   <- d
-    d    <- mean(abs(y_ - muA)/y_)
-    dd   <- abs(d - d0)/d * 100
+    d    <- mean(abs(1 - muA/y_))
+    dd   <- abs(1 - d0/d) 
     if (show) setpb(pb, min(50 + it, 95))
-    if ((d < tol || dd < 0.1) && it >= 4) break
+    if ((d < tol || dd < 0.001) && it >= 4) break
   }
   if (show && it == max.iter) {
     warning("The maximal number of iteration has been reached. ",

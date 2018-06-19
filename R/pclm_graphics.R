@@ -69,9 +69,9 @@ plot.pclm <- function(x,
          xlab = xlab, ylab = ylab, ylim = ylim,
          axes = F)
     if (length(Y) == length(Ex)) {
-      lines(c(X, max(t1)), c(mx, max(mx)), type = "s", lwd = lwd, col = col[1])
+      lines(c(X, max(t1)), c(mx, max(mx)), type = "s", lwd = lwd + 1, col = col[1])
     }
-    # abline(v = c(X, max(t1)), col = "white", lwd = lwd)
+    abline(v = c(X, max(t1)), col = "white", lwd = lwd)
     lines(x = t2, y = c(lw, lw[N]), type = type, col = col[3])
     lines(x = t2, y = c(up, up[N]), type = type, col = col[3])
     lines(x = t2, y = c(fv, fv[N]), type = type, col = col[2], lwd = lwd)
