@@ -16,9 +16,9 @@ test_pclm_1D <- function(M) {
     expect_true(all(fv >= 0))
     expect_identical(length(fv), length(lower))
     expect_identical(length(upper), length(lower))
-    # if (is.null(M$input$offset)) {
-    #   expect_identical(round(sum(fv), 1), round(sum(M$input$y), 1))
-    # }
+    if (is.null(M$input$offset)) {
+      expect_identical(round(sum(fv), 1), round(sum(M$input$y), 1))
+    }
   })
 }
 
@@ -33,9 +33,9 @@ test_pclm_2D <- function(M) {
     expect_true(all(fv >= 0))
     expect_identical(dim(fv), dim(lower))
     expect_identical(dim(upper), dim(lower))
-    # if (is.null(M$input$offset)) { # Suspend this untill a solution is found.
-    #   expect_true(abs(sum(fv) - sum(M$input$y)) < 1)
-    # }
+    if (is.null(M$input$offset)) { # Suspend this untill a solution is found.
+      expect_true(abs(sum(fv) - sum(M$input$y)) < 1)
+    }
   })
 }
 

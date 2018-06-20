@@ -6,7 +6,7 @@
 #' @keywords internal
 ".onAttach" <- function(lib, pkg){
   packageStartupMessage("\nungroup    : PCLM for Estimation of Smooth Distributions from Coarsely Binned Data",
-                        "\nLast Update: June 19, 2018\n")
+                        "\nLast Update: June 20, 2018\n")
 }
 
 

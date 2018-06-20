@@ -58,7 +58,6 @@ SEXP pclmloop(const Eigen::MappedSparseMatrix<double> C,
   double dd;
   
   // iterate until fit is good or no further fit improvements or max iterations
-  using std::abs;
   for (int i = 0; i < maxiter; ++i) {
     W = C.cwiseProduct(muA.cwiseInverse() * mu.transpose());
     z = (y.array() - muA.array()) + (C * (mu.array()*(mu.array().log())).matrix()).array();
@@ -71,7 +70,7 @@ SEXP pclmloop(const Eigen::MappedSparseMatrix<double> C,
     muA = C * mu;
     dd = (((y.array()-muA.array())/y.array()).abs().mean())-d;
     d = d + dd;
-    dd = abs(dd)/d;
+    dd = std::abs(dd)/d;
     if((d < tol || dd < 0.001) && i >= 3) break;
   }
   
@@ -86,6 +85,7 @@ SEXP pclmloop(const Eigen::MappedSparseMatrix<double> C,
     Named("Q") = Q,
     Named("Qz") = Qz,
     Named("QmQ") = QmQ,
+    Named("QmQP") = QmQP,
     Named("eta") = eta,
     // fit info
     Named("d") = d,

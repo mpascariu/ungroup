@@ -27,7 +27,7 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
   # }
   # Regression diagnostics
   QmQ   <- XX$QmQ
-  QmQP  <- QmQ + P
+  QmQP  <- XX$QmQP
   muA   <- XX$muA
   mu    <- XX$mu
   eta   <- XX$eta
