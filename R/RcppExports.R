@@ -9,3 +9,7 @@ SparseProd <- function(inX, inY) {
     .Call('_ungroup_SparseProd', PACKAGE = 'ungroup', inX, inY)
 }
 
+pclmloop <- function(C, P, B, y, maxiter, tol) {
+    .Call('_ungroup_pclmloop', PACKAGE = 'ungroup', C, P, B, y, maxiter, tol)
+}
+

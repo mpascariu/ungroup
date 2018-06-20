@@ -16,37 +16,21 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
   BM  <- build_B_spline_basis(CM$gx, CM$gy, kr, deg, diff, pclm.type) # B-spline
   P   <- build_P_matrix(BM$BA, BM$BY, lambda, pclm.type) # penalty
   C   <- CM$C
+  Cs  <- asSparseMat(C)
   B   <- BM$B
-  sB  <- asSparseMat(B) # C++ code
   y_  <- as.vector(unlist(y))
   ny_ <- length(y_)
-  
-  # Perform the iterations
-  eta <- B %*% rep(log(sum(y_) / ny_), times = ncol(B))
-  mu  <- exp(eta)
-  muA <- c(C %*% mu)  
-  d   <- 1000
-  for (it in 1:max.iter) {
-    W    <- (C * ((1/muA) %*% t(mu)))
-    z    <- (y_ - muA) + C %*% (mu * eta)
-    Q    <- SparseProd(asSparseMat(W) , sB)  # C++ code
-    Q    <- t(as.matrix(Q))
-    QmQ  <- Q %*% (muA * t(Q))
-    QmQP <- QmQ + P
-    eta  <- B %*% solve(QmQP, Q %*% z)
-    mu   <- exp(eta)
-    muA  <- c(C %*% mu)
-    d0   <- d
-    d    <- mean(abs(1 - muA/y_))
-    dd   <- abs(1 - d0/d) 
-    if (show) setpb(pb, min(50 + it, 95))
-    if ((d < tol || dd < 0.001) && it >= 4) break
-  }
-  if (show && it == max.iter) {
-    warning("The maximal number of iteration has been reached. ",
-            "Maybe it is a good idea to increase 'max.iter'. ", call. = F)
-  }
+  XX  <- pclmloop(Cs, P, B, y_, max.iter, tol)
+  # if (show && XX$it == max.iter) {
+  #   warning("The maximal number of iteration has been reached. ",
+  #           "Maybe it is a good idea to increase 'max.iter'. ", call. = F)
+  # }
   # Regression diagnostics
+  QmQ   <- XX$QmQ
+  QmQP  <- QmQ + P
+  muA   <- XX$muA
+  mu    <- XX$mu
+  eta   <- XX$eta
   H     <- solve(QmQP, QmQ)
   trace <- sum(diag(H))
   y_[y_ == 0] <- 10^-4
@@ -55,7 +39,6 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
   BIC   <- dev + log(ny_) * trace
   fit   <- as.numeric(mu)
   out   <- as.list(environment())
-  if (show) {setpb(pb, 98); cat("                       ")}
   return(out)
 }
 
