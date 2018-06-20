@@ -2,13 +2,13 @@ Package: ungroup
 Type: Package
 Title: Penalized Composite Link Model for Efficient Estimation of 
  Smooth Distributions from Coarsely Binned Data
-Version: 0.9.0
+Version: 0.9.1
 Authors@R: c(
   person("Marius D.", "Pascariu", role = c("aut", "cre"), 
          email = "rpascariu@outlook.com"),
   person("Silvia", "Rizzi", role = "aut"),
-  person("Maciej", "Danko", role = "aut"),
-  person("Jonas", "Schoeley", role = "ctb"))
+  person("Jonas", "Schoeley", role = "aut"),
+  person("Maciej", "Danko", role = "aut"))
 Maintainer: Marius D. Pascariu <rpascariu@outlook.com>
 Description: Versatile method for ungrouping histograms (binned count data) 
  assuming that counts are Poisson distributed and that the underlying sequence 
