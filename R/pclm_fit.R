@@ -12,40 +12,24 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
                      lambda, kr, deg, diff, max.iter, tol, pclm.type){
   if (show) {pb = startpb(0, 100); setpb(pb, 50); cat("   Ungrouping data      ")}
   # Some preparations
-  CM  <- build_C_matrix(x, y, nlast, offset, out.step, pclm.type) # composition matrix
-  BM  <- build_B_spline_basis(CM$gx, CM$gy, kr, deg, diff, pclm.type) # B-spline
-  P   <- build_P_matrix(BM$BA, BM$BY, lambda, pclm.type) # penalty
-  C   <- CM$C
-  B   <- BM$B
-  sB  <- asSparseMat(B) # C++ code
-  y_  <- as.vector(unlist(y))
-  ny_ <- length(y_)
+  CM   <- build_C_matrix(x, y, nlast, offset, out.step, pclm.type) # composition matrix
+  BM   <- build_B_spline_basis(CM$gx, CM$gy, kr, deg, diff, pclm.type) # B-spline
+  P    <- build_P_matrix(BM$BA, BM$BY, lambda, pclm.type) # penalty
+  C    <- CM$C
+  B    <- BM$B
+  y_   <- as.vector(unlist(y))
+  ny_  <- length(y_)
+  XX   <- pclm_loop(asSparseMat(C), P, B, y_, max.iter, tol)
+  QmQ  <- XX$QmQ
+  QmQP <- XX$QmQP
+  muA  <- XX$muA
+  mu   <- XX$mu
+  eta  <- XX$eta
+  # if (show && XX$iterations == max.iter) {
+  #   warning("The maximal number of iteration has been reached. ",
+  #           "Maybe it is a good idea to increase 'max.iter'. ", call. = F)
+  # }
   
-  # Perform the iterations
-  eta <- B %*% rep(log(sum(y_) / ny_), times = ncol(B))
-  mu  <- exp(eta)
-  muA <- c(C %*% mu)  
-  d   <- 1000
-  for (it in 1:max.iter) {
-    W    <- (C * ((1/muA) %*% t(mu)))
-    z    <- (y_ - muA) + C %*% (mu * eta)
-    Q    <- SparseProd(asSparseMat(W) , sB)  # C++ code
-    Q    <- t(as.matrix(Q))
-    QmQ  <- Q %*% (muA * t(Q))
-    QmQP <- QmQ + P
-    eta  <- B %*% solve(QmQP, Q %*% z)
-    mu   <- exp(eta)
-    muA  <- c(C %*% mu)
-    d0   <- d
-    d    <- mean(abs(1 - muA/y_))
-    dd   <- abs(1 - d0/d) 
-    if (show) setpb(pb, min(50 + it, 95))
-    if ((d < tol || dd < 0.001) && it >= 4) break
-  }
-  if (show && it == max.iter) {
-    warning("The maximal number of iteration has been reached. ",
-            "Maybe it is a good idea to increase 'max.iter'. ", call. = F)
-  }
   # Regression diagnostics
   H     <- solve(QmQP, QmQ)
   trace <- sum(diag(H))
@@ -55,7 +39,6 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
   BIC   <- dev + log(ny_) * trace
   fit   <- as.numeric(mu)
   out   <- as.list(environment())
-  if (show) {setpb(pb, 98); cat("                       ")}
   return(out)
 }
 
@@ -68,7 +51,7 @@ pclm.confidence <- function(X, ci.level, pclm.type) {
     H0    <- solve(QmQP)       # vcov matrix Bayesian approach
     H1    <- H0 %*% QmQ %*% H0 # vcov matrix sandwich estimator
     s.e.  <- sqrt(diag(B %*% H1 %*% t(B)))
-    psi2  <- dev / (ny_ - trace) # overdispersion
+    # psi2  <- dev / (ny_ - trace) # overdispersion
     # Confidence intervals
     qn    <- qnorm(1 - ci.level/2)
     lower <- as.numeric(exp(eta - qn*s.e.))

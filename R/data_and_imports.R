@@ -7,7 +7,7 @@
 #' @importFrom graphics axis barplot legend lines plot abline par
 #' @import pbapply
 #' @import rgl
-#' @import Rcpp
+#' @importFrom Rcpp sourceCpp
 #' @import RcppEigen
 #' @useDynLib ungroup
 #' @name foo_imports

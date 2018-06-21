@@ -7,32 +7,36 @@
 using namespace Rcpp;
 
 // asSparseMat
-SEXP asSparseMat(SEXP inX);
-RcppExport SEXP _ungroup_asSparseMat(SEXP inXSEXP) {
+SEXP asSparseMat(const Eigen::Map<Eigen::MatrixXd> X);
+RcppExport SEXP _ungroup_asSparseMat(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type inX(inXSEXP);
-    rcpp_result_gen = Rcpp::wrap(asSparseMat(inX));
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(asSparseMat(X));
     return rcpp_result_gen;
 END_RCPP
 }
-// SparseProd
-SEXP SparseProd(SEXP inX, SEXP inY);
-RcppExport SEXP _ungroup_SparseProd(SEXP inXSEXP, SEXP inYSEXP) {
+// pclm_loop
+SEXP pclm_loop(const Eigen::MappedSparseMatrix<double> C, const Eigen::Map<Eigen::MatrixXd> P, const Eigen::Map<Eigen::MatrixXd> B, const Eigen::Map<Eigen::VectorXd> y, double maxiter, double tol);
+RcppExport SEXP _ungroup_pclm_loop(SEXP CSEXP, SEXP PSEXP, SEXP BSEXP, SEXP ySEXP, SEXP maxiterSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type inX(inXSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type inY(inYSEXP);
-    rcpp_result_gen = Rcpp::wrap(SparseProd(inX, inY));
+    Rcpp::traits::input_parameter< const Eigen::MappedSparseMatrix<double> >::type C(CSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type P(PSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type maxiter(maxiterSEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(pclm_loop(C, P, B, y, maxiter, tol));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ungroup_asSparseMat", (DL_FUNC) &_ungroup_asSparseMat, 1},
-    {"_ungroup_SparseProd", (DL_FUNC) &_ungroup_SparseProd, 2},
+    {"_ungroup_pclm_loop", (DL_FUNC) &_ungroup_pclm_loop, 6},
     {NULL, NULL, 0}
 };
 

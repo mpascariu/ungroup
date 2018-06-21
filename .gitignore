@@ -5,6 +5,7 @@
 .Ruserdata
 .DS_Store
 ungroup.Rproj
+ungroupJS.Rproj
 
 # Example code in package build process
 *-Ex.R
