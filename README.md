@@ -26,12 +26,20 @@ You can track (and contribute to) the development of `ungroup` at https://github
 2. Make sure you have a working development environment.
     * **Windows**: Install [Rtools](https://CRAN.R-project.org/bin/windows/Rtools/).
     * **Mac**: Install `Xcode` from the Mac App Store.
-    * **Linux**: Install a compiler and various development libraries (details vary across different flavors of Linux).
+    * **Linux**: Install a compiler and various development libraries (details vary across different flavours of Linux).
 
 3. Install the development version of `ungroup`.
 
    ```R
    devtools::install_github("mpascariu/ungroup", dependencies = TRUE)
+   ```
+
+## Known Issue
+For some of you the installation will not quite work because of problems related to `rgl` package that `ungroup` depends on. If this is the case, try to install the `rgl` from CRAN first and then install `ungroup` following the instructions listed above. 
+
+   ```R
+   # Install rgl package 
+   install.packages("rgl")
    ```
 
 ## References
