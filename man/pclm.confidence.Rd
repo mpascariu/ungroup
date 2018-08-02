@@ -2,7 +2,7 @@
 % Please edit documentation in R/pclm_fit.R
 \name{pclm.confidence}
 \alias{pclm.confidence}
-\title{Compute Standard Errors and Confidence Intervals}
+\title{Compute Confidence Intervals}
 \usage{
 pclm.confidence(X, ci.level, pclm.type)
 }
@@ -13,6 +13,6 @@ pclm.confidence(X, ci.level, pclm.type)
 Default: \code{0.05}.}
 }
 \description{
-Compute Standard Errors and Confidence Intervals
+Compute Confidence Intervals
 }
 \keyword{internal}

@@ -6,7 +6,7 @@
 \title{Test Dataset in the Package}
 \format{An object of class \code{ungroup.data} of length 2.}
 \source{
-\href{http://www.mortality.org}{Human Mortality Database}
+\href{https://www.mortality.org}{Human Mortality Database}
 }
 \usage{
 ungroup.data
@@ -16,7 +16,7 @@ Dataset containing death counts (Dx) and exposures (Ex)  by age for a
 certain population between 1980 and 2014. The data-set is provided for 
 testing purposes only and might be altered and outdated. Download actual 
 demographic data free of charge from HMD. Once a username and a password is 
-created on the \href{http://www.mortality.org}{website} the 
+created on the \href{https://www.mortality.org}{website} the 
 \href{https://CRAN.R-project.org/package=MortalityLaws}{MortalityLaws} 
 R package can be used to extract data in R format.
 }
