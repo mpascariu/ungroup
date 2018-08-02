@@ -20,4 +20,7 @@ created on the \href{https://www.mortality.org}{website} the
 \href{https://CRAN.R-project.org/package=MortalityLaws}{MortalityLaws} 
 R package can be used to extract data in R format.
 }
+\seealso{
+\code{\link[MortalityLaws]{ReadHMD}}
+}
 \keyword{datasets}

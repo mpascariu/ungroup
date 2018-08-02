@@ -25,6 +25,7 @@ NULL
 #' \href{https://CRAN.R-project.org/package=MortalityLaws}{MortalityLaws} 
 #' R package can be used to extract data in R format.
 #' @source \href{https://www.mortality.org}{Human Mortality Database}
+#' @seealso \code{\link[MortalityLaws]{ReadHMD}}
 #' @name ungroup.data 
 #' 
 "ungroup.data"
