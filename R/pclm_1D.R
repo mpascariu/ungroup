@@ -120,15 +120,17 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, show,
                               lambda = Par[1], kr = Par[2], deg = Par[3],
                               diff, max.iter, tol, pclm.type = "1D"))
-  cn    <- c("fit", "lower", "upper", "s.e.")
-  M[cn] <- pclm.confidence(M, ci.level, pclm.type = "1D")
+  SE    <- with(M, compute_standard_errors(B, QmQ, QmQP))
+  cn    <- c("fit", "lower", "upper", "SE")
+  M[cn] <- with(M, pclm.confidence(fit, out.step, y, SE, ci.level, 
+                                   pclm.type = "1D", offset))
   M     <- delete.artificial.bin(M) # ***
   G     <- map.bins(x, nlast, out.step)
   dn    <- G$output$names
-  names(M$fit) = names(M$lower) = names(M$upper) = names(M$s.e.) <- dn
+  names(M$fit) = names(M$lower) = names(M$upper) = names(M$SE) <- dn
   
   # Output
-  gof <- list(AIC = M$AIC, BIC = M$BIC, standard.errors = M$s.e.)
+  gof <- list(AIC = M$AIC, BIC = M$BIC, standard.errors = M$SE)
   ci  <- list(upper = M$upper, lower = M$lower)
   out <- list(input = input, fitted = M$fit, ci = ci, goodness.of.fit = gof,
               smoothPar = Par, bin.definition = G)
@@ -152,6 +154,7 @@ print.pclm <- function(x, ...){
   cat("\nNumber of input groups  :", length(x$input$x))
   cat("\nNumber of fitted values :", length(x$fitted))
   cat("\nLength of estimate bins :", x$input$out.step, "\n")
+  cat("\n")
 }
 
 #' Summary for pclm method
@@ -188,6 +191,7 @@ print.summary.pclm <- function(x, ...) {
     cat("\nB-splines degree           :", L[3])
     cat("\nAIC                        :", AIC)
     cat("\nBIC                        :", BIC)
+    cat("\n")
   })
 }
 

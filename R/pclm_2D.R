@@ -37,14 +37,12 @@
 #' # set lambda = c(NA, NA):
 #' 
 #' P1 <- pclm2D(x, y, nlast, control = list(lambda = c(NA, NA)))
-#' }
 #' 
 #' # Example 2 ---------------------- 
 #' # Ungroup and build a mortality surface
 #' P2 <- pclm2D(x, y, nlast, offset)
 #' summary(P2)
 #' 
-#' \dontrun{
 #' plot(P2)                      # plot
 #' library(rgl)
 #' snapshot3d("plotP2.jpeg")     # save the plot in jpeg format
@@ -83,15 +81,17 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
   M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, show,
                               lambda = Par[1:2], kr = Par[3], deg = Par[4], 
                               diff, max.iter, tol, pclm.type = "2D"))
-  cn    <- c("fit", "lower", "upper", "s.e.")
-  M[cn] <- pclm.confidence(M, ci.level, pclm.type = "2D")
+  SE    <- with(M, compute_standard_errors(B, QmQ, QmQP))
+  cn    <- c("fit", "lower", "upper", "SE")
+  M[cn] <- with(M, pclm.confidence(fit, out.step, y, SE, ci.level, 
+                                   pclm.type = "2D", offset))
   M     <- delete.artificial.bin(M) # ***
   G     <- map.bins(x, nlast, out.step)
   dn    <- list(G$output$names, colnames(y))
-  dimnames(M$fit) = dimnames(M$lower) = dimnames(M$upper) = dimnames(M$s.e.) <- dn
+  dimnames(M$fit) = dimnames(M$lower) = dimnames(M$upper) = dimnames(M$SE) <- dn
   
   # Output
-  gof <- list(AIC = M$AIC, BIC = M$BIC, standard.errors = M$s.e.)
+  gof <- list(AIC = M$AIC, BIC = M$BIC, standard.errors = M$SE)
   ci  <- list(upper = M$upper, lower = M$lower)
   out <- list(input = input, fitted = M$fit, ci = ci, goodness.of.fit = gof,
               smoothPar = Par, bin.definition = G)
@@ -115,6 +115,7 @@ print.pclm2D <- function(x, ...){
   cat("\nNumber of input  groups    :", nrow(x$input$y), "x", ncol(x$input$y))
   cat("\nNumber of fitted values    :", nrow(x$fitted), "x", ncol(x$fitted))
   cat("\nDimension of estimate bins :", x$input$out.step, "x 1\n")
+  cat("\n")
 }
 
 #' Summary method for pclm2D
@@ -153,6 +154,7 @@ print.summary.pclm2D <- function(x, ...) {
     cat("\nB-splines degree           :", L[4])
     cat("\nAIC                        :", AIC)
     cat("\nBIC                        :", BIC)
+    cat("\n")
   })
 }
 

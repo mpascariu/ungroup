@@ -1,14 +1,14 @@
 
 #' Imports
 #' 
+#' @import pbapply
+#' @import RcppEigen
+#' @importFrom Rcpp sourceCpp
 #' @importFrom stats optimise qnorm quantile fitted aggregate nlminb
 #' @importFrom utils tail
 #' @importFrom MortalitySmooth MortSmooth_bbase
 #' @importFrom graphics axis barplot legend lines plot abline par
-#' @import pbapply
-#' @import rgl
-#' @importFrom Rcpp sourceCpp
-#' @import RcppEigen
+#' @importFrom rgl axes3d box3d open3d surface3d title3d
 #' @useDynLib ungroup
 #' @name foo_imports
 #' @keywords internal

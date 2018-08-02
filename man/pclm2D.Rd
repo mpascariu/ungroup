@@ -86,14 +86,12 @@ summary(P1)
 # set lambda = c(NA, NA):
 
 P1 <- pclm2D(x, y, nlast, control = list(lambda = c(NA, NA)))
-}
 
 # Example 2 ---------------------- 
 # Ungroup and build a mortality surface
 P2 <- pclm2D(x, y, nlast, offset)
 summary(P2)
 
-\dontrun{
 plot(P2)                      # plot
 library(rgl)
 snapshot3d("plotP2.jpeg")     # save the plot in jpeg format

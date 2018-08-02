@@ -5,7 +5,7 @@
 \title{Auxiliary for Controlling \code{pclm} Fitting}
 \usage{
 pclm.control(lambda     = NA,
-             kr         = 6,
+             kr         = 2,
              deg        = 3,
              int.lambda = c(0.1, 1e+5),
              diff       = 2,
