@@ -7,7 +7,7 @@
 delete.artificial.bin(M)
 }
 \arguments{
-\item{M}{A pclm.default object}
+\item{M}{A pclm.fit object}
 }
 \description{
 Delete from results the last group added artificially in pclm and pclm2D

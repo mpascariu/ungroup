@@ -94,3 +94,47 @@ pclm.confidence.dx <- function(X) {
     return(out)
   })
 }
+
+
+#' PCLM Akaike Information Criterion
+#' 
+#' @inherit stats::AIC description params details return references
+#' @keywords internal
+#' @export
+AIC.pclm <- function(object, ..., k = 2) {
+  X <- if (any(ls(object) == "deep"))  object$deep else object
+  with(X, {
+    aic <- dev + k * trace
+    return(aic)  
+  })
+}
+
+#' PCLM-2D Akaike Information Criterion
+#' 
+#' @inherit AIC.pclm description params details return references
+#' @keywords internal
+#' @export
+AIC.pclm2D <- function(object, ..., k = 2) AIC.pclm(object, ..., k)
+
+
+#' PCLM Bayes Information Criterion
+#' 
+#' @inherit AIC.pclm description params details return references
+#' @keywords internal
+#' @export
+BIC.pclm <- function(object, ...) {
+  X <- if (any(ls(object) == "deep"))  object$deep else object
+  with(X, {
+    bic <- dev + log(ny_) * trace
+    return(bic)
+  })
+}
+
+#' PCLM-2D Akaike Information Criterion
+#' 
+#' @inherit AIC.pclm description params details return references
+#' @keywords internal
+#' @export
+BIC.pclm2D <- function(object, ..., k = 2) BIC.pclm(object, ..., k)
+
+

@@ -7,7 +7,7 @@
 #'              deg        = 3,
 #'              int.lambda = c(0.1, 1e+5),
 #'              diff       = 2,
-#'              opt.method = "BIC",
+#'              opt.method = c("BIC", "AIC"),
 #'              max.iter   = 1e+3,
 #'              tol        = 1e-3)
 #' @param lambda Smoothing parameter to be used in pclm estimation.
@@ -25,17 +25,21 @@
 #' @param max.iter Maximal number of iterations used in fitting procedure.
 #' @param tol Relative tolerance in PCLM fitting procedure. Default: 0.1\% i.e. 
 #' the estimated aggregate bins should be in the 0.1\% error margin.
-#' @return List with control parameters.
 #' @seealso \code{\link{pclm}}
+#' @return A list with exactly eight control parameters.
+#' @examples 
+#' pclm.control()
+#' @keywords internal
 #' @export
 pclm.control <- function(lambda = NA,
                          kr = 2,
                          deg = 3,
                          int.lambda = c(0.1, 1e+5),
                          diff = 2,
-                         opt.method = "BIC",
+                         opt.method = c("BIC", "AIC"),
                          max.iter = 1e+3, 
                          tol = 1e-3){
+  opt.method <- match.arg(opt.method)
   out <- c(as.list(environment()))
   return(out)
 }
@@ -49,20 +53,24 @@ pclm.control <- function(lambda = NA,
 #'                deg        = 3,
 #'                int.lambda = c(0.1, 1e+3),
 #'                diff       = 2,
-#'                opt.method = "BIC",
+#'                opt.method = c("BIC", "AIC"),
 #'                max.iter   = 1e+3,
 #'                tol        = 1e-3)
-#' @inheritParams pclm.control
 #' @seealso \code{\link{pclm2D}}
+#' @inherit pclm.control params return
+#' @examples 
+#' pclm2D.control()
+#' @keywords internal
 #' @export
 pclm2D.control <- function(lambda = c(1, 1),
                            kr = 7,
                            deg = 3,
                            int.lambda = c(0.1, 1e+3),
                            diff = 2,
-                           opt.method = "BIC",
+                           opt.method = c("BIC", "AIC"),
                            max.iter = 1e+3, 
                            tol = 1e-3){
+  opt.method <- match.arg(opt.method)
   out <- c(as.list(environment()))
   return(out)
 }

@@ -11,6 +11,7 @@
 #' @export
 pclm.fit <- function(x, y, nlast, offset, out.step, show,
                      lambda, kr, deg, diff, max.iter, tol, pclm.type){
+  
   if (show) {pb = startpb(0, 100); setpb(pb, 50); cat("   Ungrouping data      ")}
   # Some preparations
   CM   <- build_C_matrix(x, y, nlast, offset, out.step, pclm.type) # composition matrix
@@ -35,6 +36,7 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
   out   <- as.list(environment())
   return(out)
 }
+
 
 
 #' Build Composition Matrices
@@ -137,7 +139,7 @@ create.artificial.bin <- function(i, vy = 1, vo = 1.01){
 
 
 #' Delete from results the last group added artificially in pclm and pclm2D 
-#' @param M A pclm.default object
+#' @param M A pclm.fit object
 #' @keywords internal
 delete.artificial.bin <- function(M){
   n <- 1
@@ -151,7 +153,7 @@ delete.artificial.bin <- function(M){
   f2 <- function(x) { # method 2 - delete groups
     rev(rev(x)[-N])
   }
-  L = M$pclm.type == "1D"
+  L <- class(M$fit) == "numeric"
   M$fit   <- with(M, if (L) f1(fit)   else apply(fit, 2, FUN = f1))
   M$lower <- with(M, if (L) f1(lower) else apply(lower, 2, FUN = f1))
   M$upper <- with(M, if (L) f1(upper) else apply(upper, 2, FUN = f1))

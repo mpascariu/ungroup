@@ -32,7 +32,7 @@ You can track (and contribute to) the development of `ungroup` at https://github
 3. Install the development version of `ungroup`.
 
    ```R
-   devtools::install_github("mpascariu/ungroup", dependencies = TRUE)
+   devtools::install_github("mpascariu/ungroup")
    ```
 
 ## Known Issue

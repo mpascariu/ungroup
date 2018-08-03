@@ -30,7 +30,21 @@ Default: \code{TRUE}.}
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}
 
-\item{control}{List with additional parameters. See \code{\link{pclm.control}}.}
+\item{control}{List with additional parameters: \itemize{
+\item{\code{lambda}} -- Smoothing parameter to be used in pclm estimation.
+If \code{lambda = NA} an algorithm will find the optimal values.
+\item{kr} -- Knot ratio. Number of internal intervals used for defining 
+1 knot in B-spline basis construction. See \code{\link{MortSmooth_bbase}}.
+\item{\code{deg}} -- Degree of the splines needed to create equally-spaced 
+B-splines basis over an abscissa of data.
+\item{\code{int.lambda}} -- If \code{lambda} is optimized an interval to be 
+searched needs to be specified. Format: vector containing the end-points.
+\item{\code{diff}} -- An integer indicating the order of differences of the 
+components of PCLM coefficients.
+\item{\code{opt.method}} -- Selection criterion of the model.
+Possible values are \code{"AIC"} and \code{"BIC"}.
+\item{\code{max.iter}} -- Maximal number of iterations used in fitting procedure.
+\item{\code{tol}} -- Relative tolerance in PCLM fitting procedure.}}
 }
 \description{
 Optimize Smoothing Parameters

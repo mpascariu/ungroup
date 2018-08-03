@@ -9,7 +9,7 @@ pclm2D.control(lambda     = c(1, 1),
                deg        = 3,
                int.lambda = c(0.1, 1e+3),
                diff       = 2,
-               opt.method = "BIC",
+               opt.method = c("BIC", "AIC"),
                max.iter   = 1e+3,
                tol        = 1e-3)
 }
@@ -37,9 +37,16 @@ Possible values are \code{"AIC"} and \code{"BIC"}. Default: \code{"BIC"}.}
 \item{tol}{Relative tolerance in PCLM fitting procedure. Default: 0.1\% i.e. 
 the estimated aggregate bins should be in the 0.1\% error margin.}
 }
+\value{
+A list with exactly eight control parameters.
+}
 \description{
 Auxiliary for Controlling \code{pclm2D} Fitting
+}
+\examples{
+pclm2D.control()
 }
 \seealso{
 \code{\link{pclm2D}}
 }
+\keyword{internal}

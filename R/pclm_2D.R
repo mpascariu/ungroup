@@ -11,7 +11,7 @@
 #' should be equal with the length of \code{x}.
 #' @inheritParams pclm
 #' @inherit pclm return
-#' @seealso \code{\link{plot.pclm2D}}
+#' @seealso \code{\link{pclm2D.control}}, \code{\link{plot.pclm2D}}.
 #' @examples 
 #' # Input data
 #' Dx <- ungroup.data$Dx
@@ -55,7 +55,7 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
   # Check input
   control     <- do.call("pclm2D.control", control)
   input       <- as.list(environment())
-                 pclm.input.check(input, "2D")
+  pclm.input.check(input, "2D")
   input$nlast <- validate.nlast(x, nlast, out.step)
   
   # Preliminary; start the clock
@@ -73,7 +73,6 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
   
   # If smoothing parameters are not provided in input, find them automatically.
   if (any(is.na(Par))) { 
-    # IF 'out.step < 1' the algorithm can becomes slow (several minutes slow).
     Par <- optimize_par2D(I$x, I$y, I$nlast, I$offset, show, out.step, control)
   }
   
@@ -91,7 +90,7 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
   dimnames(M$fit) = dimnames(M$lower) = dimnames(M$upper) = dimnames(M$SE) <- dn
   
   # Output
-  gof <- list(AIC = M$AIC, BIC = M$BIC, standard.errors = M$SE)
+  gof <- list(AIC = AIC.pclm(M), BIC = BIC.pclm(M), standard.errors = M$SE)
   ci  <- list(upper = M$upper, lower = M$lower)
   out <- list(input = input, fitted = M$fit, ci = ci, goodness.of.fit = gof,
               smoothPar = Par, bin.definition = G)

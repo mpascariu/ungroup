@@ -20,7 +20,7 @@ optimize_par2D <- function(x, y, nlast, offset, show, out.step, control) {
       # print(round(c(L = L, AIC = out), 3))
       return(out)
     }
-
+    
     # Find lambda (continuos)
     if (any(is.na(lambda))) { 
       if (show) {setpb(pb, 40); cat("   Optimizing lambda  ")}
@@ -47,8 +47,8 @@ optimize_par2D <- function(x, y, nlast, offset, show, out.step, control) {
     }
     if (Par[1] == int.lambda[2]) {
       warning(paste0("'lambda' has reached the upper limit of ", int.lambda[2],
-                    ". Maybe it is a good idea to extend interval. ",
-                    "See 'int.lambda' argument in 'pclm2D.control'."), call. = F)
+                     ". Maybe it is a good idea to extend interval. ",
+                     "See 'int.lambda' argument in 'pclm2D.control'."), call. = F)
     } 
     return(Par)
   })
@@ -69,7 +69,7 @@ optimize_par1D <- function(x, y, nlast, offset, show, out.step, control) {
                pclm.type = "1D")[[paste(opt.method)]]
       # print(c(L = L, opt = opt))
     }
- 
+    
     # Find lambda (continuos)
     if (is.na(lambda)) { 
       if (show) {setpb(pb, 40); cat("   Optimizing lambda  ")}
@@ -84,11 +84,3 @@ optimize_par1D <- function(x, y, nlast, offset, show, out.step, control) {
     return(Par)
   })
 }
-
-
-
-
-
-
-
-

@@ -4,7 +4,7 @@
 #' @import pbapply
 #' @import RcppEigen
 #' @importFrom Rcpp sourceCpp
-#' @importFrom stats optimise qnorm quantile fitted aggregate nlminb
+#' @importFrom stats optimise qnorm quantile fitted aggregate nlminb AIC BIC
 #' @importFrom utils tail
 #' @importFrom MortalitySmooth MortSmooth_bbase
 #' @importFrom graphics axis barplot legend lines plot abline par

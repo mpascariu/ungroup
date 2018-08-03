@@ -9,7 +9,7 @@ pclm.control(lambda     = NA,
              deg        = 3,
              int.lambda = c(0.1, 1e+5),
              diff       = 2,
-             opt.method = "BIC",
+             opt.method = c("BIC", "AIC"),
              max.iter   = 1e+3,
              tol        = 1e-3)
 }
@@ -38,11 +38,15 @@ Possible values are \code{"AIC"} and \code{"BIC"}. Default: \code{"BIC"}.}
 the estimated aggregate bins should be in the 0.1\% error margin.}
 }
 \value{
-List with control parameters.
+A list with exactly eight control parameters.
 }
 \description{
 Auxiliary for Controlling \code{pclm} Fitting
 }
+\examples{
+pclm.control()
+}
 \seealso{
 \code{\link{pclm}}
 }
+\keyword{internal}

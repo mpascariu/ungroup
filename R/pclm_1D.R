@@ -28,7 +28,22 @@
 #' Default: \code{0.05}.
 #' @param out.step Length of estimated intervals in output. 
 #' Values between 0.1 and 1 are accepted. Default: 1.
-#' @param control List with additional parameters. See \code{\link{pclm.control}}.
+#' @param control List with additional parameters: \itemize{
+#'   \item{\code{lambda}} -- Smoothing parameter to be used in pclm estimation.
+#'   If \code{lambda = NA} an algorithm will find the optimal values.
+#'   \item{kr} -- Knot ratio. Number of internal intervals used for defining 
+#'   1 knot in B-spline basis construction. See \code{\link{MortSmooth_bbase}}.
+#'   \item{\code{deg}} -- Degree of the splines needed to create equally-spaced 
+#'   B-splines basis over an abscissa of data.
+#'   \item{\code{int.lambda}} -- If \code{lambda} is optimized an interval to be 
+#'   searched needs to be specified. Format: vector containing the end-points.
+#'   \item{\code{diff}} -- An integer indicating the order of differences of the 
+#'   components of PCLM coefficients.
+#'   \item{\code{opt.method}} -- Selection criterion of the model.
+#'   Possible values are \code{"AIC"} and \code{"BIC"}.
+#'   \item{\code{max.iter}} -- Maximal number of iterations used in fitting procedure.
+#'   \item{\code{tol}} -- Relative tolerance in PCLM fitting procedure.}
+#' 
 #' @return The output is a list with the following components:
 #' @return \item{input}{ A list with arguments provided in input. Saved for convenience.}
 #' @return \item{fitted}{ The fitted values of the PCLM model.}
@@ -39,9 +54,11 @@
 #' and \code{deg}.}
 #' @return \item{bins.definition}{ Additional values to identify the bins limits and 
 #' location in input and output objects.}
+#' @return \item{deep}{ A list of objects created in the fitting process. Useful 
+#' in diagnosis of possible issues.}
 #' @return \item{call}{ An unevaluated function call, that is, an unevaluated 
 #' expression which consists of the named function applied to the given arguments.}
-#' @seealso \code{\link{pclm2D}}
+#' @seealso \code{\link{pclm.control}}, \code{\link{plot.pclm}}.
 #' @references
 #' \enumerate{
 #' \item{Rizzi S, Gampe J, Eilers PHC. \href{https://doi.org/10.1093/aje/kwv020}{
@@ -95,7 +112,7 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   # Check input
   control     <- do.call("pclm.control", control)
   input       <- c(as.list(environment())) # save all the input for later use
-                 pclm.input.check(input, "1D")
+  pclm.input.check(input, "1D")
   input$nlast <- validate.nlast(x, nlast, out.step)
   
   # Preliminary; start the clock
@@ -130,7 +147,7 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   names(M$fit) = names(M$lower) = names(M$upper) = names(M$SE) <- dn
   
   # Output
-  gof <- list(AIC = M$AIC, BIC = M$BIC, standard.errors = M$SE)
+  gof <- list(AIC = AIC.pclm(M), BIC = BIC.pclm(M), standard.errors = M$SE)
   ci  <- list(upper = M$upper, lower = M$lower)
   out <- list(input = input, fitted = M$fit, ci = ci, goodness.of.fit = gof,
               smoothPar = Par, bin.definition = G)
@@ -139,7 +156,6 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   if (show) setpb(pb, 100)
   return(out)  
 }
-
 
 # ----------------------------------------------
 
