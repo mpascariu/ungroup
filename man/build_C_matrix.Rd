@@ -16,8 +16,8 @@ For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 \item{nlast}{Length of the last interval. In the example above \code{nlast} would be 5.}
 
 \item{offset}{Optional offset term to calculate smooth mortality rates. 
-A vector of the same length as x and y. See \emph{Rizzi et al.(2015)} for 
-further details.}
+A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
+for further details.}
 
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}

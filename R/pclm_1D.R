@@ -13,15 +13,15 @@
 #' maximizing a penalized likelihood. This maximization is performed efficiently 
 #' by a version of the iteratively reweighted least-squares algorithm. Optimal 
 #' values of the smoothing parameter are chosen by minimizing Bayesian or 
-#' Akaike's Information Criterion.
+#' Akaike's Information Criterion.\insertNoCite{*}{ungroup}
 #' @param x Vector containing the starting values of the input intervals/bins.
 #' For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 #' \code{x} will be defined by the vector: \code{c(0, 5, 10)}.
 #' @param y Vector with counts to be ungrouped. It must have the same dimension as \code{x}.
 #' @param nlast Length of the last interval. In the example above \code{nlast} would be 5.
 #' @param offset Optional offset term to calculate smooth mortality rates. 
-#' A vector of the same length as x and y. See \emph{Rizzi et al.(2015)} for 
-#' further details.
+#' A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
+#' for further details.
 #' @param show Logical value. Indicates whether a progress bar should be shown or not.
 #' Default: \code{TRUE}.
 #' @param ci.level Level of significance for computing confidence intervals. 
@@ -59,18 +59,7 @@
 #' @return \item{call}{ An unevaluated function call, that is, an unevaluated 
 #' expression which consists of the named function applied to the given arguments.}
 #' @seealso \code{\link{pclm.control}}, \code{\link{plot.pclm}}.
-#' @references
-#' \enumerate{
-#' \item{Rizzi S, Gampe J, Eilers PHC. \href{https://doi.org/10.1093/aje/kwv020}{
-#' Efficient estimation of smooth distributions from coarsely grouped data.} 
-#' American Journal of Epidemiology, Volume 182, Issue 2, 15 July 2015, Pages 138-147.}
-#' \item{Rizzi S, Thinggaard M, Engholm G, et al. \href{https://doi.org/10.1186/s12874-016-0157-8}{
-#' Comparison of non-parametric methods for ungrouping coarsely aggregated data.} 
-#' BMC Medical Research Methodology. 2016;16:59.}
-#' \item{Eilers PHC. \href{https://doi.org/10.1177/1471082X0700700302}{
-#' Ill-posed problems with counts, the composite link model and penalized 
-#' likelihood.} Statistical Modelling, Volume 7, Issue 3, 1 October 2007, Pages 239-254.}
-#' }
+#' @references \insertAllCited{}
 #' @examples
 #' # Data  
 #' x <- c(0, 1, seq(5, 85, by = 5))

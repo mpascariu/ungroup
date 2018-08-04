@@ -6,13 +6,13 @@
 #' @keywords internal
 ".onAttach" <- function(lib, pkg){
   packageStartupMessage("\nungroup    : PCLM for Estimation of Smooth Distributions from Coarsely Binned Data",
-                        "\nLast Update: August 4, 2018\n")
+                        "\nLast Update: August 5, 2018\n")
 }
 
 
 #' Imports
 #' 
-#' @import pbapply
+#' @import pbapply Rdpack
 #' @import RcppEigen
 #' @importFrom Rcpp sourceCpp
 #' @importFrom stats optimise qnorm quantile fitted aggregate nlminb AIC BIC

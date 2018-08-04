@@ -2,6 +2,10 @@
 library(knitr)
 opts_chunk$set(collapse = TRUE)
 
+library(RefManageR)
+bib <- ReadBib(system.file("REFERENCES.bib", package = "ungroup"), check = "warn")
+BibOptions(check.entries = "warn", style = "latex", bib.style = "authoryear")
+
 ## ------------------------------------------------------------------------
 # Load the package
 library(ungroup)
@@ -56,4 +60,7 @@ M5 <- pclm(x, y, nlast, offset)
 
 ## ---- fig.align='center', fig.asp=0.8, out.width = '60%'-----------------
 plot(M5, type = "s")
+
+## ----results = "asis", echo = FALSE--------------------------------------
+PrintBibliography(bib)
 

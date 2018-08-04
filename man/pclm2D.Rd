@@ -18,8 +18,8 @@ should be equal with the length of \code{x}.}
 \item{nlast}{Length of the last interval. In the example above \code{nlast} would be 5.}
 
 \item{offset}{Optional offset term to calculate smooth mortality rates. 
-A vector of the same length as x and y. See \emph{Rizzi et al.(2015)} for 
-further details.}
+A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
+for further details.}
 
 \item{show}{Logical value. Indicates whether a progress bar should be shown or not.
 Default: \code{TRUE}.}

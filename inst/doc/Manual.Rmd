@@ -1,5 +1,5 @@
 ---
-title: "pclm User Manual"
+title: "ungroup User Manual"
 author: "Marius D. Pascariu, Silvia Rizzi and Maciej J. Danko"
 date: "December 8, 2017"
 output: 
@@ -21,14 +21,18 @@ vignette: >
 ```{r setup, include=FALSE}
 library(knitr)
 opts_chunk$set(collapse = TRUE)
+
+library(RefManageR)
+bib <- ReadBib(system.file("REFERENCES.bib", package = "ungroup"), check = "warn")
+BibOptions(check.entries = "warn", style = "latex", bib.style = "authoryear")
 ```
 
 # Abstract
 
-The `pclm` R package introduces a versatile method for ungrouping histograms (binned count data) assuming that counts are Poisson distributed and that the underlying sequence on a fine grid to be estimated is smooth. The method is based on the composite link model and estimation is achieved by maximizing a penalized likelihood. Smooth detailed sequences of counts and rates are so estimated from the binned counts. Ungrouping binned data can be desirable for many reasons: Bins can be too coarse to allow for accurate analysis; comparisons can be hindered when different grouping approaches are used in different histograms; and the last interval is often wide and open-ended and, thus, covers a lot of information in the tail area. Age-at-death distributions grouped in age classes and abridged life tables are examples of binned data. Because of modest assumptions, the approach is suitable for many demographic and epidemiological applications. For a detailed description of the method and applications see [Rizzi et al. (2015)](https://doi.org/10.1093/aje/kwv020).
+The `pclm` R package introduces a versatile method for ungrouping histograms (binned count data) assuming that counts are Poisson distributed and that the underlying sequence on a fine grid to be estimated is smooth. The method is based on the composite link model and estimation is achieved by maximizing a penalized likelihood. Smooth detailed sequences of counts and rates are so estimated from the binned counts. Ungrouping binned data can be desirable for many reasons: Bins can be too coarse to allow for accurate analysis; comparisons can be hindered when different grouping approaches are used in different histograms; and the last interval is often wide and open-ended and, thus, covers a lot of information in the tail area. Age-at-death distributions grouped in age classes and abridged life tables are examples of binned data. Because of modest assumptions, the approach is suitable for many demographic and epidemiological applications. For a detailed description of the method and applications see `r Citet(bib, "rizzi2015")`.
 
 # Package Structure  
-The package has 2 top level functions `pclm` and `pclm2D` an auxiliary function `pclm.control`, several generic functions (`plot`, `summary`, `fitted`) and a test dataset (`pclm.data`).
+The package has 2 top level functions `pclm` and `pclm2D` an auxiliary function `pclm.control`, several generic functions (`plot`, `summary`, `fitted`, `residuals`) and a test dataset (`ungroup.data`).
 
 All functions are documented in the standard way, which means that once you load the package using `library(ungroup)` you can just type for example `?pclm` to see the help file.
 
@@ -130,7 +134,10 @@ plot(M5, type = "s")
 The PCLM can be extended to a two-dimensional regression problem. The two-dimensional Penalized Composite Link Model to ungroup simultaneously coarse distributions for adjacent years can be fitted using `pclm2D` function, and it works in exactly the same way as `pclm`. See the examples provided in the help page. Note that `pclm2D` might be slower, depending on the data and model specification provided in the functions.
 
 
-
+# References
+```{r results = "asis", echo = FALSE}
+PrintBibliography(bib)
+```
 
 
 

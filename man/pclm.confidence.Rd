@@ -23,8 +23,8 @@ Default: \code{0.05}.}
 univariate and two-dimensional model respectively.}
 
 \item{offset}{Optional offset term to calculate smooth mortality rates. 
-A vector of the same length as x and y. See \emph{Rizzi et al.(2015)} for 
-further details.}
+A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
+for further details.}
 }
 \description{
 Compute Confidence Intervals for PCLM output
