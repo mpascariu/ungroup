@@ -20,7 +20,7 @@ compute_standard_errors <- function(B, QmQ, QmQP) {
 #' @inheritParams pclm
 #' @inheritParams pclm.fit
 #' @keywords internal
-pclm.confidence <- function(fit, out.step, y, SE, ci.level, pclm.type, offset) {
+pclm.confidence <- function(fit, out.step, y, SE, ci.level, type, offset) {
   I    <- c(as.list(environment()))
   I$ny <- length(y) 
   I$qn <- qnorm(1 - ci.level/2)
@@ -41,7 +41,7 @@ pclm.confidence.mx <- function(X) {
     lower <- as.numeric(exp(log(fit) - qn * SE))
     upper <- as.numeric(exp(log(fit) + qn * SE))
     
-    if (pclm.type == "2D") {
+    if (type == "2D") {
       fit   <- matrix(fit, ncol = ny)
       upper <- matrix(upper, ncol = ny)
       lower <- matrix(lower, ncol = ny)
@@ -58,7 +58,7 @@ pclm.confidence.mx <- function(X) {
 #' @keywords internal
 pclm.confidence.dx <- function(X) {
   with(X, {
-    if (X$pclm.type == "2D") {
+    if (X$type == "2D") {
       SE  <- matrix(SE, ncol = ny)
       fit <- matrix(fit, ncol = ny)
       Xi  <- X
@@ -66,7 +66,7 @@ pclm.confidence.dx <- function(X) {
       for (i in 1:ny) {
         Xi$fit <- fit[, i]
         Xi$SE  <- SE[, i]
-        Xi$pclm.type <- "1D"
+        Xi$type <- "1D"
         ci <- pclm.confidence.dx(Xi)
         L[, i] <- ci$lower
         U[, i] <- ci$upper

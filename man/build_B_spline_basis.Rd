@@ -6,7 +6,7 @@
 This is an internal function which constructs B-spline basis to be used in 
 pclm estimation}
 \usage{
-build_B_spline_basis(X, Y, kr, deg, diff, pclm.type)
+build_B_spline_basis(X, Y, kr, deg, diff, type)
 }
 \arguments{
 \item{X}{vector with ages}
@@ -22,7 +22,7 @@ basis over an abscissa of data.}
 \item{diff}{An integer indicating the order of differences of the components 
 of PCLM coefficients. Default value: 2.}
 
-\item{pclm.type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
+\item{type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
 univariate and two-dimensional model respectively.}
 }
 \description{

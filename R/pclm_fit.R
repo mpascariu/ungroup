@@ -5,18 +5,18 @@
 #' \code{\link{pclm}} and \code{\link{pclm2D}} functions
 #' @inheritParams pclm
 #' @inheritParams pclm.control
-#' @param pclm.type Type of PCLM model. Options: \code{"1D", "2D"} for 
+#' @param type Type of PCLM model. Options: \code{"1D", "2D"} for 
 #' univariate and two-dimensional model respectively.
 #' @keywords internal
 #' @export
 pclm.fit <- function(x, y, nlast, offset, out.step, show,
-                     lambda, kr, deg, diff, max.iter, tol, pclm.type){
+                     lambda, kr, deg, diff, max.iter, tol, type){
   
   if (show) {pb = startpb(0, 100); setpb(pb, 50); cat("   Ungrouping data      ")}
   # Some preparations
-  CM   <- build_C_matrix(x, y, nlast, offset, out.step, pclm.type) # composition matrix
-  BM   <- build_B_spline_basis(CM$gx, CM$gy, kr, deg, diff, pclm.type) # B-spline
-  P    <- build_P_matrix(BM$BA, BM$BY, lambda, pclm.type) # penalty
+  CM   <- build_C_matrix(x, y, nlast, offset, out.step, type) # composition matrix
+  BM   <- build_B_spline_basis(CM$gx, CM$gy, kr, deg, diff, type) # B-spline
+  P    <- build_P_matrix(BM$BA, BM$BY, lambda, type) # penalty
   C    <- CM$C
   B    <- BM$B
   y_   <- as.vector(unlist(y))
@@ -31,18 +31,15 @@ pclm.fit <- function(x, y, nlast, offset, out.step, show,
   trace <- sum(diag(H))
   y_[y_ == 0] <- 10^-4
   dev   <- 2 * sum(y_ * log(y_ / K$muA), na.rm = TRUE)
-  AIC   <- dev + 2 * trace
-  BIC   <- dev + log(ny_) * trace
   out   <- as.list(environment())
   return(out)
 }
 
 
-
 #' Build Composition Matrices
 #' @inheritParams pclm.fit
 #' @keywords internal
-build_C_matrix <- function(x, y, nlast, offset, out.step, pclm.type) {
+build_C_matrix <- function(x, y, nlast, offset, out.step, type) {
   # Build C matrix in the age direction
   nx <- length(x)
   gx <- seq(min(x), max(x) + nlast - out.step, by = out.step)
@@ -52,7 +49,7 @@ build_C_matrix <- function(x, y, nlast, offset, out.step, pclm.type) {
   for (j in 1:nx) CA[j, which(gx >= x[j] & gx < xr[j])] <- 1
   
   # Build C matrix in the year direction
-  if (pclm.type == "1D") {
+  if (type == "1D") {
     ny <- length(y)
     CY <- NULL
     C  <- CA
@@ -78,7 +75,7 @@ build_C_matrix <- function(x, y, nlast, offset, out.step, pclm.type) {
 #' @inheritParams pclm.fit
 #' @seealso \code{\link{MortSmooth_bbase}}
 #' @keywords internal
-build_B_spline_basis <- function(X, Y, kr, deg, diff, pclm.type) {
+build_B_spline_basis <- function(X, Y, kr, deg, diff, type) {
   # B-spline basis 
   bsb <- function(Z, kr, deg, diff) {
     zl   <- min(Z)
@@ -95,7 +92,7 @@ build_B_spline_basis <- function(X, Y, kr, deg, diff, pclm.type) {
   
   BA  <- bsb(X, kr, deg, diff) # for ages
   BY  <- bsb(Y, kr, deg, diff) # for years
-  B   <- if (pclm.type == "1D") BA$B else BY$B %x% BA$B
+  B   <- if (type == "1D") BA$B else BY$B %x% BA$B
   out <- as.list(environment())
   return(out)
 } 
@@ -106,9 +103,9 @@ build_B_spline_basis <- function(X, Y, kr, deg, diff, pclm.type) {
 #' @param BY B-spline basis object for year axis
 #' @inheritParams pclm.fit
 #' @keywords internal
-build_P_matrix <- function(BA, BY, lambda, pclm.type){
+build_P_matrix <- function(BA, BY, lambda, type){
   L  <- sqrt(lambda)
-  if (pclm.type == "1D") {
+  if (type == "1D") {
     P <- L * BA$tD
   } else {
     Px <- BY$dg %x% BA$tD

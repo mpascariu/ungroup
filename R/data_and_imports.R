@@ -1,4 +1,15 @@
 
+#' onAttach
+#' @param lib lib
+#' @param pkg pkg
+#' @name onAttach
+#' @keywords internal
+".onAttach" <- function(lib, pkg){
+  packageStartupMessage("\nungroup    : PCLM for Estimation of Smooth Distributions from Coarsely Binned Data",
+                        "\nLast Update: August 4, 2018\n")
+}
+
+
 #' Imports
 #' 
 #' @import pbapply
@@ -14,6 +25,7 @@
 #' @keywords internal
 #' 
 NULL
+
 
 #' Test Dataset in the Package
 #' 

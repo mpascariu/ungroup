@@ -4,7 +4,7 @@
 \alias{build_P_matrix}
 \title{Construct Penalty Matrix}
 \usage{
-build_P_matrix(BA, BY, lambda, pclm.type)
+build_P_matrix(BA, BY, lambda, type)
 }
 \arguments{
 \item{BA}{B-spline basis object for age axis}
@@ -14,7 +14,7 @@ build_P_matrix(BA, BY, lambda, pclm.type)
 \item{lambda}{Smoothing parameter to be used in pclm estimation.
 If \code{lambda = NA} an algorithm will find the optimal values.}
 
-\item{pclm.type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
+\item{type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
 univariate and two-dimensional model respectively.}
 }
 \description{

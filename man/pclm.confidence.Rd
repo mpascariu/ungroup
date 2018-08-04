@@ -4,7 +4,7 @@
 \alias{pclm.confidence}
 \title{Compute Confidence Intervals for PCLM output}
 \usage{
-pclm.confidence(fit, out.step, y, SE, ci.level, pclm.type, offset)
+pclm.confidence(fit, out.step, y, SE, ci.level, type, offset)
 }
 \arguments{
 \item{fit}{Fitted values from pclm.fit}
@@ -19,7 +19,7 @@ Values between 0.1 and 1 are accepted. Default: 1.}
 \item{ci.level}{Level of significance for computing confidence intervals. 
 Default: \code{0.05}.}
 
-\item{pclm.type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
+\item{type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
 univariate and two-dimensional model respectively.}
 
 \item{offset}{Optional offset term to calculate smooth mortality rates. 

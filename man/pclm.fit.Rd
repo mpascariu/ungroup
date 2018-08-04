@@ -5,7 +5,7 @@
 \title{Fit PCLM Models}
 \usage{
 pclm.fit(x, y, nlast, offset, out.step, show, lambda, kr, deg, diff, max.iter,
-  tol, pclm.type)
+  tol, type)
 }
 \arguments{
 \item{x}{Vector containing the starting values of the input intervals/bins.
@@ -43,7 +43,7 @@ of PCLM coefficients. Default value: 2.}
 \item{tol}{Relative tolerance in PCLM fitting procedure. Default: 0.1\% i.e. 
 the estimated aggregate bins should be in the 0.1\% error margin.}
 
-\item{pclm.type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
+\item{type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
 univariate and two-dimensional model respectively.}
 }
 \description{

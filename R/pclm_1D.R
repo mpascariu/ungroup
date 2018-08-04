@@ -110,15 +110,15 @@
 pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
                  ci.level = 0.05, out.step = 1, control = list()){
   # Check input
-  control     <- do.call("pclm.control", control)
-  input       <- c(as.list(environment())) # save all the input for later use
-  pclm.input.check(input, "1D")
-  input$nlast <- validate.nlast(x, nlast, out.step)
+  control <- do.call("pclm.control", control)
+  input   <- I <- as.list(environment()) # save all the input for later use
+  I$nlast <- validate.nlast(x, nlast, out.step)
+  type    <- "1D"
+  pclm.input.check(input, type)
   
   # Preliminary; start the clock
   if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
-  I   <- create.artificial.bin(input) # ***
-  Par <- with(control, c(lambda = lambda, kr = kr, deg = deg))
+  I[c("x", "y", "nlast", "offset")] <- create.artificial.bin(I) # ***
   
   # Deal with offset term
   if (!is.null(offset)) {
@@ -128,31 +128,28 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
     I$offset <- fitted(pclmEx)
   }
   
-  # If smoothing parameters are not provided in input, find them automatically.
-  if (any(is.na(Par))) {
-    Par <- optimize_par1D(I$x, I$y, I$nlast, I$offset, show, out.step, control)
-  }
+  # Find lambda
+  L <- I$control$lambda
+  if (any(is.na(L))) L <- optimize_par(I, type)
   
   # solve the PCLM 
   M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, show,
-                              lambda = Par[1], kr = Par[2], deg = Par[3],
-                              diff, max.iter, tol, pclm.type = "1D"))
-  SE    <- with(M, compute_standard_errors(B, QmQ, QmQP))
-  cn    <- c("fit", "lower", "upper", "SE")
-  M[cn] <- with(M, pclm.confidence(fit, out.step, y, SE, ci.level, 
-                                   pclm.type = "1D", offset))
-  M     <- delete.artificial.bin(M) # ***
-  G     <- map.bins(x, nlast, out.step)
-  dn    <- G$output$names
-  names(M$fit) = names(M$lower) = names(M$upper) = names(M$SE) <- dn
+                              lambda = L, kr, deg, diff, max.iter, tol, type))
+  SE <- with(M, compute_standard_errors(B, QmQ, QmQP))
+  R  <- with(M, pclm.confidence(fit, out.step, y, SE, ci.level, type, offset))
+  R  <- delete.artificial.bin(R) # ***
+  G  <- map.bins(x, nlast, out.step)
+  dn <- G$output$names
+  names(R$fit) = names(R$lower) = names(R$upper) = names(R$SE) <- dn
   
   # Output
-  gof <- list(AIC = AIC.pclm(M), BIC = BIC.pclm(M), standard.errors = M$SE)
-  ci  <- list(upper = M$upper, lower = M$lower)
-  out <- list(input = input, fitted = M$fit, ci = ci, goodness.of.fit = gof,
-              smoothPar = Par, bin.definition = G)
-  out      <- structure(class = "pclm", out)
-  out$call <- match.call()
+  Fcall <- match.call()
+  Par <- with(control, c(lambda = L, kr = kr, deg = deg))
+  gof <- list(AIC = AIC.pclm(M), BIC = BIC.pclm(M), standard.errors = R$SE)
+  ci  <- list(upper = R$upper, lower = R$lower)
+  out <- list(input = input, fitted = R$fit, ci = ci, goodness.of.fit = gof,
+              smoothPar = Par, bin.definition = G, deep = M, call = Fcall)
+  out <- structure(class = "pclm", out)
   if (show) setpb(pb, 100)
   return(out)  
 }

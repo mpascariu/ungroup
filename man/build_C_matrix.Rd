@@ -4,7 +4,7 @@
 \alias{build_C_matrix}
 \title{Build Composition Matrices}
 \usage{
-build_C_matrix(x, y, nlast, offset, out.step, pclm.type)
+build_C_matrix(x, y, nlast, offset, out.step, type)
 }
 \arguments{
 \item{x}{Vector containing the starting values of the input intervals/bins.
@@ -22,7 +22,7 @@ further details.}
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}
 
-\item{pclm.type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
+\item{type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
 univariate and two-dimensional model respectively.}
 }
 \description{

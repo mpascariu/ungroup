@@ -8,9 +8,6 @@ pclm.input.check(X, pclm.type)
 }
 \arguments{
 \item{X}{A list with input arguments provided in \code{\link{pclm}} function}
-
-\item{pclm.type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
-univariate and two-dimensional model respectively.}
 }
 \description{
 Validate input values
