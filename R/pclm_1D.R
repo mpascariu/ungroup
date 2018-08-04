@@ -123,9 +123,8 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   # Deal with offset term
   if (!is.null(offset)) {
     if (show) { setpb(pb, 5); cat("   Ungrouping offset")}
-    pclmEx <- pclm(x = I$x, y = I$offset, I$nlast, offset = NULL, 
-                   show = F, ci.level, out.step, control)
-    I$offset <- fitted(pclmEx)
+    I$offset <- pclm(x = I$x, y = I$offset, I$nlast, offset = NULL, 
+                     show = F, ci.level, out.step, control)$fitted
   }
   
   # Find lambda
@@ -156,6 +155,32 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
 
 # ----------------------------------------------
 
+#' Extract PCLM Deviance Residuals
+#' 
+#' @inherit stats::residuals params return
+#' @examples 
+#' x <- c(0, 1, seq(5, 85, by = 5))
+#' y <- c(294, 66, 32, 44, 170, 284, 287, 293, 361, 600, 998, 
+#'        1572, 2529, 4637, 6161, 7369, 10481, 15293, 39016)
+#' M1 <- pclm(x, y, nlast = 26)
+#' 
+#' residuals(M1)
+#' @export
+residuals.pclm <- function(object, ...) {
+  if (!is.null(object$input$offset)) {
+    stop("residuals method not implemented for hazard rates", call. = F)
+  }
+  C <- object$deep$C
+  C <- C[-nrow(C), -ncol(C)]
+  
+  y.obs <- object$input$y
+  y.hat <- as.numeric(C %*% fitted(object))
+  res <- y.obs - y.hat
+  names(res) <- object$bin.definition$input$names
+  return(res)
+}
+
+
 #' Print for pclm method
 #' @param x An object of class \code{"pclm"}
 #' @inheritParams base::print
@@ -178,7 +203,7 @@ summary.pclm <- function(object, ...) {
   cl    <- object$call
   AIC   <- round(object$goodness.of.fit$AIC, 2)
   BIC   <- round(object$goodness.of.fit$BIC, 2)
-  L     <- round(object$smoothPar)
+  sPar  <- round(object$smoothPar)
   dim.y <- length(object$input$y)
   dim.f <- length(fitted(object))
   out.step <- object$input$out.step
@@ -195,15 +220,15 @@ print.summary.pclm <- function(x, ...) {
   with(x, {
     cat("\nPenalized Composite Link Model (PCLM)")
     cat("\n\nCall:\n"); print(cl)
-    cat("\nPCLM Type                  : Univariate")
-    cat("\nNumber of input groups     :", dim.y)
-    cat("\nNumber of fitted values    :", dim.f)
-    cat("\nLength of estimate bins    :", out.step)
-    cat("\nSmoothing parameter lambda :", L[1])
-    cat("\nB-splines intervals/knot   :", L[2])
-    cat("\nB-splines degree           :", L[3])
-    cat("\nAIC                        :", AIC)
-    cat("\nBIC                        :", BIC)
+    cat("\nPCLM Type                    : Univariate")
+    cat("\nNumber of input groups       :", dim.y)
+    cat("\nNumber of fitted values      :", dim.f)
+    cat("\nLength of estimate bins      :", out.step)
+    cat("\nSmoothing parameter lambda   :", sPar[1])
+    cat("\nB-splines intervals/knot (kr):", sPar[2])
+    cat("\nB-splines degree (deg)       :", sPar[3])
+    cat("\nAIC                          :", AIC)
+    cat("\nBIC                          :", BIC)
     cat("\n")
   })
 }

@@ -8,7 +8,6 @@
 #' @param type Type of PCLM model. Options: \code{"1D", "2D"} for 
 #' univariate and two-dimensional model respectively.
 #' @keywords internal
-#' @export
 pclm.fit <- function(x, y, nlast, offset, out.step, show,
                      lambda, kr, deg, diff, max.iter, tol, type){
   

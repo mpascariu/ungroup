@@ -50,8 +50,8 @@
 #' }
 #' 
 #' @export
-pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
-                   out.step = 1, control = list()) {
+pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, 
+                   ci.level = 0.05, out.step = 1, control = list()) {
   # Check input
   control <- do.call("pclm2D.control", control)
   input   <- I <- as.list(environment()) # save all the input for later use
@@ -66,9 +66,8 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
   # Deal with offset term
   if (!is.null(offset)) {
     if (show) { setpb(pb, 5); cat("   Ungrouping offset")}
-    pclmEx <- pclm2D(x = I$x, y = I$offset, I$nlast, offset = NULL, 
-                     show = F, ci.level, out.step, control)
-    I$offset <- fitted(pclmEx)
+    I$offset <- pclm2D(x = I$x, y = I$offset, I$nlast, offset = NULL, 
+                       show = F, ci.level, out.step, control)$fitted
   }
   
   # Find lambda
@@ -87,7 +86,7 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
   
   # Output
   Fcall <- match.call()
-  Par <- with(control, c(L, kr = kr, deg = deg))
+  Par <- with(control, c(lambda.x = L[1], lambda.y = L[2], kr = kr, deg = deg))
   gof <- list(AIC = AIC.pclm(M), BIC = BIC.pclm(M), standard.errors = R$SE)
   ci  <- list(upper = R$upper, lower = R$lower)
   out <- list(input = input, fitted = R$fit, ci = ci, goodness.of.fit = gof,
@@ -99,6 +98,27 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
 
 
 # ----------------------------------------------
+
+#' Extract PCLM-2D Deviance Residuals
+#' 
+#' @inherit stats::residuals params return
+#' @export
+residuals.pclm2D <- function(object, ...) {
+  if (!is.null(object$input$offset)) {
+    stop("residuals method not implemented for hazard rates", call. = F)
+  }
+  C  <- object$deep$C
+  x  <- object$input$x
+  y  <- object$input$y
+  nr <- 1:length(x)
+  nc <- 1:(ncol(C) / length(y) - 1)
+  y.hat <- C[nr, nc] %*% fitted(object)
+  res <- y - y.hat
+  rownames(res) <- object$bin.definition$input$names
+  
+  return(res)
+}
+
 
 #' Print method for pclm2D
 #' @param x An object of class \code{"pclm2D"}
@@ -124,7 +144,7 @@ summary.pclm2D <- function(object, ...) {
   cl    <- object$call
   AIC   <- round(object$goodness.of.fit$AIC, 2)
   BIC   <- round(object$goodness.of.fit$BIC, 2)
-  L     <- round(object$smoothPar, 2)
+  sPar  <- round(object$smoothPar, 2)
   dim.y <- dim(object$input$y)
   dim.f <- dim(fitted(object))
   out.step <- object$input$out.step
@@ -141,15 +161,15 @@ print.summary.pclm2D <- function(x, ...) {
   with(x, {
     cat("\nPenalized Composite Link Model (PCLM)")
     cat("\n\nCall:\n"); print(cl)
-    cat("\nPCLM Type                  : Two-Dimensional")
-    cat("\nNumber of input groups     :", dim.y[1], "x", dim.y[2])
-    cat("\nNumber of fitted values    :", dim.f[1], "x", dim.f[2])
-    cat("\nDimension of estimate bins :", out.step, "x 1")
-    cat("\nSmoothing parameter lambda :", L[1], "x", L[2])
-    cat("\nB-splines intervals/knot   :", L[3])
-    cat("\nB-splines degree           :", L[4])
-    cat("\nAIC                        :", AIC)
-    cat("\nBIC                        :", BIC)
+    cat("\nPCLM Type                    : Two-Dimensional")
+    cat("\nNumber of input groups       :", dim.y[1], "x", dim.y[2])
+    cat("\nNumber of fitted values      :", dim.f[1], "x", dim.f[2])
+    cat("\nDimension of estimate bins   :", out.step, "x 1")
+    cat("\nSmoothing parameter lambda   :", sPar[1], "x", sPar[2])
+    cat("\nB-splines intervals/knot (kr):", sPar[3])
+    cat("\nB-splines degree (deg)       :", sPar[4])
+    cat("\nAIC                          :", AIC)
+    cat("\nBIC                          :", BIC)
     cat("\n")
   })
 }
