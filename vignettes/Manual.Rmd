@@ -1,6 +1,6 @@
 ---
 title: "Brief introduction to ungroup"
-author: "Marius D. Pascariu, Maciej J. Danko, Jonas Schoeley and Silvia Rizzi"
+author: "Marius D. Pascariu, Maciej J. Danko, Jonas Schöley and Silvia Rizzi"
 date: "September 1, 2018"
 output: 
   pdf_document:
