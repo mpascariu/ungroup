@@ -66,17 +66,16 @@ plot.pclm <- function(x,
     if (missing(legend.position)) legend.position = "topleft"
     
     plot(t2, c(fv, fv[N]), type = type, log = 'y', col = col[2],
-         xlab = xlab, ylab = ylab, ylim = ylim,
-         axes = F)
+         xlab = xlab, ylab = ylab, ylim = ylim, axes = F)
     if (length(Y) == length(Ex)) {
       lines(c(X, max(t1)), c(mx, max(mx)), type = "s", lwd = lwd + 1, col = col[1])
     }
-    abline(v = c(X, max(t1)), col = "white", lwd = lwd)
+    # abline(v = c(X, max(t1)), col = "white", lwd = lwd)
     lines(x = t2, y = c(lw, lw[N]), type = type, col = col[3])
     lines(x = t2, y = c(up, up[N]), type = type, col = col[3])
     lines(x = t2, y = c(fv, fv[N]), type = type, col = col[2], lwd = lwd)
     legend(legend.position, legend = legend,
-           bty = 'n', lty = 1, lwd = lwd,
+           bty = 'n', lty = 1, lwd = 3,
            col = col, text.col = "grey40")
     axis(1)
     axis(2)
@@ -112,7 +111,7 @@ plot.pclm2D <- function(x, color = c(1, 2), alpha = c(1, .5),
   len  <- sort(rep(x$bin.definition$input$length, 2))
   loc  <- x$bin.definition$input$location
   y    <- x$input$y
-  Ex   <- x$input$offset
+  Ex   <- x$offset
   n    <- ncol(y)
   Z    <- if (is.null(Ex)) y else y/Ex
   Z    <- as.data.frame(Z)

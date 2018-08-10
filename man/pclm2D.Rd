@@ -83,7 +83,7 @@ trajectories of coarsely grouped distributions and time trends.
 Dx <- ungroup.data$Dx
 Ex <- ungroup.data$Ex
 
-# Aggregate data
+# Aggregate data to ungroup it in the examples below
 x      <- c(0, 1, seq(5, 85, by = 5))
 nlast  <- 26
 n      <- c(diff(x), nlast)

@@ -13,6 +13,15 @@ build_B_spline_basis(X, Y, kr, deg, diff, type)
 
 \item{Y}{vector with years}
 
+\item{kr}{Knot ratio. Number of internal intervals used for defining 1 knot in 
+B-spline basis construction. See \code{\link{MortSmooth_bbase}}.}
+
+\item{deg}{Degree of the splines needed to create equally-spaced B-splines 
+basis over an abscissa of data.}
+
+\item{diff}{An integer indicating the order of differences of the components 
+of PCLM coefficients. Default value: 2.}
+
 \item{type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
 univariate and two-dimensional model respectively.}
 }

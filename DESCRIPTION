@@ -2,7 +2,7 @@ Package: ungroup
 Type: Package
 Title: Penalized Composite Link Model for Efficient Estimation of 
  Smooth Distributions from Coarsely Binned Data
-Version: 0.11.6
+Version: 0.11.7
 Date: 2018-09-01
 Authors@R: c(
   person("Marius D.", "Pascariu", role = c("aut", "cre"), 
@@ -31,7 +31,6 @@ Imports:
   MortalitySmooth (>= 2.3.4),
   pbapply (>= 1.3),
   Rcpp (>= 0.12.0),
-  RcppEigen,
   rgl,
   Rdpack (>= 0.8)
 LinkingTo:

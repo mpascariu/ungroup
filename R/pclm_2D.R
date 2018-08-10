@@ -17,7 +17,7 @@
 #' Dx <- ungroup.data$Dx
 #' Ex <- ungroup.data$Ex
 #' 
-#' # Aggregate data
+#' # Aggregate data to ungroup it in the examples below
 #' x      <- c(0, 1, seq(5, 85, by = 5))
 #' nlast  <- 26
 #' n      <- c(diff(x), nlast)
@@ -65,9 +65,11 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE,
   
   # Deal with offset term
   if (!is.null(offset)) {
-    if (show) { setpb(pb, 5); cat("   Ungrouping offset")}
-    I$offset <- pclm2D(x = I$x, y = I$offset, I$nlast, offset = NULL, 
-                       show = F, ci.level, out.step, control)$fitted
+    if (all(dim(offset) == dim(y))) {
+      if (show) { setpb(pb, 5); cat("   Ungrouping offset")}
+      I$offset <- pclm2D(x = I$x, y = I$offset, I$nlast, offset = NULL, 
+                         show = F, ci.level, out.step, control)$fitted
+    }
   }
   
   # Find lambda
@@ -102,6 +104,22 @@ pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE,
 #' Extract PCLM-2D Deviance Residuals
 #' 
 #' @inherit stats::residuals params return
+#' @examples 
+#' 
+#' Dx <- ungroup.data$Dx
+#' Ex <- ungroup.data$Ex
+#' 
+#' # Aggregate data to ungroup it in the example below
+#' x      <- c(0, 1, seq(5, 85, by = 5))
+#' nlast  <- 26
+#' n      <- c(diff(x), nlast)
+#' group  <- rep(x, n)
+#' y      <- aggregate(Dx, by = list(group), FUN = "sum")[, -1]
+#' 
+#' # Example
+#' P1 <- pclm2D(x, y, nlast)
+#' 
+#' residuals(P1)
 #' @export
 residuals.pclm2D <- function(object, ...) {
   if (!is.null(object$input$offset)) {

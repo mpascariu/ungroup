@@ -30,7 +30,6 @@
 #' }
 #' @useDynLib ungroup
 #' @import pbapply Rdpack
-#' @import RcppEigen
 #' @importFrom Rcpp sourceCpp
 #' @importFrom stats optimise qnorm quantile fitted aggregate nlminb AIC BIC
 #' @importFrom utils tail

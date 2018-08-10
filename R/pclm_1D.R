@@ -95,6 +95,12 @@
 #' M4 <- pclm(x, y, nlast, offset)
 #' plot(M4, type = "s")
 #' 
+#' # Example 5 -----------------------
+#' # Grouped x & ungrouped offset (estimate death rates)
+#' 
+#' ungroupped_Ex <- pclm(x, y = offset, nlast, offset = NULL)$fitted # ungroupped offset data
+#' 
+#' M5 <- pclm(x, y, nlast, offset = ungroupped_Ex)
 #' @export
 pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
                  ci.level = 0.05, out.step = 1, control = list()){
@@ -111,9 +117,11 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   
   # Deal with offset term
   if (!is.null(offset)) {
-    if (show) { setpb(pb, 5); cat("   Ungrouping offset")}
-    I$offset <- pclm(x = I$x, y = I$offset, I$nlast, offset = NULL, 
-                     show = F, ci.level, out.step, control)$fitted
+    if (length(offset) == length(y)) {
+      if (show) { setpb(pb, 5); cat("   Ungrouping offset")}
+      I$offset <- pclm(x = I$x, y = I$offset, I$nlast, offset = NULL, 
+                       show = F, ci.level, out.step, control)$fitted
+    } 
   }
   
   # Find lambda

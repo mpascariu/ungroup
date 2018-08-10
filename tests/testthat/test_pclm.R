@@ -86,6 +86,21 @@ summary(P2)
 
 for (i in 1:3) test_pclm_2D(get(paste0("P", i)))
 
+
+# ----------------------------------------------
+# test residuals
+
+test_that("Residuals", {
+  expect_output(print(residuals(M1)))
+  expect_output(print(residuals(M2)))
+  expect_output(print(residuals(M3)))
+  expect_error(residuals(M4))
+  
+  expect_output(print(residuals(P1)))
+  expect_error(residuals(P2))
+})
+
+
 # ----------------------------------------------
 # Test error messages
 

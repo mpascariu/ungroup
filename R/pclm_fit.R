@@ -4,7 +4,7 @@
 #' This is an internal function used to estimate PCLM model. It is used by 
 #' \code{\link{pclm}} and \code{\link{pclm2D}} functions
 #' @inheritParams pclm
-#' @inheritParams pclm.control
+#' @inheritParams control.pclm
 #' @param type Type of PCLM model. Options: \code{"1D", "2D"} for 
 #' univariate and two-dimensional model respectively.
 #' @keywords internal

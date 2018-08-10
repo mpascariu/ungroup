@@ -120,6 +120,12 @@ summary(M3) # not the smallest BIC here, but sometimes is not important.
 M4 <- pclm(x, y, nlast, offset)
 plot(M4, type = "s")
 
+# Example 5 -----------------------
+# Grouped x & ungrouped offset (estimate death rates)
+
+ungroupped_Ex <- pclm(x, y = offset, nlast, offset = NULL)$fitted # ungroupped offset data
+
+M5 <- pclm(x, y, nlast, offset = ungroupped_Ex)
 }
 \references{
 \insertAllCited{}

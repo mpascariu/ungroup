@@ -35,9 +35,9 @@ pclm.input.check <- function(X, pclm.type) {
       if (length(x) != length(y)) {
         stop("length of 'x' and 'y' must be equal", call. = F)
       }
-      if (!is.null(offset) & length(offset) != length(y)) {
-        stop(paste("'offset' must have the same length as 'y'"), call. = F)
-      }
+      # if (!is.null(offset) & length(offset) != length(y)) {
+      #   stop("'offset' must have the same length as 'y'", call. = F)
+      # }
     }
     if (pclm.type == "2D") {
       if (!(is.data.frame(y) || is.matrix(y))) {
@@ -46,9 +46,9 @@ pclm.input.check <- function(X, pclm.type) {
       if (length(x) != nrow(y)) {
         stop("length(x) must be equal to nrow(y)", call. = F)
       }
-      if (!is.null(offset) & !all(dim(offset) == dim(y))) {
-        stop(paste("'offset' must have the same dimension as 'y'"), call. = F)
-      }
+      # if (!is.null(offset) & !all(dim(offset) == dim(y))) {
+      #   stop(paste("'offset' must have the same dimension as 'y'"), call. = F)
+      # }
     }
     
   })
