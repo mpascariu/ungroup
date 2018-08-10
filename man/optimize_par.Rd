@@ -4,7 +4,7 @@
 \alias{optimize_par}
 \title{Optimize Smoothing Parameters
 This function optimize searches of \code{lambda, kr} and \code{deg}. 
-See \code{\link{pclm.control}} to see what is their meaning. 
+See \code{\link{control.pclm}} to see what is their meaning. 
 The optimization process works in steps. Simultaneous optimization was 
 tested and found inefficient.}
 \usage{
@@ -19,7 +19,7 @@ univariate and two-dimensional model respectively.}
 \description{
 Optimize Smoothing Parameters
 This function optimize searches of \code{lambda, kr} and \code{deg}. 
-See \code{\link{pclm.control}} to see what is their meaning. 
+See \code{\link{control.pclm}} to see what is their meaning. 
 The optimization process works in steps. Simultaneous optimization was 
 tested and found inefficient.
 }

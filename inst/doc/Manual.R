@@ -2,10 +2,6 @@
 library(knitr)
 opts_chunk$set(collapse = TRUE)
 
-library(RefManageR)
-bib <- ReadBib(system.file("REFERENCES.bib", package = "ungroup"), check = "warn")
-BibOptions(check.entries = "warn", style = "latex", bib.style = "authoryear")
-
 ## ------------------------------------------------------------------------
 # Load the package
 library(ungroup)
@@ -21,7 +17,7 @@ y <- c(294, 66, 32, 44, 170, 284, 287, 293, 361, 600, 998,
 # offset: Population exposed to risk in the age group
 offset <- c(114, 440, 509, 492, 628, 618, 576, 580, 634, 657, 
             631, 584, 573, 619, 530, 384, 303, 245, 249) * 1000
-# nlast: the size of the last age interval (usualy open)
+# nlast: the size of the last age interval (usually open)
 nlast <- 26
 # This results in the last group being [85, 110).
 
@@ -52,15 +48,12 @@ length(fitted(M2))
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  # Optimise smoothing parameter: lambda, kr and deg
-#  M3 <- pclm(x, y, nlast, control = list(lambda = NA,
-#                                         opt.method = 'AIC'))
+#  M3 <- pclm(x, y, nlast,
+#             control = list(lambda = NA, opt.method = "AIC"))
 
 ## ---- message=FALSE, results='hide'--------------------------------------
 M5 <- pclm(x, y, nlast, offset)
 
 ## ---- fig.align='center', fig.asp=0.8, out.width = '60%'-----------------
 plot(M5, type = "s")
-
-## ----results = "asis", echo = FALSE--------------------------------------
-PrintBibliography(bib)
 

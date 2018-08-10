@@ -11,7 +11,7 @@
 #' should be equal with the length of \code{x}.
 #' @inheritParams pclm
 #' @inherit pclm return
-#' @seealso \code{\link{pclm2D.control}}, \code{\link{plot.pclm2D}}.
+#' @seealso \code{\link{control.pclm2D}}, \code{\link{plot.pclm2D}}.
 #' @examples 
 #' # Input data
 #' Dx <- ungroup.data$Dx
@@ -53,7 +53,7 @@
 pclm2D <- function(x, y, nlast, offset = NULL, show = TRUE, 
                    ci.level = 0.05, out.step = 1, control = list()) {
   # Check input
-  control <- do.call("pclm2D.control", control)
+  control <- do.call("control.pclm2D", control)
   input   <- I <- as.list(environment()) # save all the input for later use
   I$nlast <- validate.nlast(x, nlast, out.step)
   type    <- "2D"

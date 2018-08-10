@@ -83,7 +83,7 @@ to be estimated from the aggregated data. Estimates are obtained by
 maximizing a penalized likelihood. This maximization is performed efficiently 
 by a version of the iteratively reweighted least-squares algorithm. Optimal 
 values of the smoothing parameter are chosen by minimizing Bayesian or 
-Akaike's Information Criterion.\insertNoCite{*}{ungroup}
+Akaike's Information Criterion.
 }
 \examples{
 # Data  
@@ -125,5 +125,5 @@ plot(M4, type = "s")
 \insertAllCited{}
 }
 \seealso{
-\code{\link{pclm.control}}, \code{\link{plot.pclm}}.
+\code{\link{control.pclm}}, \code{\link{plot.pclm}}.
 }

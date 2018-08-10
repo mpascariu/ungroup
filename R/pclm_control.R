@@ -2,7 +2,7 @@
 #' Auxiliary for Controlling \code{pclm} Fitting
 #' 
 #' @usage 
-#' pclm.control(lambda     = NA,
+#' control.pclm(lambda     = NA,
 #'              kr         = 2,
 #'              deg        = 3,
 #'              int.lambda = c(0.1, 1e+5),
@@ -28,10 +28,9 @@
 #' @seealso \code{\link{pclm}}
 #' @return A list with exactly eight control parameters.
 #' @examples 
-#' pclm.control()
-#' @keywords internal
+#' control.pclm()
 #' @export
-pclm.control <- function(lambda = NA,
+control.pclm <- function(lambda = NA,
                          kr = 2,
                          deg = 3,
                          int.lambda = c(0.1, 1e+5),
@@ -48,7 +47,7 @@ pclm.control <- function(lambda = NA,
 #' Auxiliary for Controlling \code{pclm2D} Fitting
 #' 
 #' @usage 
-#' pclm2D.control(lambda     = c(1, 1),
+#' control.pclm2D(lambda     = c(1, 1),
 #'                kr         = 7,
 #'                deg        = 3,
 #'                int.lambda = c(0.1, 1e+3),
@@ -57,12 +56,11 @@ pclm.control <- function(lambda = NA,
 #'                max.iter   = 1e+3,
 #'                tol        = 1e-3)
 #' @seealso \code{\link{pclm2D}}
-#' @inherit pclm.control params return
+#' @inherit control.pclm params return
 #' @examples 
-#' pclm2D.control()
-#' @keywords internal
+#' control.pclm2D()
 #' @export
-pclm2D.control <- function(lambda = c(1, 1),
+control.pclm2D <- function(lambda = c(1, 1),
                            kr = 7,
                            deg = 3,
                            int.lambda = c(0.1, 1e+3),

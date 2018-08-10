@@ -26,23 +26,6 @@ Values between 0.1 and 1 are accepted. Default: 1.}
 \item{show}{Logical value. Indicates whether a progress bar should be shown or not.
 Default: \code{TRUE}.}
 
-\item{lambda}{Smoothing parameter to be used in pclm estimation.
-If \code{lambda = NA} an algorithm will find the optimal values.}
-
-\item{kr}{Knot ratio. Number of internal intervals used for defining 1 knot in 
-B-spline basis construction. See \code{\link{MortSmooth_bbase}}.}
-
-\item{deg}{Degree of the splines needed to create equally-spaced B-splines 
-basis over an abscissa of data.}
-
-\item{diff}{An integer indicating the order of differences of the components 
-of PCLM coefficients. Default value: 2.}
-
-\item{max.iter}{Maximal number of iterations used in fitting procedure.}
-
-\item{tol}{Relative tolerance in PCLM fitting procedure. Default: 0.1\% i.e. 
-the estimated aggregate bins should be in the 0.1\% error margin.}
-
 \item{type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
 univariate and two-dimensional model respectively.}
 }

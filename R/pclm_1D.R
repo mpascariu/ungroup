@@ -13,7 +13,7 @@
 #' maximizing a penalized likelihood. This maximization is performed efficiently 
 #' by a version of the iteratively reweighted least-squares algorithm. Optimal 
 #' values of the smoothing parameter are chosen by minimizing Bayesian or 
-#' Akaike's Information Criterion.\insertNoCite{*}{ungroup}
+#' Akaike's Information Criterion.
 #' @param x Vector containing the starting values of the input intervals/bins.
 #' For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 #' \code{x} will be defined by the vector: \code{c(0, 5, 10)}.
@@ -58,7 +58,7 @@
 #' in diagnosis of possible issues.}
 #' @return \item{call}{ An unevaluated function call, that is, an unevaluated 
 #' expression which consists of the named function applied to the given arguments.}
-#' @seealso \code{\link{pclm.control}}, \code{\link{plot.pclm}}.
+#' @seealso \code{\link{control.pclm}}, \code{\link{plot.pclm}}.
 #' @references \insertAllCited{}
 #' @examples
 #' # Data  
@@ -99,7 +99,7 @@
 pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
                  ci.level = 0.05, out.step = 1, control = list()){
   # Check input
-  control <- do.call("pclm.control", control)
+  control <- do.call("control.pclm", control)
   input   <- I <- as.list(environment()) # save all the input for later use
   I$nlast <- validate.nlast(x, nlast, out.step)
   type    <- "1D"

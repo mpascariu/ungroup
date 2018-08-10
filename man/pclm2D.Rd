@@ -117,5 +117,5 @@ aspect3d(x = 1, y = 2, z = 1) # modify the aspect ratio
 
 }
 \seealso{
-\code{\link{pclm2D.control}}, \code{\link{plot.pclm2D}}.
+\code{\link{control.pclm2D}}, \code{\link{plot.pclm2D}}.
 }

@@ -20,7 +20,7 @@ ofun <- function(L, I, type) {
 
 #' Optimize Smoothing Parameters
 #' This function optimize searches of \code{lambda, kr} and \code{deg}. 
-#' See \code{\link{pclm.control}} to see what is their meaning. 
+#' See \code{\link{control.pclm}} to see what is their meaning. 
 #' The optimization process works in steps. Simultaneous optimization was 
 #' tested and found inefficient.
 #' @param I Input object from pclm function

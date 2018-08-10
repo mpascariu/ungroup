@@ -1,31 +1,4 @@
 
-#' onAttach
-#' @param lib lib
-#' @param pkg pkg
-#' @name onAttach
-#' @keywords internal
-".onAttach" <- function(lib, pkg){
-  packageStartupMessage("\nungroup    : PCLM for Estimation of Smooth Distributions from Coarsely Binned Data",
-                        "\nLast Update: August 5, 2018\n")
-}
-
-
-#' Imports
-#' 
-#' @import pbapply Rdpack
-#' @import RcppEigen
-#' @importFrom Rcpp sourceCpp
-#' @importFrom stats optimise qnorm quantile fitted aggregate nlminb AIC BIC
-#' @importFrom utils tail
-#' @importFrom MortalitySmooth MortSmooth_bbase
-#' @importFrom graphics axis barplot legend lines plot abline par
-#' @importFrom rgl axes3d box3d open3d surface3d title3d
-#' @useDynLib ungroup
-#' @name foo_imports
-#' @keywords internal
-#' 
-NULL
-
 
 #' Test Dataset in the Package
 #' 
