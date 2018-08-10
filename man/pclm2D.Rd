@@ -4,7 +4,7 @@
 \alias{pclm2D}
 \title{Two-Dimensional Penalized Composite Link Model (PCLM-2D)}
 \usage{
-pclm2D(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
+pclm2D(x, y, nlast, offset = NULL, verbose = TRUE, ci.level = 95,
   out.step = 1, control = list())
 }
 \arguments{
@@ -21,11 +21,11 @@ should be equal with the length of \code{x}.}
 A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
 for further details.}
 
-\item{show}{Logical value. Indicates whether a progress bar should be shown or not.
+\item{verbose}{Logical value. Indicates whether a progress bar should be shown or not.
 Default: \code{TRUE}.}
 
 \item{ci.level}{Level of significance for computing confidence intervals. 
-Default: \code{0.05}.}
+Default: \code{95}.}
 
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}

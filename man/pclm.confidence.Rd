@@ -17,7 +17,7 @@ Values between 0.1 and 1 are accepted. Default: 1.}
 \item{SE}{Standard Errors}
 
 \item{ci.level}{Level of significance for computing confidence intervals. 
-Default: \code{0.05}.}
+Default: \code{95}.}
 
 \item{type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
 univariate and two-dimensional model respectively.}

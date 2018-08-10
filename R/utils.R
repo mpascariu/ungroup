@@ -25,8 +25,8 @@ pclm.input.check <- function(X, pclm.type) {
     if (nlast <= 0) {
       stop("'nlast' must be greater than 0", call. = F)
     }
-    if (ci.level <= 0 || ci.level >= 1) {
-      stop("'ci.level' must take values in the (0, 1) interval", call. = F)
+    if (ci.level <= 50.1 || ci.level >= 99.9) {
+      stop("'ci.level' must take values in the [50.1, 99.9] interval", call. = F)
     }
     if (out.step > 1 || out.step < 0.1) {
       stop("'out.step' must be between 0.1 and 1", call. = F)

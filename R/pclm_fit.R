@@ -8,10 +8,10 @@
 #' @param type Type of PCLM model. Options: \code{"1D", "2D"} for 
 #' univariate and two-dimensional model respectively.
 #' @keywords internal
-pclm.fit <- function(x, y, nlast, offset, out.step, show,
+pclm.fit <- function(x, y, nlast, offset, out.step, verbose,
                      lambda, kr, deg, diff, max.iter, tol, type){
   
-  if (show) {pb = startpb(0, 100); setpb(pb, 50); cat("   Ungrouping data      ")}
+  if (verbose) {pb = startpb(0, 100); setpb(pb, 50); cat("   Ungrouping data      ")}
   # Some preparations
   CM   <- build_C_matrix(x, y, nlast, offset, out.step, type) # composition matrix
   BM   <- build_B_spline_basis(CM$gx, CM$gy, kr, deg, diff, type) # B-spline

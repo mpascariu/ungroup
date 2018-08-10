@@ -23,7 +23,8 @@ compute_standard_errors <- function(B, QmQ, QmQP) {
 pclm.confidence <- function(fit, out.step, y, SE, ci.level, type, offset) {
   I    <- c(as.list(environment()))
   I$ny <- length(y) 
-  I$qn <- qnorm(1 - ci.level/2)
+  cil  <- 1 - ci.level/100
+  I$qn <- qnorm(1 - cil/2)
   
   if (is.null(offset)) {
     out <- pclm.confidence.dx(I)

@@ -22,10 +22,10 @@
 #' @param offset Optional offset term to calculate smooth mortality rates. 
 #' A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
 #' for further details.
-#' @param show Logical value. Indicates whether a progress bar should be shown or not.
-#' Default: \code{TRUE}.
+#' @param verbose Logical value. Indicates whether a progress bar should be shown or not.
+#' Default: \code{FALSE}.
 #' @param ci.level Level of significance for computing confidence intervals. 
-#' Default: \code{0.05}.
+#' Default: \code{95}.
 #' @param out.step Length of estimated intervals in output. 
 #' Values between 0.1 and 1 are accepted. Default: 1.
 #' @param control List with additional parameters: \itemize{
@@ -102,8 +102,8 @@
 #' 
 #' M5 <- pclm(x, y, nlast, offset = ungroupped_Ex)
 #' @export
-pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
-                 ci.level = 0.05, out.step = 1, control = list()){
+pclm <- function(x, y, nlast, offset = NULL, verbose = FALSE,
+                 ci.level = 95, out.step = 1, control = list()){
   # Check input
   control <- do.call("control.pclm", control)
   input   <- I <- as.list(environment()) # save all the input for later use
@@ -112,15 +112,15 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   pclm.input.check(input, type)
   
   # Preliminary; start the clock
-  if (show) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
+  if (verbose) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
   I[c("x", "y", "nlast", "offset")] <- create.artificial.bin(I) # ***
   
   # Deal with offset term
   if (!is.null(offset)) {
     if (length(offset) == length(y)) {
-      if (show) { setpb(pb, 5); cat("   Ungrouping offset")}
+      if (verbose) { setpb(pb, 5); cat("   Ungrouping offset")}
       I$offset <- pclm(x = I$x, y = I$offset, I$nlast, offset = NULL, 
-                       show = F, ci.level, out.step, control)$fitted
+                       verbose = F, ci.level, out.step, control)$fitted
     } 
   }
   
@@ -129,7 +129,7 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   if (any(is.na(L))) L <- optimize_par(I, type)
   
   # solve the PCLM 
-  M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, show,
+  M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, verbose,
                               lambda = L, kr, deg, diff, max.iter, tol, type))
   SE <- with(M, compute_standard_errors(B, QmQ, QmQP))
   R  <- with(M, pclm.confidence(fit, out.step, y, SE, ci.level, type, offset))
@@ -146,7 +146,7 @@ pclm <- function(x, y, nlast, offset = NULL, show = TRUE,
   out <- list(input = input, fitted = R$fit, ci = ci, goodness.of.fit = gof,
               smoothPar = Par, bin.definition = G, deep = M, call = Fcall)
   out <- structure(class = "pclm", out)
-  if (show) setpb(pb, 100)
+  if (verbose) setpb(pb, 100)
   return(out)  
 }
 

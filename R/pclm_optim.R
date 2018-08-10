@@ -7,7 +7,7 @@
 ofun <- function(L, I, type) {
   L <- round(exp(L), 6)
   with(I$control, {
-    M <- pclm.fit(I$x, I$y, I$nlast, I$offset, I$out.step, show = FALSE, 
+    M <- pclm.fit(I$x, I$y, I$nlast, I$offset, I$out.step, verbose = FALSE, 
                   lambda = L, kr, deg, diff, max.iter, tol, type)
     fn <- paste0(opt.method, ".pclm")
     aic_bic <- get(fn)
@@ -29,11 +29,11 @@ ofun <- function(L, I, type) {
 optimize_par <- function(I, type) {
   
   with(I$control, {
-    if (I$show) pb = startpb(0, 100)
+    if (I$verbose) pb = startpb(0, 100)
     
     # Find lambda (continuos)
     if (any(is.na(lambda))) { 
-      if (I$show) {setpb(pb, 40); cat("   Optimizing lambda  ")}
+      if (I$verbose) {setpb(pb, 40); cat("   Optimizing lambda  ")}
       
       if (type == "1D") {
         opt <- optimise(f = ofun, interval = log(int.lambda), I = I, 

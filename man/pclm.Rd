@@ -4,7 +4,7 @@
 \alias{pclm}
 \title{Univariate Penalized Composite Link Model (PCLM)}
 \usage{
-pclm(x, y, nlast, offset = NULL, show = TRUE, ci.level = 0.05,
+pclm(x, y, nlast, offset = NULL, verbose = FALSE, ci.level = 95,
   out.step = 1, control = list())
 }
 \arguments{
@@ -20,11 +20,11 @@ For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
 for further details.}
 
-\item{show}{Logical value. Indicates whether a progress bar should be shown or not.
-Default: \code{TRUE}.}
+\item{verbose}{Logical value. Indicates whether a progress bar should be shown or not.
+Default: \code{FALSE}.}
 
 \item{ci.level}{Level of significance for computing confidence intervals. 
-Default: \code{0.05}.}
+Default: \code{95}.}
 
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}
