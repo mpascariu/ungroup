@@ -4,8 +4,8 @@
 \alias{pclm}
 \title{Univariate Penalized Composite Link Model (PCLM)}
 \usage{
-pclm(x, y, nlast, offset = NULL, verbose = FALSE, ci.level = 95,
-  out.step = 1, control = list())
+pclm(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
+  verbose = FALSE, control = list())
 }
 \arguments{
 \item{x}{Vector containing the starting values of the input intervals/bins.
@@ -20,14 +20,14 @@ For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
 for further details.}
 
-\item{verbose}{Logical value. Indicates whether a progress bar should be shown or not.
-Default: \code{FALSE}.}
+\item{out.step}{Length of estimated intervals in output. 
+Values between 0.1 and 1 are accepted. Default: 1.}
 
 \item{ci.level}{Level of significance for computing confidence intervals. 
 Default: \code{95}.}
 
-\item{out.step}{Length of estimated intervals in output. 
-Values between 0.1 and 1 are accepted. Default: 1.}
+\item{verbose}{Logical value. Indicates whether a progress bar should be shown or not.
+Default: \code{FALSE}.}
 
 \item{control}{List with additional parameters: \itemize{
 \item{\code{lambda}} -- Smoothing parameter to be used in pclm estimation.

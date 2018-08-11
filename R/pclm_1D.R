@@ -22,12 +22,12 @@
 #' @param offset Optional offset term to calculate smooth mortality rates. 
 #' A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
 #' for further details.
-#' @param verbose Logical value. Indicates whether a progress bar should be shown or not.
-#' Default: \code{FALSE}.
-#' @param ci.level Level of significance for computing confidence intervals. 
-#' Default: \code{95}.
 #' @param out.step Length of estimated intervals in output. 
 #' Values between 0.1 and 1 are accepted. Default: 1.
+#' @param ci.level Level of significance for computing confidence intervals. 
+#' Default: \code{95}.
+#' @param verbose Logical value. Indicates whether a progress bar should be shown or not.
+#' Default: \code{FALSE}.
 #' @param control List with additional parameters: \itemize{
 #'   \item{\code{lambda}} -- Smoothing parameter to be used in pclm estimation.
 #'   If \code{lambda = NA} an algorithm will find the optimal values.
@@ -102,8 +102,8 @@
 #' 
 #' M5 <- pclm(x, y, nlast, offset = ungroupped_Ex)
 #' @export
-pclm <- function(x, y, nlast, offset = NULL, verbose = FALSE,
-                 ci.level = 95, out.step = 1, control = list()){
+pclm <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95, 
+                 verbose = FALSE, control = list()){
   # Check input
   control <- do.call("control.pclm", control)
   input   <- I <- as.list(environment()) # save all the input for later use
@@ -120,7 +120,7 @@ pclm <- function(x, y, nlast, offset = NULL, verbose = FALSE,
     if (length(offset) == length(y)) {
       if (verbose) { setpb(pb, 5); cat("   Ungrouping offset")}
       I$offset <- pclm(x = I$x, y = I$offset, I$nlast, offset = NULL, 
-                       verbose = F, ci.level, out.step, control)$fitted
+                       out.step, ci.level, verbose = F, control)$fitted
     } 
   }
   

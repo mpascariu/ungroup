@@ -4,8 +4,8 @@
 \alias{pclm2D}
 \title{Two-Dimensional Penalized Composite Link Model (PCLM-2D)}
 \usage{
-pclm2D(x, y, nlast, offset = NULL, verbose = TRUE, ci.level = 95,
-  out.step = 1, control = list())
+pclm2D(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
+  verbose = TRUE, control = list())
 }
 \arguments{
 \item{x}{Vector containing the starting values of the input intervals/bins.
@@ -21,14 +21,14 @@ should be equal with the length of \code{x}.}
 A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
 for further details.}
 
-\item{verbose}{Logical value. Indicates whether a progress bar should be shown or not.
-Default: \code{TRUE}.}
+\item{out.step}{Length of estimated intervals in output. 
+Values between 0.1 and 1 are accepted. Default: 1.}
 
 \item{ci.level}{Level of significance for computing confidence intervals. 
 Default: \code{95}.}
 
-\item{out.step}{Length of estimated intervals in output. 
-Values between 0.1 and 1 are accepted. Default: 1.}
+\item{verbose}{Logical value. Indicates whether a progress bar should be shown or not.
+Default: \code{TRUE}.}
 
 \item{control}{List with additional parameters: \itemize{
 \item{\code{lambda}} -- Smoothing parameter to be used in pclm estimation.

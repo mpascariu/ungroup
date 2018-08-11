@@ -52,8 +52,8 @@
 #' }
 #' 
 #' @export
-pclm2D <- function(x, y, nlast, offset = NULL, verbose = TRUE, 
-                   ci.level = 95, out.step = 1, control = list()) {
+pclm2D <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95, 
+                   verbose = TRUE, control = list()) {
   # Check input
   control <- do.call("control.pclm2D", control)
   input   <- I <- as.list(environment()) # save all the input for later use
@@ -70,7 +70,7 @@ pclm2D <- function(x, y, nlast, offset = NULL, verbose = TRUE,
     if (all(dim(offset) == dim(y))) {
       if (verbose) { setpb(pb, 5); cat("   Ungrouping offset")}
       I$offset <- pclm2D(x = I$x, y = I$offset, I$nlast, offset = NULL, 
-                         verbose = F, ci.level, out.step, control)$fitted
+                         out.step, ci.level, verbose = F, control)$fitted
     }
   }
   

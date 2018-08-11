@@ -21,7 +21,7 @@ are examples of binned data. Because of modest assumptions, the approach is
 suitable for many demographic and epidemiological applications. For a detailed 
 description of the method and applications see \insertCite{rizzi2015;textual}{ungroup}.
 
-To learn more about dplyr, start with the vignettes:
+To learn more about the package, start with the vignettes:
 \code{browseVignettes(package = "ungroup")}
 \insertNoCite{*}{ungroup}
 }
@@ -31,7 +31,7 @@ To learn more about dplyr, start with the vignettes:
 \author{
 \itemize{
 \item {Marius D. Pascariu <rpascariu@outlook.com>}
-\item {Silvia Rizzi}
+\item {Silvia Rizzi <srizzi@health.sdu.dk>}
 \item {Jonas Schoeley}
 \item {Maciej J. Danko}
 }
