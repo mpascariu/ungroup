@@ -1,5 +1,5 @@
 # Penalized Composite Link Model for Efficient Estimation of Smooth Distributions from Coarsely Binned Data
-[![stage](https://img.shields.io/badge/stage-experimental-ff69b4.svg)](https://codecov.io/github/mpascariu/ungroup)
+[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/mpascariu/ungroup?branch=master&svg=true)](https://ci.appveyor.com/project/mpascariu/ungroup)
 [![Linux Build Status](https://travis-ci.org/mpascariu/ungroup.svg?branch=master)](https://travis-ci.org/mpascariu/ungroup)
 [![codecov](https://codecov.io/github/mpascariu/ungroup/branch/master/graphs/badge.svg)](https://codecov.io/github/mpascariu/ungroup)

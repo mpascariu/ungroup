@@ -25,7 +25,15 @@ If just one object is provided, a numeric value with the corresponding
   parameters in the model (\code{df}) and the AIC or BIC.
 }
 \description{
-PCLM-2D Akaike Information Criterion
+Generic function calculating Akaike's \sQuote{An Information Criterion} for
+  one or several fitted model objects for which a log-likelihood value
+  can be obtained, according to the formula
+  \eqn{-2 \mbox{log-likelihood} + k n_{par}}{-2*log-likelihood + k*npar},
+  where \eqn{n_{par}}{npar} represents the number of parameters in the
+  fitted model, and \eqn{k = 2} for the usual AIC, or
+  \eqn{k = \log(n)}{k = log(n)}
+  (\eqn{n} being the number of observations) for the so-called BIC or SBC
+  (Schwarz's Bayesian criterion).
 }
 \details{
 When comparing models fitted by maximum likelihood to the same data,

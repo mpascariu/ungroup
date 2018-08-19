@@ -28,14 +28,15 @@
 #' \item {Jonas Schoeley}
 #' \item {Maciej J. Danko}
 #' }
+#' Maintainer: Marius D. Pascariu
 #' @useDynLib ungroup
-#' @import pbapply Rdpack
 #' @importFrom Rcpp sourceCpp
 #' @importFrom stats optimise qnorm quantile fitted aggregate nlminb AIC BIC
 #' @importFrom utils tail
 #' @importFrom MortalitySmooth MortSmooth_bbase
 #' @importFrom graphics axis barplot legend lines plot abline par
 #' @importFrom rgl axes3d box3d open3d surface3d title3d
+#' @importFrom pbapply startpb setpb closepb
 #' @name ungroup-package
 #' @docType package
 NULL

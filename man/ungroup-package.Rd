@@ -35,4 +35,5 @@ To learn more about the package, start with the vignettes:
 \item {Jonas Schoeley}
 \item {Maciej J. Danko}
 }
+Maintainer: Marius D. Pascariu
 }

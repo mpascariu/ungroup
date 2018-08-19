@@ -4,9 +4,9 @@
 \alias{plot.pclm2D}
 \title{Generic Plot for pclm2D Class}
 \usage{
-\method{plot}{pclm2D}(x, color = c(1, 2), alpha = c(1, 0.5), axes = TRUE,
-  box = TRUE, xlab = "x-axis", ylab = "y-axis", zlab = "z-axis",
-  main = "", sub = "", ...)
+\method{plot}{pclm2D}(x, color = c(1, 2), alpha = c(1, 0.5),
+  axes = TRUE, box = TRUE, xlab = "x-axis", ylab = "y-axis",
+  zlab = "z-axis", main = "", sub = "", ...)
 }
 \arguments{
 \item{x}{an object of class \code{\link{pclm2D}}}
