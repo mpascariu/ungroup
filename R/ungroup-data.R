@@ -5,11 +5,14 @@
 #' Dataset containing death counts (Dx) and exposures (Ex)  by age for a 
 #' certain population between 1980 and 2014. The data-set is provided for 
 #' testing purposes only and might be altered and outdated. Download actual 
-#' demographic data free of charge from HMD. Once a username and a password is 
-#' created on the \href{https://www.mortality.org}{website} the 
-#' \href{https://CRAN.R-project.org/package=MortalityLaws}{MortalityLaws} 
-#' R package can be used to extract data in R format.
+#' demographic data free of charge from \insertCite{hmd2018;textual}{ungroup}. 
+#' Once a username and a password is created on the 
+#' \href{https://www.mortality.org}{website} the 
+#' \href{https://CRAN.R-project.org/package=MortalityLaws}{
+#' MortalityLaws} R package can be used to extract data in R format.
+#' \insertNoCite{MortalityLaws160}{ungroup}
 #' @source \href{https://www.mortality.org}{Human Mortality Database}
+#' @references \insertAllCited{}
 #' @seealso \code{\link[MortalityLaws]{ReadHMD}}
 #' @name ungroup.data
 #' @docType data 
