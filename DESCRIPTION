@@ -2,14 +2,14 @@ Package: ungroup
 Type: Package
 Title: Penalized Composite Link Model for Efficient Estimation of 
  Smooth Distributions from Coarsely Binned Data
-Version: 0.12.3
+Version: 0.12.4
 Date: 2018-09-01
 Authors@R: c(
-  person("Marius D.", "Pascariu", role = c("aut", "cre"), 
-         email = "rpascariu@outlook.com"),
-  person("Silvia", "Rizzi", role = "aut"),
-  person("Jonas", "Schoeley", role = "aut"),
-  person("Maciej", "Danko", role = "aut"))
+  person("Marius D.", "Pascariu", role = c("aut", "cre"), email = "rpascariu@outlook.com", comment = c(ORCID = "0000-0002-2568-6489")),
+  person("Silvia", "Rizzi", role = "aut", email = "srizzi@health.sdu.dk"),
+  person("Jonas", "Schoeley", role = "aut", comment = c(ORCID = "0000-0002-3340-8518")),
+  person("Maciej", "Danko", role = "aut", email = "Danko@demogr.mpg.de", comment = c(ORCID = "0000-0002-7924-9022"))
+  )
 Description: Versatile method for ungrouping histograms (binned count data) 
  assuming that counts are Poisson distributed and that the underlying sequence 
  on a fine grid to be estimated is smooth. The method is based on the composite 
@@ -38,9 +38,9 @@ LinkingTo:
   RcppEigen
 Suggests:
   MortalityLaws,
-  knitr,
-  rmarkdown,
-  testthat
+  knitr (>= 1.20),
+  rmarkdown (>= 1.10),
+  testthat (>= 2.0.0)
 RdMacros: 
   Rdpack
 URL: https://github.com/mpascariu/pclm

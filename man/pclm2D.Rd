@@ -48,26 +48,18 @@ Possible values are \code{"AIC"} and \code{"BIC"}.
 }
 \value{
 The output is a list with the following components:
-
-\item{input}{ A list with arguments provided in input. Saved for convenience.}
-
-\item{fitted}{ The fitted values of the PCLM model.}
-
-\item{ci}{ Confidence intervals around fitted values.}
-
-\item{goodness.of.fit}{ A list containing goodness of fit measures: 
-standard errors, AIC and BIC.}
-
-\item{smoothPar}{ Estimated smoothing parameters: \code{lambda, kr} 
+ \item{input}{ A list with arguments provided in input. Saved for convenience.}
+ \item{fitted}{ The fitted values of the PCLM model.}
+ \item{ci}{ Confidence intervals around fitted values.}
+ \item{goodness.of.fit}{ A list containing goodness of fit measures: 
+standard errors, AIC and BIC.} 
+ \item{smoothPar}{ Estimated smoothing parameters: \code{lambda, kr} 
 and \code{deg}.}
-
-\item{bins.definition}{ Additional values to identify the bins limits and 
+ \item{bins.definition}{ Additional values to identify the bins limits and 
 location in input and output objects.}
-
-\item{deep}{ A list of objects created in the fitting process. Useful 
+ \item{deep}{ A list of objects created in the fitting process. Useful 
 in diagnosis of possible issues.}
-
-\item{call}{ An unevaluated function call, that is, an unevaluated 
+ \item{call}{ An unevaluated function call, that is, an unevaluated 
 expression which consists of the named function applied to the given arguments.}
 }
 \description{
@@ -76,7 +68,8 @@ e.g. simultaneous ungrouping of age-at-death distributions grouped in age
 classes for adjacent years. The PCLM can be extended to a two-dimensional 
 regression problem. This is particularly suitable for mortality analysis 
 when mortality surfaces are to be estimated to capture both age-specific 
-trajectories of coarsely grouped distributions and time trends.
+trajectories of coarsely grouped distributions and time trends 
+\insertCite{rizzi2018}{ungroup}.
 }
 \examples{
 # Input data
@@ -116,6 +109,10 @@ aspect3d(x = 1, y = 2, z = 1) # modify the aspect ratio
 }
 
 }
+\references{
+\insertAllCited{}
+}
 \seealso{
-\code{\link{control.pclm2D}}, \code{\link{plot.pclm2D}}.
+\code{\link{control.pclm2D}}
+\code{\link{plot.pclm2D}}
 }

@@ -47,26 +47,18 @@ Possible values are \code{"AIC"} and \code{"BIC"}.
 }
 \value{
 The output is a list with the following components:
-
-\item{input}{ A list with arguments provided in input. Saved for convenience.}
-
-\item{fitted}{ The fitted values of the PCLM model.}
-
-\item{ci}{ Confidence intervals around fitted values.}
-
-\item{goodness.of.fit}{ A list containing goodness of fit measures: 
-standard errors, AIC and BIC.}
-
-\item{smoothPar}{ Estimated smoothing parameters: \code{lambda, kr} 
+ \item{input}{ A list with arguments provided in input. Saved for convenience.}
+ \item{fitted}{ The fitted values of the PCLM model.}
+ \item{ci}{ Confidence intervals around fitted values.}
+ \item{goodness.of.fit}{ A list containing goodness of fit measures: 
+standard errors, AIC and BIC.} 
+ \item{smoothPar}{ Estimated smoothing parameters: \code{lambda, kr} 
 and \code{deg}.}
-
-\item{bins.definition}{ Additional values to identify the bins limits and 
+ \item{bins.definition}{ Additional values to identify the bins limits and 
 location in input and output objects.}
-
-\item{deep}{ A list of objects created in the fitting process. Useful 
+ \item{deep}{ A list of objects created in the fitting process. Useful 
 in diagnosis of possible issues.}
-
-\item{call}{ An unevaluated function call, that is, an unevaluated 
+ \item{call}{ An unevaluated function call, that is, an unevaluated 
 expression which consists of the named function applied to the given arguments.}
 }
 \description{
@@ -131,5 +123,6 @@ M5 <- pclm(x, y, nlast, offset = ungroupped_Ex)
 \insertAllCited{}
 }
 \seealso{
-\code{\link{control.pclm}}, \code{\link{plot.pclm}}.
+\code{\link{control.pclm}}
+\code{\link{plot.pclm}}
 }

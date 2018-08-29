@@ -45,20 +45,22 @@
 #'   \item{\code{tol}} -- Relative tolerance in PCLM fitting procedure.}
 #' 
 #' @return The output is a list with the following components:
-#' @return \item{input}{ A list with arguments provided in input. Saved for convenience.}
-#' @return \item{fitted}{ The fitted values of the PCLM model.}
-#' @return \item{ci}{ Confidence intervals around fitted values.}
-#' @return \item{goodness.of.fit}{ A list containing goodness of fit measures: 
+#'  \item{input}{ A list with arguments provided in input. Saved for convenience.}
+#'  \item{fitted}{ The fitted values of the PCLM model.}
+#'  \item{ci}{ Confidence intervals around fitted values.}
+#'  \item{goodness.of.fit}{ A list containing goodness of fit measures: 
 #' standard errors, AIC and BIC.} 
-#' @return \item{smoothPar}{ Estimated smoothing parameters: \code{lambda, kr} 
+#'  \item{smoothPar}{ Estimated smoothing parameters: \code{lambda, kr} 
 #' and \code{deg}.}
-#' @return \item{bins.definition}{ Additional values to identify the bins limits and 
+#'  \item{bins.definition}{ Additional values to identify the bins limits and 
 #' location in input and output objects.}
-#' @return \item{deep}{ A list of objects created in the fitting process. Useful 
+#'  \item{deep}{ A list of objects created in the fitting process. Useful 
 #' in diagnosis of possible issues.}
-#' @return \item{call}{ An unevaluated function call, that is, an unevaluated 
+#'  \item{call}{ An unevaluated function call, that is, an unevaluated 
 #' expression which consists of the named function applied to the given arguments.}
-#' @seealso \code{\link{control.pclm}}, \code{\link{plot.pclm}}.
+#' @seealso 
+#' \code{\link{control.pclm}}
+#' \code{\link{plot.pclm}}
 #' @references \insertAllCited{}
 #' @examples
 #' # Data  

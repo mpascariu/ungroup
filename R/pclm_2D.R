@@ -6,14 +6,18 @@
 #' classes for adjacent years. The PCLM can be extended to a two-dimensional 
 #' regression problem. This is particularly suitable for mortality analysis 
 #' when mortality surfaces are to be estimated to capture both age-specific 
-#' trajectories of coarsely grouped distributions and time trends.
+#' trajectories of coarsely grouped distributions and time trends 
+#' \insertCite{rizzi2018}{ungroup}.
 #' @param y data.frame with counts to be ungrouped. The number of rows 
 #' should be equal with the length of \code{x}.
 #' @param verbose Logical value. Indicates whether a progress bar should be shown or not.
 #' Default: \code{TRUE}.
 #' @inheritParams pclm
 #' @inherit pclm return
-#' @seealso \code{\link{control.pclm2D}}, \code{\link{plot.pclm2D}}.
+#' @seealso 
+#' \code{\link{control.pclm2D}}
+#' \code{\link{plot.pclm2D}}
+#' @references \insertAllCited{}
 #' @examples 
 #' # Input data
 #' Dx <- ungroup.data$Dx

@@ -38,13 +38,13 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Marius D. Pascariu \email{rpascariu@outlook.com}
+\strong{Maintainer}: Marius D. Pascariu \email{rpascariu@outlook.com} (0000-0002-2568-6489)
 
 Authors:
 \itemize{
-  \item Silvia Rizzi
-  \item Jonas Schoeley
-  \item Maciej Danko
+  \item Silvia Rizzi \email{srizzi@health.sdu.dk}
+  \item Jonas Schoeley (0000-0002-3340-8518)
+  \item Maciej Danko \email{Danko@demogr.mpg.de} (0000-0002-7924-9022)
 }
 
 }
