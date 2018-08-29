@@ -97,7 +97,7 @@ plot.pclm <- function(x,
 #' @inheritParams rgl::rgl.material
 #' @inheritParams rgl::axes3d
 #' @param axes add axes to the plot. Logical. Default: \code{TRUE}. 
-#' @param box draw a box aroud the plot. Logical. Default: \code{TRUE}. 
+#' @param box draw a box around the plot. Logical. Default: \code{TRUE}. 
 #' @seealso \code{\link{pclm2D}} \code{\link{surface3d}} \code{\link{axes3d}}
 #' \code{\link{aspect3d}} \code{\link{title3d}} \code{\link{snapshot3d}}
 #' @examples 
@@ -140,5 +140,4 @@ plot.pclm2D <- function(x, color = c(1, 2), alpha = c(1, .5),
   if (box) box3d() 
   if (axes) axes3d()
 }
-
 

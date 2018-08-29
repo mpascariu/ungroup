@@ -22,7 +22,7 @@
 
 \item{axes}{add axes to the plot. Logical. Default: \code{TRUE}.}
 
-\item{box}{draw a box aroud the plot. Logical. Default: \code{TRUE}.}
+\item{box}{draw a box around the plot. Logical. Default: \code{TRUE}.}
 
 \item{xlab}{ the axis labels for the plot }
 

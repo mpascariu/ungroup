@@ -2,7 +2,7 @@
 % Please edit documentation in R/pclm_fit.R
 \name{validate.nlast}
 \alias{validate.nlast}
-\title{Check if 'nlast' needs to be adjusted in order to accommodate out.step}
+\title{Check if \code{nlast} needs to be adjusted in order to accommodate \code{out.step}}
 \usage{
 validate.nlast(x, nlast, out.step)
 }
@@ -17,6 +17,6 @@ For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 Values between 0.1 and 1 are accepted. Default: 1.}
 }
 \description{
-Check if 'nlast' needs to be adjusted in order to accommodate out.step
+Check if \code{nlast} needs to be adjusted in order to accommodate \code{out.step}
 }
 \keyword{internal}

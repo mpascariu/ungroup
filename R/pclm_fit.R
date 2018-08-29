@@ -117,9 +117,9 @@ build_P_matrix <- function(BA, BY, lambda, type){
 
 #' Create an additional bin with a small value at the end. 
 #' Improves convergence.
-#' @param i A list of input values corresponding to pclm or pclm2D
-#' @param vy Numerical value of the bin created for 'y' input
-#' @param vo Numerical values of the bin created for 'offset' input (if the case)
+#' @param i A list of input values corresponding to pclm or pclm2D;
+#' @param vy Numerical value of the bin created for \code{y} input;
+#' @param vo Numerical values of the bin created for \code{offset} input (if the case).
 #' @keywords internal
 create.artificial.bin <- function(i, vy = 1, vo = 1.01){
   with(i, {
@@ -215,7 +215,7 @@ frac <- function(x) {
 }
 
 
-#' Check if 'nlast' needs to be adjusted in order to accommodate out.step
+#' Check if \code{nlast} needs to be adjusted in order to accommodate \code{out.step}
 #' @inheritParams pclm
 #' @keywords internal
 validate.nlast <- function(x, nlast, out.step) {
@@ -237,7 +237,8 @@ validate.nlast <- function(x, nlast, out.step) {
   return(new.nlast)
 }
 
-#' Suggest values of 'out.step' that do not require an adjustment of 'nlast'
+#' Suggest values of \code{out.step} that do not 
+#' require an adjustment of \code{nlast}
 #' @param len Interval length
 #' @param increment Increment
 #' @keywords internal

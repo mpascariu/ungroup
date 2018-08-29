@@ -8,11 +8,11 @@ Improves convergence.}
 create.artificial.bin(i, vy = 1, vo = 1.01)
 }
 \arguments{
-\item{i}{A list of input values corresponding to pclm or pclm2D}
+\item{i}{A list of input values corresponding to pclm or pclm2D;}
 
-\item{vy}{Numerical value of the bin created for 'y' input}
+\item{vy}{Numerical value of the bin created for \code{y} input;}
 
-\item{vo}{Numerical values of the bin created for 'offset' input (if the case)}
+\item{vo}{Numerical values of the bin created for \code{offset} input (if the case).}
 }
 \description{
 Create an additional bin with a small value at the end. 

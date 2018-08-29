@@ -2,7 +2,8 @@
 % Please edit documentation in R/pclm_fit.R
 \name{suggest.valid.out.step}
 \alias{suggest.valid.out.step}
-\title{Suggest values of 'out.step' that do not require an adjustment of 'nlast'}
+\title{Suggest values of \code{out.step} that do not 
+require an adjustment of \code{nlast}}
 \usage{
 suggest.valid.out.step(len, increment = 0.01)
 }
@@ -12,6 +13,7 @@ suggest.valid.out.step(len, increment = 0.01)
 \item{increment}{Increment}
 }
 \description{
-Suggest values of 'out.step' that do not require an adjustment of 'nlast'
+Suggest values of \code{out.step} that do not 
+require an adjustment of \code{nlast}
 }
 \keyword{internal}

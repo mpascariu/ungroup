@@ -32,8 +32,8 @@ To learn more about the package, start with the vignettes:
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/mpascariu/pclm}
-  \item Report bugs at \url{https://github.com/mpascariu/pclm/issues}
+  \item \url{https://github.com/mpascariu/ungroup}
+  \item Report bugs at \url{https://github.com/mpascariu/ungroup/issues}
 }
 
 }
