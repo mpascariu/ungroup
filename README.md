@@ -1,6 +1,5 @@
 # <img src="inst/figures/ungroup_logo.png" align="right" width="150" height="150" /> Penalized Composite Link Model for Efficient Estimation of Smooth Distributions from Coarsely Binned Data 
 
-
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/mpascariu/ungroup?branch=master&svg=true)](https://ci.appveyor.com/project/mpascariu/ungroup)
 [![Linux Build Status](https://travis-ci.org/mpascariu/ungroup.svg?branch=master)](https://travis-ci.org/mpascariu/ungroup)
@@ -17,8 +16,7 @@ This repository contains a versatile method for ungrouping histograms (binned co
 2. Run the following code in your R console 
 
    ```R
-   # The package is not on CRAN yet. Install from GitHub (see below). 
-   # install.packages("ungroup")
+   install.packages("ungroup")
    ```
 
 ## Updating to the latest version of `ungroup` package
@@ -36,14 +34,6 @@ You can track (and contribute to) the development of `ungroup` at https://github
 
    ```R
    devtools::install_github("mpascariu/ungroup")
-   ```
-
-## Known Issue
-For some of you the installation will not quite work because of problems related to `rgl` package that `ungroup` depends on. If this is the case, try to install the `rgl` from CRAN first and then install `ungroup` following the instructions listed above. 
-
-   ```R
-   # Install rgl package 
-   install.packages("rgl")
    ```
 
 ## References
