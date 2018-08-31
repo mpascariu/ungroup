@@ -1,4 +1,4 @@
-# Penalized Composite Link Model for Efficient Estimation of Smooth Distributions from Coarsely Binned Data <img src="inst/figures/ungroup_logo.png" align="right" width="150" height="150" />
+# <img src="inst/figures/ungroup_logo.png" align="right" width="150" height="150" /> Penalized Composite Link Model for Efficient Estimation of Smooth Distributions from Coarsely Binned Data 
 
 
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
