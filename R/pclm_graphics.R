@@ -19,11 +19,12 @@ plot.pclm <- function(x,
   # input data
   X  <- x$input$x
   Y  <- x$input$y
+  Ex <- x$input$offset
+  if (length(Y) == length(Ex)) mx <- Y/Ex
+  
   fv <- fitted(x)
   lw <- x$ci$lower
   up <- x$ci$upper
-  Ex <- x$input$offset
-  if (length(Y) == length(Ex)) mx <- Y/Ex
   BI <- x$bin.definition$input
   BO <- x$bin.definition$output
   n1 <- BI$length
@@ -110,8 +111,9 @@ plot.pclm2D <- function(x, color = c(1, 2), alpha = c(1, .5),
   # Prepare input values
   len  <- sort(rep(x$bin.definition$input$length, 2))
   loc  <- x$bin.definition$input$location
+  
   y    <- x$input$y
-  Ex   <- x$offset
+  Ex   <- x$input$offset
   n    <- ncol(y)
   Z    <- if (is.null(Ex)) y else y/Ex
   Z    <- as.data.frame(Z)
@@ -132,12 +134,27 @@ plot.pclm2D <- function(x, color = c(1, 2), alpha = c(1, .5),
   
   # Plot
   if (!par('new')) open3d(windowRect = c(50, 50, 700, 700))
-  surface3d(X, Y, Z, front = "lines", back = "lines", 
-            color = color[1], alpha = alpha[1], ...)
+  
+  
+  if (!is.null(Ex)) {
+    if (all(dim(y) != dim(Ex))) {
+      message("Observed surface cannot be plotted because `y` and `offset`", 
+              "have different dimensions.")
+    } else {
+      rgl::surface3d(X, Y, Z, front = "lines", back = "lines", 
+                     color = color[1], alpha = alpha[1], ...) 
+    }
+    
+  } else {
+    rgl::surface3d(X, Y, Z, front = "lines", back = "lines", 
+                   color = color[1], alpha = alpha[1], ...) 
+  }
+  
+  rgl::surface3d(X_, Y_, Z_, color = color[2], alpha = alpha[2])
+  rgl::title3d(main, sub, xlab, ylab, zlab)
   rgl::aspect3d(1, 1, 1)
-  surface3d(X_, Y_, Z_, color = color[2], alpha = alpha[2])
-  title3d(main, sub, xlab, ylab, zlab)
   if (box) box3d() 
   if (axes) axes3d()
 }
+
 

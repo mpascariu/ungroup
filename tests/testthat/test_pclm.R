@@ -22,22 +22,6 @@ test_pclm_1D <- function(M) {
   })
 }
 
-test_pclm_2D <- function(M) {
-  fv    <- fitted(M)
-  lower <- M$ci[[1]]
-  upper <- M$ci[[2]]
-  test_that("PCLM-2D", {
-    expect_s3_class(M, "pclm2D")
-    expect_output(print(M))
-    expect_output(print(summary(M)))
-    expect_true(all(fv >= 0))
-    expect_identical(dim(fv), dim(lower))
-    expect_identical(dim(upper), dim(lower))
-    if (is.null(M$input$offset)) { # Suspend this untill a solution is found.
-      expect_true(abs(sum(fv) - sum(M$input$y)) < 1)
-    }
-  })
-}
 
 # ----------------------------------------------
 # PCLM-1D
@@ -55,36 +39,11 @@ M3 <- pclm(x, y, nlast, out.step = 0.5,
 M4 <- pclm(x, y, nlast, offset, out.step = 0.4,
            control = list(lambda = 1, kr = 8, deg = 3))
 
-summary(M1)
-summary(M2)
-summary(M3)
-summary(M4)
 
-for (i in 1:4) test_pclm_1D(get(paste0("M", i)))
+ungroupped_Ex <- pclm(x, y = offset, nlast, offset = NULL)$fitted # ungroupped offset data
+M5 <- pclm(x, y, nlast, offset = ungroupped_Ex)
 
-# ----------------------------------------------
-# PCLM-2D
-
-Dx     <- ungroup.data$Dx[, 15:35]
-Ex     <- ungroup.data$Ex[, 15:35]
-n      <- c(diff(x), nlast)
-Ex$gr  <- Dx$gr <- rep(x, n)
-y2      <- aggregate(Dx[, 1:20], by = list(Dx$gr), FUN = "sum")[, -1]
-offset2 <- aggregate(Ex[, 1:20], by = list(Ex$gr), FUN = "sum")[, -1]
-# y2      <- aggregate(Dx[, 1:35], by = list(Dx$gr), FUN = "sum")[, -1]
-# offset2 <- aggregate(Ex[, 1:35], by = list(Ex$gr), FUN = "sum")[, -1]
-
-P1 <- pclm2D(x, y2, nlast)
-P2 <- pclm2D(x, y2, nlast, offset2, control = list(max.iter = 200))
-P3 <- pclm2D(x, y2, nlast, 
-             control = list(lambda = c(NA, NA), max.iter = 200))
-# plot(P1)
-# plot(P2)
-# plot(P3)
-summary(P1)             
-summary(P2)             
-
-for (i in 1:3) test_pclm_2D(get(paste0("P", i)))
+for (i in 1:5) test_pclm_1D(get(paste0("M", i)))
 
 
 # ----------------------------------------------
@@ -95,11 +54,7 @@ test_that("Residuals", {
   expect_output(print(residuals(M2)))
   expect_output(print(residuals(M3)))
   expect_error(residuals(M4))
-  
-  expect_output(print(residuals(P1)))
-  expect_error(residuals(P2))
 })
-
 
 # ----------------------------------------------
 # Test error messages
@@ -123,27 +78,19 @@ expect_error(pclm(x, y, nlast, control = list(opt.method = "AAIC")))
 expect_error(pclm(x, y, nlast, control = list(max.iter = 5)))
 expect_error(pclm(x, y, nlast, control = list(tol = -.1)))
 
-expect_error(pclm2D(c(x, 90), y2, nlast))
-expect_error(pclm2D(x, y, nlast))
-expect_error(pclm2D(x, y2, nlast, rbind(offset, 0)))
-
 # ----------------------------------------------
 # Test warnings
 expect_warning(pclm(x, y, nlast, offset, out.step = 0.32))
 
 # ----------------------------------------------
 # Test data
-
 expect_output(print(ungroup.data))
 
 # ----------------------------------------------
 
 test_that("The model works even if the first bin is zero", {
   x0 <- c(14:19, seq(20, 50, by = 5))
-  y0 <- c(0, 5.89614302375851, 27.5281691833457, 154.360824153406, 404.073482638157, 
-         826.841462608498, 15596.6097885998, 31266.5457249206, 32973.6915087617, 
-         28942.3542158762, 14290.9937703288, 1988.94222234551, 25.5661614888236
-  )
+  y0 <- c(0, 5, 27, 154, 404, 826, 15596, 31266, 32973, 28942, 14290, 1988, 25)
   M0 <- pclm(x = x0, y = y0, nlast = 5)
   test_pclm_1D(M0)
 })
