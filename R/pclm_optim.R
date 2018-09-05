@@ -3,7 +3,6 @@
 #' @param L lambda.hat
 #' @inheritParams optimize_par
 #' @keywords internal
-#' 
 ofun <- function(L, I, type) {
   L <- round(exp(L), 6)
   with(I$control, {
@@ -72,6 +71,5 @@ optimize_par <- function(I, type) {
     return(lambda.hat)
   })
 }
-
 
 

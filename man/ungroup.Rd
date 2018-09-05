@@ -44,7 +44,7 @@ Authors:
 \itemize{
   \item Silvia Rizzi \email{srizzi@health.sdu.dk}
   \item Jonas Schoeley (0000-0002-3340-8518)
-  \item Maciej Danko \email{Danko@demogr.mpg.de} (0000-0002-7924-9022)
+  \item Maciej J. Danko \email{Danko@demogr.mpg.de} (0000-0002-7924-9022)
 }
 
 }
