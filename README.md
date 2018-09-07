@@ -1,12 +1,14 @@
 # <img src="inst/figures/ungroup_logo.png" align="right" width="150" height="150" /> Penalized Composite Link Model for Efficient Estimation of Smooth Distributions from Coarsely Binned Data 
-
-[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![CRAN_Version](https://www.r-pkg.org/badges/version/ungroup)](https://cran.r-project.org/package=ungroup)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/mpascariu/ungroup?branch=master&svg=true)](https://ci.appveyor.com/project/mpascariu/ungroup)
 [![Linux Build Status](https://travis-ci.org/mpascariu/ungroup.svg?branch=master)](https://travis-ci.org/mpascariu/ungroup)
 [![codecov](https://codecov.io/github/mpascariu/ungroup/branch/master/graphs/badge.svg)](https://codecov.io/github/mpascariu/ungroup)
 [![issues](https://img.shields.io/github/issues-raw/mpascariu/ungroup.svg)](https://github.com/mpascariu/ungroup/issues)
 [![license](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/mpascariu/ungroup/blob/master/LICENSE)
+[![CRAN_Download_Badge1](https://cranlogs.r-pkg.org/badges/grand-total/ungroup)](https://CRAN.R-project.org/package=ungroup)
+[![CRAN_Download_Badge2](https://cranlogs.r-pkg.org/badges/ungroup)](https://CRAN.R-project.org/package=ungroup)
 
+[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 
 This repository contains a versatile method for ungrouping histograms (binned count data) assuming that counts are Poisson distributed and that the underlying sequence on a fine grid to be estimated is smooth. The method is based on the composite link model and estimation is achieved by maximizing a penalized likelihood. Smooth detailed sequences of counts and rates are so estimated from the binned counts. Ungrouping binned data can be desirable for many reasons: Bins can be too coarse to allow for accurate analysis; comparisons can be hindered when different grouping approaches are used in different histograms; and the last interval is often wide and open-ended and, thus, covers a lot of information in the tail area. Age-at-death distributions grouped in age classes and abridged life tables are examples of binned data. Because of modest assumptions, the approach is suitable for many demographic and epidemiological applications. For a detailed description of the method and applications see Rizzi et al. (2015).
 
