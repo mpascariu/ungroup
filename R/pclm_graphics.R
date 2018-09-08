@@ -67,7 +67,7 @@ plot.pclm <- function(x,
     if (missing(legend.position)) legend.position = "topleft"
     
     plot(t2, c(fv, fv[N]), type = type, log = 'y', col = col[2],
-         xlab = xlab, ylab = ylab, ylim = ylim, axes = F)
+         xlab = xlab, ylab = ylab, ylim = ylim, axes = FALSE, ...)
     if (length(Y) == length(Ex)) {
       lines(c(X, max(t1)), c(mx, max(mx)), type = "s", lwd = lwd + 1, col = col[1])
     }
