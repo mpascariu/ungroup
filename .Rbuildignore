@@ -3,6 +3,7 @@
 ^data-raw$
 ^builds$
 ^checks$
+^joss$
 ^LICENSE$
 ^.git$
 ^\.travis\.yml$
