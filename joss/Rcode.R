@@ -15,19 +15,21 @@ M1 <- pclm(x, y, nlast)
 M2 <- pclm(x, y, nlast, offset)
 
 # Plots
-h = 500 * 2
-ps = 30
+h = 7
 
-tiff("pclm1D.tiff", height = h, width = 2.5*h, type = "cairo", pointsize = ps,
-     compression = "jpeg")
+# ps = 30
+# tiff("pclm1D.tiff", height = h, width = 2.5*h, type = "cairo", pointsize = ps,
+#      compression = "none")
+pdf("figures/pclm1D.pdf", height = h, width = 2.5 * h)
+print({
 par(mfrow = c(1, 2))
-plot(M1, lwd = 3,
+plot(M1, lwd = 2,
      xlab = "Age, [x]", ylab = "Counts, [y]", 
      main = "Ungrouping of the age-at-death distribution")
-plot(M2, type = "s", lwd = 3,
+plot(M2, type = "s", lwd = 2,
      xlab = "Age, [x]", ylab = "Age-specific central death-rate, m[x]",
      main = "Estimating age-specific death rates from binned data")
-dev.off()
+dev.off()})
 par(mfrow = c(1, 1))
 
 
@@ -50,31 +52,42 @@ P2 <- pclm2D(x2, y2, nlast2, offset2)
 
 
 plot(P1, xlab = "Age, [x]", ylab = "Year, [y]", zlab = "Counts, [z]")
-rgl.viewpoint(theta = 0, phi = -70, fov = 60, zoom = 0.8)
 bgplot3d({
   plot.new()
   title(main = "Ungrouping a sequence of age-at-death distributions", 
         line = 1, cex.main = 1.7)
   
 })
-snapshot3d("pclm2D_dx.tiff")     # save the plot in tiff format
+rgl.viewpoint(theta = 0, phi = -70, fov = 60, zoom = 0.8)
+rgl.snapshot("figures/pclm2D_dx.png", fmt = "png", top = TRUE)
 
 plot(P2, color = c(1, 3),
      xlab = "Age, [x]", ylab = "Year, [y]", 
      zlab = "log m[x]")  
-rgl.viewpoint(theta = 0, phi = -70, fov = 50, zoom = 0.8)
 bgplot3d({
   plot.new()
   title(main = "Ungrouping of a mortality surface", 
         line = 1, , cex.main = 1.7)
 })
-snapshot3d("pclm2D_mx.tiff")     # save the plot in tiff format
+rgl.viewpoint(theta = 0, phi = -70, fov = 50, zoom = 0.8)
+rgl.snapshot("figures/pclm2D_mx.png", fmt = "png", top = TRUE)
+
 
 
 library(magick)
-
-p1 = image_read("pclm2D_dx.tiff")
-p2 = image_read("pclm2D_mx.tiff")
+p1 = image_read("figures/pclm2D_dx.png")
+p2 = image_read("figures/pclm2D_mx.png")
 img <- c(p1, p2)
-image_write(image_append(img), path = "pclm2D.tiff", format = "tiff")
+image_write(image_append(img), path = "figures/pclm2D.pdf", format = "pdf")
+
+
+
+
+
+
+
+
+
+
+
 
