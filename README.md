@@ -3,9 +3,9 @@
 [![Linux Build Status](https://travis-ci.org/mpascariu/ungroup.svg?branch=master)](https://travis-ci.org/mpascariu/ungroup)
 [![codecov](https://codecov.io/github/mpascariu/ungroup/branch/master/graphs/badge.svg)](https://codecov.io/github/mpascariu/ungroup)
 [![issues](https://img.shields.io/github/issues-raw/mpascariu/ungroup.svg)](https://github.com/mpascariu/ungroup/issues)
-[![license](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/mpascariu/ungroup/blob/master/LICENSE)
 
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![license](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/mpascariu/ungroup/blob/master/LICENSE)
 [![CRAN_Download_Badge1](https://cranlogs.r-pkg.org/badges/grand-total/ungroup)](https://CRAN.R-project.org/package=ungroup)
 [![CRAN_Download_Badge2](https://cranlogs.r-pkg.org/badges/ungroup)](https://CRAN.R-project.org/package=ungroup)
 
