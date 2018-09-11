@@ -2,19 +2,19 @@
 title: "Introduction to `ungroup`"
 author: "Marius D. Pascariu, Maciej J. Dańko, Jonas Schöley and Silvia Rizzi"
 date: "September 1, 2018"
-output: 
+output:
   pdf_document:
     highlight: tango
-    number_sections: true
-    toc: false
+    number_sections: yes
+    toc: no
 fontsize: 11pt
 geometry: margin=1.1in
 bibliography: REFERENCES.bib
-biblio-style: "apalike"
+biblio-style: apalike
 link-citations: true
 vignette: >
-  %\VignetteIndexEntry{Introducing ungroup}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Introducing ungroup} 
+  %\VignetteEngine{knitr::rmarkdown} 
   %\VignetteEncoding{UTF-8}
 ---
 
