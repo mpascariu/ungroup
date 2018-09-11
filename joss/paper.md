@@ -42,7 +42,7 @@ The penalized composite link model can be extended to a two-dimensional regressi
 ![Two-dimensional ungrouping of the age-at-death distributions and mortality surface. The 3-D figures are generate using the ``rgl`` R package [-@rgl09916].](figures/pclm2D.pdf)
 
 
-# Acknowledgment
+# Acknowledgments
 We thank Paul H.C. Eilers who provided insight and expertise that greatly supported the creation of this R package; and Catalina Torres and Tim Riffe for testing and offering feedback on the early versions of the software. 
 
 The authors are grateful to the following institutions for their support:
