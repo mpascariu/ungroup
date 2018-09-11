@@ -1,8 +1,10 @@
-# Wed Sep  5 22:31:22 2018 --------- Marius D. Pascariu ---
+# Tue Sep 11 19:11:30 2018 --------- Marius D. Pascariu ---
 remove(list = ls())
 library(ungroup)
 library(rgl)
 
+# ----------------------------------------------
+# Figure 1.
 # Input data  
 x <- c(0, 1, seq(5, 85, by = 5))
 y <- c(294, 66, 32, 44, 170, 284, 287, 293, 361, 600, 998,  
@@ -15,11 +17,8 @@ M1 <- pclm(x, y, nlast)
 M2 <- pclm(x, y, nlast, offset)
 
 # Plots
-h = 7
 
-# ps = 30
-# tiff("pclm1D.tiff", height = h, width = 2.5*h, type = "cairo", pointsize = ps,
-#      compression = "none")
+h = 6
 pdf("figures/pclm1D.pdf", height = h, width = 2.5 * h)
 print({
 par(mfrow = c(1, 2))
@@ -34,6 +33,7 @@ par(mfrow = c(1, 1))
 
 
 # ----------------------------------------------
+# Figure 2.
 # Input data
 Dx <- ungroup.data$Dx
 Ex <- ungroup.data$Ex

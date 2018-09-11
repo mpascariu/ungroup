@@ -49,6 +49,6 @@ The authors are grateful to the following institutions for their support:
 
  * University of Southern Denmark;
  * Max Planck Institute for Demographic Research;
- * SCOR Corporate Foundation for Science.
+ * The SCOR Corporate Foundation for Science.
 
 # References
