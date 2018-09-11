@@ -1,6 +1,5 @@
 # <img src="inst/figures/ungroup_logo.png" align="right" width="150" height="150" /> Penalized Composite Link Model for Efficient Estimation of Smooth Distributions from Coarsely Binned Data 
 [![CRAN_Version](https://www.r-pkg.org/badges/version/ungroup)](https://cran.r-project.org/package=ungroup)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/mpascariu/ungroup?branch=master&svg=true)](https://ci.appveyor.com/project/mpascariu/ungroup)
 [![Linux Build Status](https://travis-ci.org/mpascariu/ungroup.svg?branch=master)](https://travis-ci.org/mpascariu/ungroup)
 [![codecov](https://codecov.io/github/mpascariu/ungroup/branch/master/graphs/badge.svg)](https://codecov.io/github/mpascariu/ungroup)
 [![issues](https://img.shields.io/github/issues-raw/mpascariu/ungroup.svg)](https://github.com/mpascariu/ungroup/issues)
