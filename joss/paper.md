@@ -1,7 +1,13 @@
 ---
 title: '`ungroup`: An R package for efficient estimation of smooth distributions from
   coarsely binned data'
-author:
+tags:
+- composite link model
+- GLM
+- histogram
+- binned data
+- smoothing
+authors:
 - name: Marius D. Pascariu
   affiliation: 1
   email: mpascariu@health.sdu.dk
@@ -14,12 +20,6 @@ author:
   orcid: 0000-0002-3340-8518
 - name: Silvia Rizzi
   affiliation: 2
-tags:
-- composite link model
-- GLM
-- histogram
-- binned data
-- smoothing
 affiliations:
 - name: Institute of Public Health, Center on Population Dynamics, University of Southern Denmark, Odense, Denmark
   index: 1
@@ -28,7 +28,7 @@ affiliations:
 - name: Max Planck Institute for Demographic Research, Rostock, Germany
   index: 3
 date: "10 September 2018"
-bibliography: REFERENCES.bib
+bibliography: paper.bib
 ---
 
 ``ungroup`` is an open source software library written in the ``R`` programming language [@team2018r] that introduces a versatile method for ungrouping histograms (binned count data) assuming that counts are Poisson distributed and that the underlying sequence over a fine grid to be estimated is smooth. The method is based on the composite link model [@thompson1981] and estimation is achieved by maximizing a penalized likelihood [@eilers2007], which extends standard generalized linear models. The penalized composite link model (PCLM) implements the idea that observed counts, interpreted as realizations from Poisson distributions, are indirect observations of a finer (ungrouped) but latent sequence. This latent sequence represents the distribution of expected means on a fine resolution and has to be estimated from the aggregated data. Estimates are obtained by maximizing a penalized likelihood. This maximization is performed efficiently by a version of the iteratively re-weighted least-squares algorithm. Optimal values of the smoothing parameter are chosen by minimizing Bayesian or Akaike's Information Criterion [@hastie1990].
