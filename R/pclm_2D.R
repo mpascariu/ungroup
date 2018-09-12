@@ -54,7 +54,6 @@
 #' snapshot3d("plotP2.jpeg")     # save the plot in jpeg format
 #' aspect3d(x = 1, y = 2, z = 1) # modify the aspect ratio
 #' }
-#' 
 #' @export
 pclm2D <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95, 
                    verbose = TRUE, control = list()) {
@@ -66,7 +65,7 @@ pclm2D <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
   pclm.input.check(input, type)
   
   # Preliminary; start the clock
-  if (verbose) {pb = startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
+  if (verbose) {pb <- startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
   I[c("x", "y", "nlast", "offset")] <- create.artificial.bin(I) # ***
   
   # Deal with offset term
@@ -74,7 +73,7 @@ pclm2D <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
     if (all(dim(offset) == dim(y))) {
       if (verbose) { setpb(pb, 5); cat("   Ungrouping offset")}
       I$offset <- pclm2D(x = I$x, y = I$offset, I$nlast, offset = NULL, 
-                         out.step, ci.level, verbose = F, control)$fitted
+                         out.step, ci.level, verbose = FALSE, control)$fitted
     }
   }
   
@@ -90,7 +89,7 @@ pclm2D <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
   R  <- delete.artificial.bin(R) # ***
   G  <- map.bins(x, nlast, out.step)
   dn <- list(G$output$names, colnames(y))
-  dimnames(R$fit) = dimnames(R$lower) = dimnames(R$upper) = dimnames(R$SE) <- dn
+  dimnames(R$fit)<- dimnames(R$lower)<- dimnames(R$upper) <-dimnames(R$SE) <- dn
   
   # Output
   Fcall <- match.call()
@@ -129,12 +128,12 @@ pclm2D <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
 #' @export
 residuals.pclm2D <- function(object, ...) {
   if (!is.null(object$input$offset)) {
-    stop("residuals method not implemented for hazard rates", call. = F)
+    stop("residuals method not implemented for hazard rates", call. = FALSE)
   }
   C  <- object$deep$C
   x  <- object$input$x
   y  <- object$input$y
-  nr <- 1:length(x)
+  nr <- seq_along(x)
   nc <- 1:(ncol(C) / length(y) - 1)
   y.hat <- C[nr, nc] %*% fitted(object)
   res <- y - y.hat
@@ -158,6 +157,7 @@ print.pclm2D <- function(x, ...){
   cat("\n")
 }
 
+
 #' Summary method for pclm2D
 #' Generic function used to produce result summaries of the results produced 
 #' by \code{\link{pclm2D}}.
@@ -172,9 +172,10 @@ summary.pclm2D <- function(object, ...) {
   dim.y <- dim(object$input$y)
   dim.f <- dim(fitted(object))
   out.step <- object$input$out.step
-  out = structure(class = "summary.pclm2D", as.list(environment()))
+  out <- structure(class = "summary.pclm2D", as.list(environment()))
   return(out)
 }
+
 
 #' Print method for summary.pclm2D
 #' @param x An object of class \code{"summary.pclm2D"}
@@ -197,6 +198,3 @@ print.summary.pclm2D <- function(x, ...) {
     cat("\n")
   })
 }
-
-
-

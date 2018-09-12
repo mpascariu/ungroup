@@ -107,7 +107,6 @@ library(rgl)
 snapshot3d("plotP2.jpeg")     # save the plot in jpeg format
 aspect3d(x = 1, y = 2, z = 1) # modify the aspect ratio
 }
-
 }
 \references{
 \insertAllCited{}

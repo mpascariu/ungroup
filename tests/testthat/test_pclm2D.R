@@ -14,7 +14,7 @@ test_pclm_2D <- function(M) {
     expect_true(all(fv >= 0))
     expect_identical(dim(fv), dim(lower))
     expect_identical(dim(upper), dim(lower))
-    if (is.null(M$input$offset)) { # Suspend this untill a solution is found.
+    if (is.null(M$input$offset)) {
       expect_true(abs(sum(fv) - sum(M$input$y)) < 1)
     }
   })

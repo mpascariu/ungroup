@@ -12,6 +12,7 @@
 #' @importFrom graphics axis barplot legend lines plot abline par
 #' @importFrom rgl axes3d box3d open3d surface3d title3d
 #' @importFrom pbapply startpb setpb closepb
+#' @import Rdpack
 #' @name ungroup
 #' @useDynLib ungroup
 #' @aliases NULL

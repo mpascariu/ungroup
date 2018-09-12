@@ -11,7 +11,12 @@
 pclm.fit <- function(x, y, nlast, offset, out.step, verbose,
                      lambda, kr, deg, diff, max.iter, tol, type){
   
-  if (verbose) {pb = startpb(0, 100); setpb(pb, 50); cat("   Ungrouping data      ")}
+  if (verbose) { # Setup progress bar
+    pb = startpb(0, 100)
+    setpb(pb, 50)
+    cat("   Ungrouping data      ")
+  }
+  
   # Some preparations
   CM   <- build_C_matrix(x, y, nlast, offset, out.step, type) # composition matrix
   BM   <- build_B_spline_basis(CM$gx, CM$gy, kr, deg, diff, type) # B-spline
@@ -230,12 +235,13 @@ validate.nlast <- function(x, nlast, out.step) {
             "'. Now 'nlast = ", new.nlast, "'. The impact in results should be",
             " insignificant. However, if the adjustment is not acceptable",
             " try out one of the following 'out.step' values: ", 
-            paste(vos, collapse = ", "), ".", call. = F)
+            paste(vos, collapse = ", "), ".", call. = FALSE)
   } else {
     new.nlast <- nlast
   }
   return(new.nlast)
 }
+
 
 #' Suggest values of \code{out.step} that do not 
 #' require an adjustment of \code{nlast}
@@ -248,6 +254,3 @@ suggest.valid.out.step <- function(len, increment = 0.01) {
   tv <- trunc(v)
   o[v == tv]
 }
-
-
-

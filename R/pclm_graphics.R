@@ -30,22 +30,26 @@ plot.pclm <- function(x,
   n1 <- BI$length
   n2 <- BO$length
   N  <- BO$n
-  b1 <- BI$breaks[1,1]
+  b1 <- BI$breaks[1, 1]
   t1 <- with(BI, c(b1, breaks[2, ]))
   t2 <- with(BO, c(b1, breaks[2, ]))
   
   # Graphical parameters
-  if (missing(xlab)) xlab = "(x)"
-  if (missing(type)) type = "l"
-  if (missing(lwd))  lwd = 2
-  if (missing(legend)) legend = c("Input values", "Fitted values", "Conf. intervals")
+  if (missing(xlab)) xlab <- "(x)"
+  if (missing(type)) type <- "l"
+  if (missing(lwd))  lwd <- 2
+  if (missing(legend)) {
+    legend <- c("Input values", "Fitted values", "Conf. intervals")
+  }
   
   if (is.null(Ex)) { # Histogram
-    if (missing(ylab)) ylab = "Counts (y)"
-    if (missing(ylim)) ylim = c(0, max(Y/n1, fv/n2) * 1.3)
-    if (missing(col))  col  = c("gold2", 2, 4)
-    L2 = max(c(Y/n1)[1:3]) >= max(rev(c(Y/n1))[1:3])
-    if (missing(legend.position)) legend.position = ifelse(L2, "topright", "topleft")
+    if (missing(ylab)) ylab <- "Counts (y)"
+    if (missing(ylim)) ylim <- c(0, max(Y/n1, fv/n2) * 1.3)
+    if (missing(col))  col  <- c("gold2", 2, 4)
+    L2 <- max(c(Y/n1)[1:3]) >= max(rev(c(Y/n1))[1:3])
+    if (missing(legend.position)) {
+      legend.position <- ifelse(L2, "topright", "topleft")
+    }
     
     f <- function(x) c(x, x[length(x)])
     barplot(height = Y/n1, width = n1, space = 0, 
@@ -60,16 +64,18 @@ plot.pclm <- function(x,
            lty = c(NA, 1, 1), lwd = c(NA, lwd, lwd),
            col = col, text.col = "grey40", pt.cex = 2.3)
     axis(1, labels = t1, at = t1 - b1)
+    
   } else {# mx plot
-    if (missing(ylab)) ylab = "y / offset   (Log scale)"
-    if (missing(ylim)) ylim = c(min(fv) * 0.50, max(fv) * 2)
-    if (missing(col))  col = c(1, 2, 4)
-    if (missing(legend.position)) legend.position = "topleft"
+    if (missing(ylab)) ylab <- "y / offset   (Log scale)"
+    if (missing(ylim)) ylim <- c(min(fv) * 0.50, max(fv) * 2)
+    if (missing(col))  col <- c(1, 2, 4)
+    if (missing(legend.position)) legend.position <- "topleft"
     
     plot(t2, c(fv, fv[N]), type = type, log = 'y', col = col[2],
          xlab = xlab, ylab = ylab, ylim = ylim, axes = FALSE, ...)
     if (length(Y) == length(Ex)) {
-      lines(c(X, max(t1)), c(mx, max(mx)), type = "s", lwd = lwd + 1, col = col[1])
+      lines(x = c(X, max(t1)), y = c(mx, max(mx)), 
+            type = "s", lwd = lwd + 1, col = col[1])
     }
     # abline(v = c(X, max(t1)), col = "white", lwd = lwd)
     lines(x = t2, y = c(lw, lw[N]), type = type, col = col[3])
@@ -117,7 +123,7 @@ plot.pclm2D <- function(x, color = c(1, 2), alpha = c(1, .5),
   n    <- ncol(y)
   Z    <- if (is.null(Ex)) y else y/Ex
   Z    <- as.data.frame(Z)
-  Z$ID <- 1:nrow(Z)
+  Z$ID <- seq_len(nrow(Z))
   Z    <- rbind(Z, Z)
   Z    <- as.matrix(Z[sort(Z$ID), 1:n])
   Z    <- if (is.null(Ex)) sweep(Z, 1, len, FUN = "/") else log(Z)
@@ -129,8 +135,8 @@ plot.pclm2D <- function(x, color = c(1, 2), alpha = c(1, .5),
   len_ <- x$bin.definition$output$length
   Z_   <- as.matrix(fitted(x))
   Z_   <- if (is.null(Ex)) sweep(Z_, 1, len_, FUN = "/") else log(Z_)
-  X_   <- 1:nrow(Z_) * out.step
-  Y_   <- ncol(Z_):1
+  X_   <- seq_len(nrow(Z_)) * out.step
+  Y_   <- rev(seq_len(ncol(Z_)))
   
   # Plot
   if (!par('new')) open3d(windowRect = c(50, 50, 700, 700))

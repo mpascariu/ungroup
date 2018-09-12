@@ -28,7 +28,7 @@ ofun <- function(L, I, type) {
 optimize_par <- function(I, type) {
   
   with(I$control, {
-    if (I$verbose) pb = startpb(0, 100)
+    if (I$verbose) pb <- startpb(0, 100)
     
     # Find lambda (continuos)
     if (any(is.na(lambda))) { 
@@ -66,7 +66,8 @@ optimize_par <- function(I, type) {
     if (lambda.hat[1] == int.lambda[2]) {
       warning(paste0("'lambda' has reached the upper limit of ", int.lambda[2],
                      ". Maybe it is a good idea to extend interval. ",
-                     "See 'int.lambda' argument in 'pclm2D.control'."), call. = F)
+                     "See 'int.lambda' argument in 'pclm2D.control'."), 
+              call. = FALSE)
     } 
     return(lambda.hat)
   })

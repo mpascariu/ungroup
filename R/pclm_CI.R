@@ -34,6 +34,7 @@ pclm.confidence <- function(fit, out.step, y, SE, ci.level, type, offset) {
   return(out)
 }
 
+
 #' Compute Confidence Intervals for estimated hazard 
 #' @param X List of inputs from pclm.confidence function
 #' @keywords internal
@@ -110,6 +111,7 @@ AIC.pclm <- function(object, ..., k = 2) {
   })
 }
 
+
 #' PCLM-2D Akaike Information Criterion
 #' 
 #' @inherit AIC.pclm description params details return references
@@ -130,6 +132,7 @@ BIC.pclm <- function(object, ...) {
     return(bic)
   })
 }
+
 
 #' PCLM-2D Akaike Information Criterion
 #' 
