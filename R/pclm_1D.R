@@ -81,7 +81,10 @@
 #' # Example 2 ----------------------
 #' # ungroup even in smaller intervals
 #' M2 <- pclm(x, y, nlast, out.step = 0.5)
-#' plot(M2)
+#' head(fitted(M1))
+#' plot(M1, type = "s")
+#' # Note, in example 1 we are estimating intervals of length 1. In example 2 
+#' # we are estimating intervals of length 0.5 using the same aggregate data.
 #' 
 #' # Example 3 ----------------------
 #' # Do not optimise smoothing parameters; choose your own. Faster.

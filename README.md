@@ -37,6 +37,18 @@ You can track (and contribute to) the development of `ungroup` at https://github
    devtools::install_github("mpascariu/ungroup")
    ```
 
+## Intro
+Get started with `ungroup` by checking the vignette 
+ ```R
+ browseVignettes(package = "ungroup") 
+ ```
+
+## Contributing
+This software is an academic project. We welcome any issues and pull requests.
+* If `ungroup` is malfunctioning, please report the case by submitting an issue on GitHub.
+* If you wish to contribute, please submit a pull request following the guidelines in [CONTRIBUTING.md](https://github.com/mpascariu/ungroup/blob/master/CONTRIBUTING.md).
+
+
 ## References
 [Rizzi S](http://findresearcher.sdu.dk:8080/portal/en/person/srizzi), [Gampe J](http://www.demogr.mpg.de/en/institute/staff_directory_1899/jutta_gampe_655.htm) and Eilers PHC. 2015. [Efficient Estimation of Smooth Distributions From Coarsely Grouped Data.](https://doi.org/10.1093/aje/kwv020) American Journal of Epidemiology, Volume 182, Issue 2, Pages 138-147.
 
