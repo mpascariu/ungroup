@@ -38,7 +38,7 @@ You can track (and contribute to) the development of `ungroup` at https://github
    ```
 
 ## Intro
-Get started with `ungroup` by checking the vignette 
+Get started with `ungroup` by checking the [vignette](https://github.com/mpascariu/ungroup/blob/master/inst/doc/Intro.pdf) 
  ```R
  browseVignettes(package = "ungroup") 
  ```
