@@ -31,15 +31,13 @@ date: "19 September 2018"
 bibliography: paper.bib
 ---
 
-#Summary
+# Summary
 
 ``ungroup`` is an open source software library written in the ``R`` programming language [@team2018r] that introduces a versatile method for ungrouping histograms (binned count data) assuming that counts are Poisson distributed and that the underlying sequence over a fine grid to be estimated is smooth. The method is based on the composite link model [@thompson1981] and estimation is achieved by maximizing a penalized likelihood [@eilers2007], which extends standard generalized linear models. The penalized composite link model (PCLM) implements the idea that observed counts, interpreted as realizations from Poisson distributions, are indirect observations of a finer (ungrouped) but latent sequence. This latent sequence represents the distribution of expected means on a fine resolution and has to be estimated from the aggregated data. Estimates are obtained by maximizing a penalized likelihood. This maximization is performed efficiently by a version of the iteratively re-weighted least-squares algorithm. Optimal values of the smoothing parameter are chosen by minimizing Bayesian or Akaike's Information Criterion [@hastie1990].
 
 Ungrouping binned data can be desirable for many reasons: Bins can be too coarse to allow for accurate analysis; comparisons can be hindered when different grouping approaches are used in different histograms; the last interval may be wide and open-ended masking the tail behaviour of the underlying distribution. Age-at-death distributions grouped into age classes and abridged life tables are examples of binned data which can be ungrouped with the package ``ungroup``. The modest assumptions of the methodology underpinning the PCLM method make it suitable for many demographic and epidemiological applications. For a detailed description of the method and applications see @rizzi2015 and @rizzi2016.
 
 The penalized composite link model can be extended to a two-dimensional regression problem [@rizzi2018]. The two-dimensional regression analysis combines two approaches: the PCLM for ungrouping in one dimension and two-dimensional smoothing with P-splines [@currie2004]. As an example one can ungroup age-specific distributions from the coarsely grouped data and smooth across adjacent calendar years to estimate both detailed age-at-death distributions and mortality time trends.
-
-# Examples
 
 ![Ungrouping of the age-at-death distribution and estimating age-specific death rates. The original death counts and exposures taken from the @hmd2018 using the ``MortalityLaws`` R package [-@MortalityLaws160] were grouped in 5-year bins plus a wide class for ages 85+. In each panel, the original aggregated data is compared with smoothly estimated values.](figures/pclm1D.pdf)
 
