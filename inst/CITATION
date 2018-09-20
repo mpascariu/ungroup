@@ -1,0 +1,33 @@
+
+bibentry(bibtype = "Article",
+  title        = "{ungroup}: An {R} package for efficient estimation of smooth distributions from coarsely binned data",
+  author       = c(
+  person("Marius D.", "Pascariu", 
+          role = c("aut", "cre"), 
+          email = "rpascariu@outlook.com", 
+          comment = c(ORCID = "0000-0002-2568-6489")),
+  person("Maciej J.", "Danko", 
+          role = "aut", 
+          email = "Danko@demogr.mpg.de", 
+          comment = c(ORCID = "0000-0002-7924-9022")),
+  person("Jonas", "Schoeley", 
+          role = "aut", 
+          comment = c(ORCID = "0000-0002-3340-8518")),
+  person("Silvia", "Rizzi", 
+          role = "aut", 
+          email = "srizzi@health.sdu.dk")),
+  journal      = "Journal of Open Source Software",
+  year         = "2018",
+  volume       = "3",
+  number       = "29",
+  pages        = "937",
+  doi          = "10.21105/joss.00937",
+
+  textVersion  =
+  paste("Pascariu et al., (2018).",
+        "ungroup: An R package for efficient estimation of smooth distributions", 
+        "from coarsely binned data. Journal of Open Source Software,", 
+        "3(29), 937, https://doi.org/10.21105/joss.00937"),
+        
+  header       = "To cite ungroup in publications use:"
+)
