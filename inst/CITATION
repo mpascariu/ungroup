@@ -1,7 +1,16 @@
 
-bibentry(bibtype = "Article",
-  title        = "{ungroup}: An {R} package for efficient estimation of smooth distributions from coarsely binned data",
-  author       = c(
+bibentry(
+  header = "To cite ungroup in publications use:",
+  
+  textVersion =
+  paste("Pascariu et al., (2018).",
+        "ungroup: An R package for efficient estimation of smooth distributions", 
+        "from coarsely binned data. Journal of Open Source Software,", 
+        "3(29), 937, https://doi.org/10.21105/joss.00937"),
+        
+  bibtype = "article",
+  title   = "{ungroup}: An {R} package for efficient estimation of smooth distributions from coarsely binned data",
+  author  = c(
   person("Marius D.", "Pascariu", 
           role = c("aut", "cre"), 
           email = "rpascariu@outlook.com", 
@@ -16,18 +25,10 @@ bibentry(bibtype = "Article",
   person("Silvia", "Rizzi", 
           role = "aut", 
           email = "srizzi@health.sdu.dk")),
-  journal      = "Journal of Open Source Software",
-  year         = "2018",
-  volume       = "3",
-  number       = "29",
-  pages        = "937",
-  doi          = "10.21105/joss.00937",
-
-  textVersion  =
-  paste("Pascariu et al., (2018).",
-        "ungroup: An R package for efficient estimation of smooth distributions", 
-        "from coarsely binned data. Journal of Open Source Software,", 
-        "3(29), 937, https://doi.org/10.21105/joss.00937"),
-        
-  header       = "To cite ungroup in publications use:"
+  journal = "Journal of Open Source Software",
+  year    = "2018",
+  volume  = "3",
+  number  = "29",
+  pages   = "937",
+  doi     = "10.21105/joss.00937"
 )
