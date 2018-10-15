@@ -20,12 +20,6 @@ pclm.input.check <- function(X, pclm.type) {
       stop("'y' contains negative values. The counts are always positive.", 
            call. = FALSE)
     }
-    if (length(nlast) != 1) {
-      stop("length(nlast) must be 1", call. = FALSE)
-    }
-    if (nlast <= 0) {
-      stop("'nlast' must be greater than 0", call. = FALSE)
-    }
     if (ci.level <= 50.1 || ci.level >= 99.9) {
       stop("'ci.level' must take values in the [50.1, 99.9] interval", 
            call. = FALSE)
@@ -75,3 +69,70 @@ pclm.input.check <- function(X, pclm.type) {
   })
 }
 
+
+#' Check if \code{nlast} needs to be adjusted in order to accommodate 
+#' \code{out.step}
+#' @inheritParams pclm
+#' @keywords internal
+validate.nlast <- function(x, nlast, out.step) {
+  if (length(nlast) != 1) {
+    stop("'nlast' has to be a scalar. length(nlast) must be equal to 1.", 
+         call. = FALSE)
+  }
+  if (nlast <= 0) {
+    stop("'nlast' must be greater than 0", call. = FALSE)
+  }
+  
+  len <- max(x) - min(x) + nlast
+  N   <- len/out.step
+  if (frac(N) != 0) {
+    n.bins <- round(N, 0)
+    new.nlast <- n.bins * out.step - len + nlast
+    vos <- suggest.valid.out.step(len)
+    warning("'nlast' has been adjusted in order to obtain ", n.bins, 
+            " bins of equal length as specified in 'out.step = ", out.step,
+            "'. Now 'nlast = ", new.nlast, "'. The impact in results should be",
+            " insignificant. However, if the adjustment is not acceptable",
+            " try out one of the following 'out.step' values: ", 
+            paste(vos, collapse = ", "), ".", call. = FALSE)
+  } else {
+    new.nlast <- nlast
+  }
+  return(new.nlast)
+}
+
+
+#' Sequence function with last value
+#' 
+#' @inheritParams base::seq
+#' @keywords internal 
+seqlast <- function(from, to, by) 
+{
+  vec <- do.call(what = seq, args = list(from, to, by))
+  if ( tail(vec, 1) != to ) {
+    return(c(vec, to))
+  } else {
+    return(vec)
+  }
+}
+
+
+#' Extract Fractional Part of a Number
+#' @param x A numeric value, vector or matrix
+#' @keywords internal
+frac <- function(x) {
+  x - trunc(x)
+}
+
+
+#' Suggest values of \code{out.step} that do not 
+#' require an adjustment of \code{nlast}
+#' @param len Interval length
+#' @param increment Increment
+#' @keywords internal
+suggest.valid.out.step <- function(len, increment = 0.01) {
+  o  <- seq(0.1, 1, by = increment)
+  v  <- len/o
+  tv <- trunc(v)
+  o[v == tv]
+}
