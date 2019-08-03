@@ -31,7 +31,7 @@ Ex$gr  <- Dx$gr <- rep(x, n)
 y2      <- aggregate(Dx[, 1:20], by = list(Dx$gr), FUN = "sum")[, -1]
 offset2 <- aggregate(Ex[, 1:20], by = list(Ex$gr), FUN = "sum")[, -1]
 
-P1 <- pclm2D(x, y2, nlast)
+P1 <- pclm2D(x, as.matrix(y2), nlast)
 P2 <- pclm2D(x, y2, nlast, offset2, control = list(max.iter = 200))
 P3 <- pclm2D(x, y2, nlast, control = list(lambda = c(NA, NA), max.iter = 200))
 

@@ -1,3 +1,8 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GPL-3
+# Last update: Sat Aug 03 17:23:49 2019
+# --------------------------------------------------- #
 
 #' Validate input values
 #' 
@@ -45,7 +50,7 @@ pclm.input.check <- function(X, pclm.type) {
   
   # Validate input in pclm.control
   with(X$control, {
-    if (!is.na(lambda) && lambda < 0) {
+    if (any(!is.na(lambda)) && any(lambda < 0)) {
       stop("'lambda' must be a positive scalar", call. = FALSE)
     }
     if (!is.na(kr)) {

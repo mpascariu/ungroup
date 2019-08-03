@@ -1,3 +1,9 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GPL-3
+# Last update: Sat Aug 03 16:42:09 2019
+# --------------------------------------------------- #
+
 
 #' Two-Dimensional Penalized Composite Link Model (PCLM-2D)
 #' 
@@ -8,7 +14,7 @@
 #' when mortality surfaces are to be estimated to capture both age-specific 
 #' trajectories of coarsely grouped distributions and time trends 
 #' \insertCite{rizzi2018}{ungroup}.
-#' @param y data.frame with counts to be ungrouped. The number of rows 
+#' @param y \code{data.frame} with counts to be ungrouped. The number of rows 
 #' should be equal with the length of \code{x}.
 #' @param verbose Logical value. Indicates whether a progress bar should be shown or not.
 #' Default: \code{TRUE}.
@@ -55,8 +61,18 @@
 #' aspect3d(x = 1, y = 2, z = 1) # modify the aspect ratio
 #' }
 #' @export
-pclm2D <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95, 
-                   verbose = TRUE, control = list()) {
+pclm2D <- function(x, 
+                   y, 
+                   nlast, 
+                   offset = NULL, 
+                   out.step = 1, 
+                   ci.level = 95, 
+                   verbose = TRUE, 
+                   control = list()) {
+  
+  if(is.matrix(y)) y <- as.data.frame(y)
+  if(is.matrix(offset)) offset <- as.data.frame(offset)
+  
   # Check input
   control <- do.call("control.pclm2D", control)
   input   <- I <- as.list(environment()) # save all the input for later use
