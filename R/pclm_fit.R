@@ -150,6 +150,7 @@ build_P_matrix <- function(BA, BY, lambda, type){
 #' @param vo Numerical values of the bin created for \code{offset} input 
 #' (if the case).
 #' @keywords internal
+#' @export
 create.artificial.bin <- function(i, vy = 1, vo = 1.01){
   with(i, {
     x     <- c(x, max(x) + nlast)
@@ -166,6 +167,7 @@ create.artificial.bin <- function(i, vy = 1, vo = 1.01){
 #' Delete from results the last group added artificially in pclm and pclm2D 
 #' @param M A pclm.fit object
 #' @keywords internal
+#' @export
 delete.artificial.bin <- function(M){
   n <- 1
   N <- 1:n

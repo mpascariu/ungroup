@@ -125,6 +125,7 @@ pclm <- function(x, y, nlast,
                  verbose  = FALSE, 
                  control  = list()){
   # Check input
+  y       <- as.numeric(y)
   control <- do.call("control.pclm", control)
   input   <- I <- as.list(environment()) # save all the input for later use
   I$nlast <- validate.nlast(x, nlast, out.step)

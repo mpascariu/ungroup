@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
-# License: GPL-3
-# Last update: Sat Aug 03 17:23:49 2019
+# License: MIT
+# Last update: Thu Nov 07 12:13:55 2019
 # --------------------------------------------------- #
 
 #' Validate input values
@@ -9,6 +9,7 @@
 #' @param X A list with input arguments provided in \code{\link{pclm}} function
 #' @inheritParams pclm.fit
 #' @keywords internal
+#' @export
 pclm.input.check <- function(X, pclm.type) {
   # Validate the other arguments
   with(X, {
@@ -45,7 +46,10 @@ pclm.input.check <- function(X, pclm.type) {
         stop("length(x) must be equal to nrow(y)", call. = FALSE)
       }
     }
-    
+    if (is.array(y)) {
+      stop("'y' argument should be a numeric vector or a data.frame.", 
+           call. = FALSE)
+    }
   })
   
   # Validate input in pclm.control
@@ -79,6 +83,7 @@ pclm.input.check <- function(X, pclm.type) {
 #' \code{out.step}
 #' @inheritParams pclm
 #' @keywords internal
+#' @export
 validate.nlast <- function(x, nlast, out.step) {
   if (length(nlast) != 1) {
     stop("'nlast' has to be a scalar. length(nlast) must be equal to 1.", 
@@ -110,7 +115,8 @@ validate.nlast <- function(x, nlast, out.step) {
 #' Sequence function with last value
 #' 
 #' @inheritParams base::seq
-#' @keywords internal 
+#' @keywords internal
+#' @export 
 seqlast <- function(from, to, by) 
 {
   vec <- do.call(what = seq, args = list(from, to, by))
@@ -125,6 +131,7 @@ seqlast <- function(from, to, by)
 #' Extract Fractional Part of a Number
 #' @param x A numeric value, vector or matrix
 #' @keywords internal
+#' @export
 frac <- function(x) {
   x - trunc(x)
 }
@@ -135,6 +142,7 @@ frac <- function(x) {
 #' @param len Interval length
 #' @param increment Increment
 #' @keywords internal
+#' @export
 suggest.valid.out.step <- function(len, increment = 0.01) {
   o  <- seq(0.1, 1, by = increment)
   v  <- len/o
