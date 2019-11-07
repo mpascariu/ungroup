@@ -12,14 +12,15 @@ pclm2D(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
 For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 \code{x} will be defined by the vector: \code{c(0, 5, 10)}.}
 
-\item{y}{data.frame with counts to be ungrouped. The number of rows 
+\item{y}{\code{data.frame} with counts to be ungrouped. The number of rows 
 should be equal with the length of \code{x}.}
 
-\item{nlast}{Length of the last interval. In the example above \code{nlast} would be 5.}
+\item{nlast}{Length of the last interval. In the example above \code{nlast} 
+would be 5.}
 
 \item{offset}{Optional offset term to calculate smooth mortality rates. 
-A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
-for further details.}
+A vector of the same length as x and y. See 
+\insertCite{rizzi2015;textual}{ungroup} for further details.}
 
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}
@@ -27,8 +28,8 @@ Values between 0.1 and 1 are accepted. Default: 1.}
 \item{ci.level}{Level of significance for computing confidence intervals. 
 Default: \code{95}.}
 
-\item{verbose}{Logical value. Indicates whether a progress bar should be shown or not.
-Default: \code{TRUE}.}
+\item{verbose}{Logical value. Indicates whether a progress bar should be 
+shown or not. Default: \code{TRUE}.}
 
 \item{control}{List with additional parameters: \itemize{
 \item{\code{lambda}} -- Smoothing parameter to be used in pclm estimation.
@@ -43,12 +44,14 @@ searched needs to be specified. Format: vector containing the end-points.
 components of PCLM coefficients.
 \item{\code{opt.method}} -- Selection criterion of the model.
 Possible values are \code{"AIC"} and \code{"BIC"}.
-\item{\code{max.iter}} -- Maximal number of iterations used in fitting procedure.
+\item{\code{max.iter}} -- Maximal number of iterations used in fitting 
+procedure.
 \item{\code{tol}} -- Relative tolerance in PCLM fitting procedure.}}
 }
 \value{
 The output is a list with the following components:
- \item{input}{ A list with arguments provided in input. Saved for convenience.}
+ \item{input}{ A list with arguments provided in input. Saved for 
+ convenience.}
  \item{fitted}{ The fitted values of the PCLM model.}
  \item{ci}{ Confidence intervals around fitted values.}
  \item{goodness.of.fit}{ A list containing goodness of fit measures: 
@@ -60,7 +63,8 @@ location in input and output objects.}
  \item{deep}{ A list of objects created in the fitting process. Useful 
 in diagnosis of possible issues.}
  \item{call}{ An unevaluated function call, that is, an unevaluated 
-expression which consists of the named function applied to the given arguments.}
+expression which consists of the named function applied to the given 
+arguments.}
 }
 \description{
 Fit two-dimensional penalized composite link model (PCLM-2D), 
@@ -69,7 +73,7 @@ classes for adjacent years. The PCLM can be extended to a two-dimensional
 regression problem. This is particularly suitable for mortality analysis 
 when mortality surfaces are to be estimated to capture both age-specific 
 trajectories of coarsely grouped distributions and time trends 
-\insertCite{rizzi2018}{ungroup}.
+\insertCite{rizzi2019}{ungroup}.
 }
 \examples{
 # Input data

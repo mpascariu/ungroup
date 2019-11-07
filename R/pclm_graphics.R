@@ -1,3 +1,8 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: MIT
+# Last update: Thu Nov 07 11:48:33 2019
+# --------------------------------------------------- #
 
 #' Generic Plot for pclm Class
 #' 
@@ -94,10 +99,11 @@ plot.pclm <- function(x,
 #' Generic Plot for pclm2D Class
 #' 
 #' The generic plot for a \code{pclm2D} object is constructed using 
-#' \code{\link{rgl}} package. And can be modified/improved using the \code{rgl} tools 
-#' implemented in the package like: \code{\link{surface3d}}, \code{\link{axes3d}},
-#' \code{\link{aspect3d}}, \code{\link{title3d}} or \code{\link{snapshot3d}}. 
-#' For A complete guide to 3D visualization using \code{rgl} see 
+#' \code{\link{rgl}} package. And can be modified/improved using the \code{rgl} 
+#' tools implemented in the package like: \code{\link{surface3d}}, 
+#' \code{\link{axes3d}}, \code{\link{aspect3d}}, \code{\link{title3d}} or 
+#' \code{\link{snapshot3d}}.For A complete guide to 3D visualization using 
+#' \code{rgl} see 
 #' \href{http://www.sthda.com/english/wiki/a-complete-guide-to-3d-visualization-device-system-in-r-r-software-and-data-visualization}{this tutorial}.
 #' @param x an object of class \code{\link{pclm2D}}
 #' @inheritParams rgl::surface3d
@@ -110,10 +116,17 @@ plot.pclm <- function(x,
 #' @examples 
 #' # See complete examples in pclm2D help page
 #' @export
-plot.pclm2D <- function(x, color = c(1, 2), alpha = c(1, .5), 
-                        axes = TRUE, box = TRUE, 
-                        xlab = "x-axis", ylab = "y-axis", zlab = "z-axis", 
-                        main = "", sub = "", ...) {
+plot.pclm2D <- function(x, 
+                        color = c(1, 2), 
+                        alpha = c(1, .5), 
+                        axes  = TRUE, 
+                        box   = TRUE, 
+                        xlab  = "x-axis", 
+                        ylab  = "y-axis", 
+                        zlab  = "z-axis", 
+                        main  = "",
+                        sub   = "", 
+                        ...) {
   # Prepare input values
   len  <- sort(rep(x$bin.definition$input$length, 2))
   loc  <- x$bin.definition$input$location

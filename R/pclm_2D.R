@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
-# License: GPL-3
-# Last update: Sat Aug 03 16:42:09 2019
+# License: MIT
+# Last update: Sun Aug 11 21:04:11 2019
 # --------------------------------------------------- #
 
 
@@ -13,11 +13,11 @@
 #' regression problem. This is particularly suitable for mortality analysis 
 #' when mortality surfaces are to be estimated to capture both age-specific 
 #' trajectories of coarsely grouped distributions and time trends 
-#' \insertCite{rizzi2018}{ungroup}.
+#' \insertCite{rizzi2019}{ungroup}.
 #' @param y \code{data.frame} with counts to be ungrouped. The number of rows 
 #' should be equal with the length of \code{x}.
-#' @param verbose Logical value. Indicates whether a progress bar should be shown or not.
-#' Default: \code{TRUE}.
+#' @param verbose Logical value. Indicates whether a progress bar should be 
+#' shown or not. Default: \code{TRUE}.
 #' @inheritParams pclm
 #' @inherit pclm return
 #' @seealso 

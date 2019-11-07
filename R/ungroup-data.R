@@ -1,4 +1,8 @@
-
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: MIT
+# Last update: Thu Nov 07 11:53:41 2019
+# --------------------------------------------------- #
 
 #' Test Dataset in the Package
 #' 

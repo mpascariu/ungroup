@@ -1,3 +1,8 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: MIT
+# Last update: Thu Nov 07 11:21:49 2019
+# --------------------------------------------------- #
 
 #' Univariate Penalized Composite Link Model (PCLM)
 #' 
@@ -17,16 +22,19 @@
 #' @param x Vector containing the starting values of the input intervals/bins.
 #' For example: if we have 3 bins \code{[0,5), [5,10) and [10, 15)},
 #' \code{x} will be defined by the vector: \code{c(0, 5, 10)}.
-#' @param y Vector with counts to be ungrouped. It must have the same dimension as \code{x}.
-#' @param nlast Length of the last interval. In the example above \code{nlast} would be 5.
+#' @param y Vector with counts to be ungrouped. It must have the same dimension 
+#' as \code{x}.
+#' @param nlast Length of the last interval. In the example above \code{nlast} 
+#' would be 5.
 #' @param offset Optional offset term to calculate smooth mortality rates. 
-#' A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
-#' for further details.
+#' A vector of the same length as x and y. See 
+#' \insertCite{rizzi2015;textual}{ungroup} for further details.
 #' @param out.step Length of estimated intervals in output. 
 #' Values between 0.1 and 1 are accepted. Default: 1.
 #' @param ci.level Level of significance for computing confidence intervals. 
 #' Default: \code{95}.
-#' @param verbose Logical value. Indicates whether a progress bar should be shown or not.
+#' @param verbose Logical value. Indicates whether a progress bar should be 
+#' shown or not.
 #' Default: \code{FALSE}.
 #' @param control List with additional parameters: \itemize{
 #'   \item{\code{lambda}} -- Smoothing parameter to be used in pclm estimation.
@@ -41,11 +49,13 @@
 #'   components of PCLM coefficients.
 #'   \item{\code{opt.method}} -- Selection criterion of the model.
 #'   Possible values are \code{"AIC"} and \code{"BIC"}.
-#'   \item{\code{max.iter}} -- Maximal number of iterations used in fitting procedure.
+#'   \item{\code{max.iter}} -- Maximal number of iterations used in fitting 
+#'   procedure.
 #'   \item{\code{tol}} -- Relative tolerance in PCLM fitting procedure.}
 #' 
 #' @return The output is a list with the following components:
-#'  \item{input}{ A list with arguments provided in input. Saved for convenience.}
+#'  \item{input}{ A list with arguments provided in input. Saved for 
+#'  convenience.}
 #'  \item{fitted}{ The fitted values of the PCLM model.}
 #'  \item{ci}{ Confidence intervals around fitted values.}
 #'  \item{goodness.of.fit}{ A list containing goodness of fit measures: 
@@ -57,7 +67,8 @@
 #'  \item{deep}{ A list of objects created in the fitting process. Useful 
 #' in diagnosis of possible issues.}
 #'  \item{call}{ An unevaluated function call, that is, an unevaluated 
-#' expression which consists of the named function applied to the given arguments.}
+#' expression which consists of the named function applied to the given 
+#' arguments.}
 #' @seealso 
 #' \code{\link{control.pclm}}
 #' \code{\link{plot.pclm}}
@@ -107,8 +118,12 @@
 #' 
 #' M5 <- pclm(x, y, nlast, offset = ungroupped_Ex)
 #' @export
-pclm <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95, 
-                 verbose = FALSE, control = list()){
+pclm <- function(x, y, nlast, 
+                 offset   = NULL, 
+                 out.step = 1, 
+                 ci.level = 95, 
+                 verbose  = FALSE, 
+                 control  = list()){
   # Check input
   control <- do.call("control.pclm", control)
   input   <- I <- as.list(environment()) # save all the input for later use
@@ -124,8 +139,14 @@ pclm <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
   if (!is.null(offset)) {
     if (length(offset) == length(y)) {
       if (verbose) { setpb(pb, 5); cat("   Ungrouping offset")}
-      I$offset <- pclm(x = I$x, y = I$offset, I$nlast, offset = NULL, 
-                       out.step, ci.level, verbose = FALSE, control)$fitted
+      I$offset <- pclm(x        = I$x, 
+                       y        = I$offset, 
+                       nlast    = I$nlast, 
+                       offset   = NULL, 
+                       out.step = out.step, 
+                       ci.level = ci.level, 
+                       verbose  = FALSE, 
+                       control  = control)$fitted
     } 
   }
   
@@ -134,8 +155,20 @@ pclm <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
   if (any(is.na(L))) L <- optimize_par(I, type)
   
   # solve the PCLM 
-  M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, verbose,
-                              lambda = L, kr, deg, diff, max.iter, tol, type))
+  M <- with(control, pclm.fit(x        = I$x, 
+                              y        = I$y, 
+                              nlast    = I$nlast, 
+                              offset   = I$offset, 
+                              out.step = out.step, 
+                              verbose  = verbose,
+                              lambda   = L, 
+                              kr       = kr, 
+                              deg      = deg, 
+                              diff     = diff, 
+                              max.iter = max.iter, 
+                              tol      = tol, 
+                              type     = type))
+  
   SE <- with(M, compute_standard_errors(B, QmQ, QmQP))
   R  <- with(M, pclm.confidence(fit, out.step, y, SE, ci.level, type, offset))
   R  <- delete.artificial.bin(R) # ***
@@ -146,10 +179,21 @@ pclm <- function(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
   # Output
   Fcall <- match.call()
   Par <- with(control, c(lambda = L, kr = kr, deg = deg))
-  gof <- list(AIC = AIC.pclm(M), BIC = BIC.pclm(M), standard.errors = R$SE)
-  ci  <- list(upper = R$upper, lower = R$lower)
-  out <- list(input = input, fitted = R$fit, ci = ci, goodness.of.fit = gof,
-              smoothPar = Par, bin.definition = G, deep = M, call = Fcall)
+  gof <- list(AIC = AIC.pclm(M), 
+              BIC = BIC.pclm(M), 
+              standard.errors = R$SE)
+  ci  <- list(upper = R$upper, 
+              lower = R$lower)
+  
+  # exit
+  out <- list(input           = input, 
+              fitted          = R$fit, 
+              ci              = ci, 
+              goodness.of.fit = gof,
+              smoothPar       = Par, 
+              bin.definition  = G, 
+              deep            = M, 
+              call            = Fcall)
   out <- structure(class = "pclm", out)
   if (verbose) setpb(pb, 100)
   return(out)  
@@ -203,14 +247,14 @@ print.pclm <- function(x, ...){
 #' @keywords internal
 #' @export
 summary.pclm <- function(object, ...) {
-  cl    <- object$call
-  AIC   <- round(object$goodness.of.fit$AIC, 2)
-  BIC   <- round(object$goodness.of.fit$BIC, 2)
-  sPar  <- round(object$smoothPar)
-  dim.y <- length(object$input$y)
-  dim.f <- length(fitted(object))
+  cl       <- object$call
+  AIC      <- round(object$goodness.of.fit$AIC, 2)
+  BIC      <- round(object$goodness.of.fit$BIC, 2)
+  sPar     <- round(object$smoothPar)
+  dim.y    <- length(object$input$y)
+  dim.f    <- length(fitted(object))
   out.step <- object$input$out.step
-  out <- structure(class = "summary.pclm", as.list(environment()))
+  out      <- structure(class = "summary.pclm", as.list(environment()))
   return(out)
 }
 

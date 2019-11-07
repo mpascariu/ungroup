@@ -38,10 +38,11 @@
 }
 \description{
 The generic plot for a \code{pclm2D} object is constructed using 
-\code{\link{rgl}} package. And can be modified/improved using the \code{rgl} tools 
-implemented in the package like: \code{\link{surface3d}}, \code{\link{axes3d}},
-\code{\link{aspect3d}}, \code{\link{title3d}} or \code{\link{snapshot3d}}. 
-For A complete guide to 3D visualization using \code{rgl} see 
+\code{\link{rgl}} package. And can be modified/improved using the \code{rgl} 
+tools implemented in the package like: \code{\link{surface3d}}, 
+\code{\link{axes3d}}, \code{\link{aspect3d}}, \code{\link{title3d}} or 
+\code{\link{snapshot3d}}.For A complete guide to 3D visualization using 
+\code{rgl} see 
 \href{http://www.sthda.com/english/wiki/a-complete-guide-to-3d-visualization-device-system-in-r-r-software-and-data-visualization}{this tutorial}.
 }
 \examples{

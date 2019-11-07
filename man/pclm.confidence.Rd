@@ -12,7 +12,8 @@ pclm.confidence(fit, out.step, y, SE, ci.level, type, offset)
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}
 
-\item{y}{Vector with counts to be ungrouped. It must have the same dimension as \code{x}.}
+\item{y}{Vector with counts to be ungrouped. It must have the same dimension 
+as \code{x}.}
 
 \item{SE}{Standard Errors}
 
@@ -23,8 +24,8 @@ Default: \code{95}.}
 univariate and two-dimensional model respectively.}
 
 \item{offset}{Optional offset term to calculate smooth mortality rates. 
-A vector of the same length as x and y. See \insertCite{rizzi2015;textual}{ungroup} 
-for further details.}
+A vector of the same length as x and y. See 
+\insertCite{rizzi2015;textual}{ungroup} for further details.}
 }
 \description{
 Compute Confidence Intervals for PCLM output

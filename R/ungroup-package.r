@@ -1,4 +1,8 @@
-
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: MIT
+# Last update: Thu Nov 07 11:33:27 2019
+# --------------------------------------------------- #
 
 #' @details 
 #' To learn more about the package, start with the vignettes:

@@ -1,3 +1,8 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: MIT
+# Last update: Thu Nov 07 11:46:20 2019
+# --------------------------------------------------- #
 
 
 #' Compute Standard Errors and Confidence Intervals

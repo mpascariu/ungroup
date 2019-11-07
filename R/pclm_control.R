@@ -1,3 +1,9 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: MIT
+# Last update: Thu Nov 07 11:46:49 2019
+# --------------------------------------------------- #
+
 
 #' Auxiliary for Controlling \code{pclm} Fitting
 #' 
@@ -10,6 +16,7 @@
 #'              opt.method = c("BIC", "AIC"),
 #'              max.iter   = 1e+3,
 #'              tol        = 1e-3)
+#'              
 #' @param lambda Smoothing parameter to be used in pclm estimation.
 #' If \code{lambda = NA} an algorithm will find the optimal values.
 #' @param kr Knot ratio. Number of internal intervals used for defining 1 knot in 
@@ -30,16 +37,17 @@
 #' @examples 
 #' control.pclm()
 #' @export
-control.pclm <- function(lambda = NA,
-                         kr = 2,
-                         deg = 3,
+control.pclm <- function(lambda     = NA,
+                         kr         = 2,
+                         deg        = 3,
                          int.lambda = c(0.1, 1e+5),
-                         diff = 2,
+                         diff       = 2,
                          opt.method = c("BIC", "AIC"),
-                         max.iter = 1e+3, 
-                         tol = 1e-3){
+                         max.iter   = 1e+3, 
+                         tol        = 1e-3){
+  
   opt.method <- match.arg(opt.method)
-  out <- c(as.list(environment()))
+  out        <- c(as.list(environment()))
   return(out)
 }
 
@@ -60,16 +68,17 @@ control.pclm <- function(lambda = NA,
 #' @examples 
 #' control.pclm2D()
 #' @export
-control.pclm2D <- function(lambda = c(1, 1),
-                           kr = 7,
-                           deg = 3,
+control.pclm2D <- function(lambda     = c(1, 1),
+                           kr         = 7,
+                           deg        = 3,
                            int.lambda = c(0.1, 1e+3),
-                           diff = 2,
+                           diff       = 2,
                            opt.method = c("BIC", "AIC"),
-                           max.iter = 1e+3, 
-                           tol = 1e-3){
+                           max.iter   = 1e+3, 
+                           tol        = 1e-3){
+  
   opt.method <- match.arg(opt.method)
-  out <- c(as.list(environment()))
+  out        <- c(as.list(environment()))
   return(out)
 }
 
