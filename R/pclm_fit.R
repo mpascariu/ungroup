@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: MIT
-# Last update: Thu Nov 07 11:33:39 2019
+# Last update: Wed Dec 04 19:17:56 2019
 # --------------------------------------------------- #
 
 #' Fit PCLM Models
@@ -180,7 +180,9 @@ delete.artificial.bin <- function(M){
   f2 <- function(x) { # method 2 - delete groups
     rev(rev(x)[-N])
   }
-  L <- class(M$fit) == "numeric"
+  # L <- class(M$fit) == "numeric"
+  L <- !is.matrix(M$fit)
+  
   M$fit   <- with(M, if (L) f1(fit)   else apply(fit,   2, FUN = f1))
   M$lower <- with(M, if (L) f1(lower) else apply(lower, 2, FUN = f1))
   M$upper <- with(M, if (L) f1(upper) else apply(upper, 2, FUN = f1))
