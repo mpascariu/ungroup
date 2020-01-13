@@ -4,7 +4,6 @@
 ^builds$
 ^checks$
 ^joss$
-^LICENSE$
 ^LICENSE\.md$
 ^.git$
 ^\.travis\.yml$
