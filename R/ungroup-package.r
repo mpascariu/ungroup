@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: MIT
-# Last update: Thu Nov 07 11:33:27 2019
+# Last update: Mon Dec 28 21:06:37 2020
 # --------------------------------------------------- #
 
 #' @details 
@@ -17,6 +17,7 @@
 #' @importFrom rgl axes3d box3d open3d surface3d title3d
 #' @importFrom pbapply startpb setpb closepb
 #' @import Rdpack
+#' @importClassesFrom Matrix dgCMatrix
 #' @name ungroup
 #' @useDynLib ungroup
 #' @aliases NULL
