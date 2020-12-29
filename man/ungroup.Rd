@@ -2,7 +2,6 @@
 % Please edit documentation in R/ungroup-package.r
 \docType{package}
 \name{ungroup}
-\alias{ungroup-package}
 \title{ungroup: Penalized Composite Link Model for Efficient Estimation of 
  Smooth Distributions from Coarsely Binned Data}
 \description{
@@ -38,13 +37,13 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Marius D. Pascariu \email{rpascariu@outlook.com} (0000-0002-2568-6489)
+\strong{Maintainer}: Marius D. Pascariu \email{rpascariu@outlook.com} (\href{https://orcid.org/0000-0002-2568-6489}{ORCID})
 
 Authors:
 \itemize{
   \item Silvia Rizzi \email{srizzi@health.sdu.dk}
-  \item Jonas Schoeley (0000-0002-3340-8518)
-  \item Maciej J. Danko \email{Danko@demogr.mpg.de} (0000-0002-7924-9022)
+  \item Jonas Schoeley (\href{https://orcid.org/0000-0002-3340-8518}{ORCID})
+  \item Maciej J. Danko \email{Danko@demogr.mpg.de} (\href{https://orcid.org/0000-0002-7924-9022}{ORCID})
 }
 
 }

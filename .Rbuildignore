@@ -12,3 +12,7 @@
 ^appveyor\.yml$
 ^doc$
 ^Meta$
+
+\.fsrc$
+\.o$
+\.so$

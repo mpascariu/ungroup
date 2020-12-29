@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: MIT
-# Last update: Thu Nov 07 11:48:33 2019
+# Last update: Tue Dec 29 10:13:43 2020
 # --------------------------------------------------- #
 
 #' Generic Plot for pclm Class
@@ -14,6 +14,13 @@
 #' fitted values and confidence intervals.
 #' @param legend.position Legend position, or the x and y co-ordinates to be 
 #' used to position the legend. 
+#' @param type 1-character string giving the type of plot desired. 
+#' The following values are possible, for details, see plot: "p" for points, 
+#' "l" for lines, "b" for both points and lines, "c" for empty points joined 
+#' by lines, "o" for overplotted points and lines, "s" and "S" for stair 
+#' steps and "h" for histogram-like vertical lines. Finally, "n" does not 
+#' produce any points or lines.
+#' @param ... other graphical parameters (see \link{par} for more details).
 #' @seealso \code{\link{pclm}}
 #' @examples 
 #' # See complete examples in pclm help page
@@ -107,10 +114,12 @@ plot.pclm <- function(x,
 #' \href{http://www.sthda.com/english/wiki/a-complete-guide-to-3d-visualization-device-system-in-r-r-software-and-data-visualization}{this tutorial}.
 #' @param x an object of class \code{\link{pclm2D}}
 #' @inheritParams rgl::surface3d
-#' @inheritParams rgl::rgl.material
+#' @inheritParams rgl::material3d
 #' @inheritParams rgl::axes3d
 #' @param axes add axes to the plot. Logical. Default: \code{TRUE}. 
-#' @param box draw a box around the plot. Logical. Default: \code{TRUE}. 
+#' @param box draw a box around the plot. Logical. Default: \code{TRUE}.
+#' @param ... Any of the arguments above can be passed to 
+#' \code{\link{surface3d}}.
 #' @seealso \code{\link{pclm2D}} \code{\link{surface3d}} \code{\link{axes3d}}
 #' \code{\link{aspect3d}} \code{\link{title3d}} \code{\link{snapshot3d}}
 #' @examples 

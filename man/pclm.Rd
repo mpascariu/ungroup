@@ -4,8 +4,16 @@
 \alias{pclm}
 \title{Univariate Penalized Composite Link Model (PCLM)}
 \usage{
-pclm(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
-  verbose = FALSE, control = list())
+pclm(
+  x,
+  y,
+  nlast,
+  offset = NULL,
+  out.step = 1,
+  ci.level = 95,
+  verbose = FALSE,
+  control = list()
+)
 }
 \arguments{
 \item{x}{Vector containing the starting values of the input intervals/bins.

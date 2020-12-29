@@ -50,17 +50,17 @@ When comparing models fitted by maximum likelihood to the same data,
   
   These are generic functions (with S4 generics defined in package
   \pkg{stats4}): however methods should be defined for the
-  log-likelihood function \code{\link{logLik}} rather than these
+  log-likelihood function \code{\link[stats]{logLik}} rather than these
   functions: the action of their default methods is to call \code{logLik}
   on all the supplied objects and assemble the results.  Note that in
-  several common cases \code{\link{logLik}} does not return the value at
+  several common cases \code{\link[stats]{logLik}} does not return the value at
   the MLE: see its help page.
 
   The log-likelihood and hence the AIC/BIC is only defined up to an
   additive constant.  Different constants have conventionally been used
-  for different purposes and so \code{\link{extractAIC}} and \code{AIC}
+  for different purposes and so \code{\link[stats]{extractAIC}} and \code{AIC}
   may give different values (and do for models of class \code{"lm"}: see
-  the help for \code{\link{extractAIC}}).  Particular care is needed
+  the help for \code{\link[stats]{extractAIC}}).  Particular care is needed
   when comparing fits of different classes (with, for example, a
   comparison of a Poisson and gamma GLM being meaningless since one has
   a discrete response, the other continuous).
@@ -69,7 +69,7 @@ When comparing models fitted by maximum likelihood to the same data,
   \code{AIC(object, \dots, k = log(nobs(object)))}.
   This needs the number of observations to be known: the default method
   looks first for a \code{"nobs"} attribute on the return value from the
-  \code{\link{logLik}} method, then tries the \code{\link{nobs}}
+  \code{\link[stats]{logLik}} method, then tries the \code{\link[stats]{nobs}}
   generic, and if neither succeed returns BIC as \code{NA}.
 }
 \references{

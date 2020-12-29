@@ -4,8 +4,16 @@
 \alias{pclm2D}
 \title{Two-Dimensional Penalized Composite Link Model (PCLM-2D)}
 \usage{
-pclm2D(x, y, nlast, offset = NULL, out.step = 1, ci.level = 95,
-  verbose = TRUE, control = list())
+pclm2D(
+  x,
+  y,
+  nlast,
+  offset = NULL,
+  out.step = 1,
+  ci.level = 95,
+  verbose = TRUE,
+  control = list()
+)
 }
 \arguments{
 \item{x}{Vector containing the starting values of the input intervals/bins.

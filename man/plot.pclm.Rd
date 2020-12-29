@@ -4,8 +4,7 @@
 \alias{plot.pclm}
 \title{Generic Plot for pclm Class}
 \usage{
-\method{plot}{pclm}(x, xlab, ylab, ylim, type, lwd, col, legend,
-  legend.position, ...)
+\method{plot}{pclm}(x, xlab, ylab, ylim, type, lwd, col, legend, legend.position, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link{pclm}}}
@@ -16,15 +15,12 @@
 
 \item{ylim}{the y limits of the plot.}
 
-\item{type}{1-character string giving the type of plot desired.  The
-    following values are possible, for details, see \code{\link{plot}}:
-    \code{"p"} for points, \code{"l"} for lines,
-    \code{"b"} for both points and lines,
-    \code{"c"} for empty points joined by lines,
-    \code{"o"} for overplotted points and lines,
-    \code{"s"} and \code{"S"} for stair steps and
-    \code{"h"} for histogram-like vertical lines.  Finally,
-    \code{"n"} does not produce any points or lines.}
+\item{type}{1-character string giving the type of plot desired. 
+The following values are possible, for details, see plot: "p" for points, 
+"l" for lines, "b" for both points and lines, "c" for empty points joined 
+by lines, "o" for overplotted points and lines, "s" and "S" for stair 
+steps and "h" for histogram-like vertical lines. Finally, "n" does not 
+produce any points or lines.}
 
 \item{lwd}{Line width, a positive number, defaulting to 2.}
 
@@ -38,8 +34,7 @@ fitted values and confidence intervals.}
 \item{legend.position}{Legend position, or the x and y co-ordinates to be 
 used to position the legend.}
 
-\item{...}{other \link{graphical parameters} (see \code{\link{par}} and
-    section \sQuote{Details} below).}
+\item{...}{other graphical parameters (see \link{par} for more details).}
 }
 \description{
 Generic Plot for pclm Class

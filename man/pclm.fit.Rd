@@ -4,8 +4,21 @@
 \alias{pclm.fit}
 \title{Fit PCLM Models}
 \usage{
-pclm.fit(x, y, nlast, offset, out.step, verbose, lambda, kr, deg, diff,
-  max.iter, tol, type)
+pclm.fit(
+  x,
+  y,
+  nlast,
+  offset,
+  out.step,
+  verbose,
+  lambda,
+  kr,
+  deg,
+  diff,
+  max.iter,
+  tol,
+  type
+)
 }
 \arguments{
 \item{x}{Vector containing the starting values of the input intervals/bins.

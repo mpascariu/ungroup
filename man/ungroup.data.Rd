@@ -4,7 +4,9 @@
 \name{ungroup.data}
 \alias{ungroup.data}
 \title{Test Dataset in the Package}
-\format{An object of class \code{ungroup.data} of length 2.}
+\format{
+An object of class \code{ungroup.data} of length 2.
+}
 \source{
 \href{https://www.mortality.org}{Human Mortality Database}
 }
