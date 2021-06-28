@@ -1,7 +1,6 @@
 # --------------------------------------------------- #
-# Author: Marius D. Pascariu
-# License: MIT
-# Last update: Tue Dec 29 10:13:43 2020
+# Author: Marius D. PASCARIU
+# Last update: Wed Jun 23 16:38:17 2021
 # --------------------------------------------------- #
 
 #' Generic Plot for pclm Class
@@ -106,83 +105,105 @@ plot.pclm <- function(x,
 #' Generic Plot for pclm2D Class
 #' 
 #' The generic plot for a \code{pclm2D} object is constructed using 
-#' \code{\link{rgl}} package. And can be modified/improved using the \code{rgl} 
-#' tools implemented in the package like: \code{\link{surface3d}}, 
-#' \code{\link{axes3d}}, \code{\link{aspect3d}}, \code{\link{title3d}} or 
-#' \code{\link{snapshot3d}}.For A complete guide to 3D visualization using 
-#' \code{rgl} see 
-#' \href{http://www.sthda.com/english/wiki/a-complete-guide-to-3d-visualization-device-system-in-r-r-software-and-data-visualization}{this tutorial}.
-#' @param x an object of class \code{\link{pclm2D}}
-#' @inheritParams rgl::surface3d
-#' @inheritParams rgl::material3d
-#' @inheritParams rgl::axes3d
-#' @param axes add axes to the plot. Logical. Default: \code{TRUE}. 
-#' @param box draw a box around the plot. Logical. Default: \code{TRUE}.
-#' @param ... Any of the arguments above can be passed to 
-#' \code{\link{surface3d}}.
-#' @seealso \code{\link{pclm2D}} \code{\link{surface3d}} \code{\link{axes3d}}
-#' \code{\link{aspect3d}} \code{\link{title3d}} \code{\link{snapshot3d}}
+#' \code{\link[graphics]{persp}} method. 
+#' 
+#' @param x an object of class \code{\link{pclm2D}}.
+#' @param nbcol dimension of the color palette. Number of colors. Default: 25.
+#' @param type chart type. Defines which data are plotted, \code{"fitted"} 
+#' values or \code{"observed"} input data. Default: \code{"fitted"}.
+#' @inheritParams graphics::persp
+#' @inheritParams grDevices::colorRampPalette
+#' @param ... any other argument to be passed to 
+#' \code{\link[graphics]{persp}}.
+#' @seealso \code{\link{pclm2D}}
 #' @examples 
 #' # See complete examples in pclm2D help page
 #' @export
 plot.pclm2D <- function(x, 
-                        color = c(1, 2), 
-                        alpha = c(1, .5), 
-                        axes  = TRUE, 
-                        box   = TRUE, 
-                        xlab  = "x-axis", 
-                        ylab  = "y-axis", 
-                        zlab  = "z-axis", 
-                        main  = "",
-                        sub   = "", 
+                        type = c("fitted", "observed"),
+                        colors = c("#b6e3db", "#e5d9c2", "#b5ba61", "#725428"),
+                        nbcol = 25,
+                        xlab = "x",
+                        ylab = "y",
+                        zlab = "values",
+                        phi = 30,
+                        theta = 210,
+                        border = "grey50",
+                        ticktype = "simple",
                         ...) {
-  # Prepare input values
-  len  <- sort(rep(x$bin.definition$input$length, 2))
-  loc  <- x$bin.definition$input$location
   
-  y    <- x$input$y
-  Ex   <- x$input$offset
-  n    <- ncol(y)
-  Z    <- if (is.null(Ex)) y else y/Ex
-  Z    <- as.data.frame(Z)
-  Z$ID <- seq_len(nrow(Z))
-  Z    <- rbind(Z, Z)
-  Z    <- as.matrix(Z[sort(Z$ID), 1:n])
-  Z    <- if (is.null(Ex)) sweep(Z, 1, len, FUN = "/") else log(Z)
-  X    <- sort(c(loc[1,], loc[2,]))
-  Y    <- n:1
+  type   <- match.arg(type)
+  object <- x
+  Ex     <- x$input$offset
+  ok     <- TRUE
+  vsn    <- 0.000000001 # very small number
   
-  # Prepare fitted values
-  out.step <- x$input$out.step
-  len_ <- x$bin.definition$output$length
-  Z_   <- as.matrix(fitted(x))
-  Z_   <- if (is.null(Ex)) sweep(Z_, 1, len_, FUN = "/") else log(Z_)
-  X_   <- seq_len(nrow(Z_)) * out.step
-  Y_   <- rev(seq_len(ncol(Z_)))
+  if (type == "fitted") {
+    out.step <- x$input$out.step
+    len <- x$bin.definition$output$length
+    Z   <- as.matrix(fitted(x))
+    # If data if offset take logs
+    Z   <- if (is.null(Ex)) sweep(Z, 1, len, FUN = "/") else log(Z)
+    X   <- seq_len(nrow(Z)) * out.step
+    Y   <- seq_len(ncol(Z))
+  } 
   
-  # Plot
-  if (!par('new')) open3d(windowRect = c(50, 50, 700, 700))
-  
-  
-  if (!is.null(Ex)) {
-    if (all(dim(y) != dim(Ex))) {
-      message("Observed surface cannot be plotted because `y` and `offset`", 
-              "have different dimensions.")
-    } else {
-      rgl::surface3d(X, Y, Z, front = "lines", back = "lines", 
-                     color = color[1], alpha = alpha[1], ...) 
-    }
+  if (type == "observed") {
     
-  } else {
-    rgl::surface3d(X, Y, Z, front = "lines", back = "lines", 
-                   color = color[1], alpha = alpha[1], ...) 
+    len  <- sort(rep(x$bin.definition$input$length, 2))
+    loc  <- x$bin.definition$input$location
+    y    <- x$input$y
+    n    <- ncol(y)
+    Z    <- if (is.null(Ex)) y else y/Ex
+    Z    <- as.data.frame(Z)
+    Z$ID <- seq_len(nrow(Z))
+    
+    # We are doing all this to in order to get a stepwise type of surface
+    Z    <- rbind(Z, Z + vsn)
+    Z    <- as.matrix(Z[sort(Z$ID), 1:n])
+    Z    <- if (is.null(Ex)) sweep(Z, 1, len, FUN = "/") else log(Z)
+    X    <- sort(c(loc[1,], loc[2,] + vsn))
+    Y    <- 1:n
+  } 
+  
+  # Check point
+  if (!is.null(Ex)) {
+    ok <- all(dim(Y) != dim(Ex))
+    
+    if (!ok) {
+      warning("Observed surface cannot be plotted because `y` and `offset`", 
+              "have different dimensions.")
+    }
   }
   
-  rgl::surface3d(X_, Y_, Z_, color = color[2], alpha = alpha[2])
-  rgl::title3d(main, sub, xlab, ylab, zlab)
-  rgl::aspect3d(1, 1, 1)
-  if (box) box3d() 
-  if (axes) axes3d()
+  # if all ok plot!
+  if(ok) {
+    
+    # Figure out colors.
+    # Compute the z-value at the facet centres
+    ncz <- ncol(Z)
+    nrz <- nrow(Z)
+    zfacet   <- Z[-1, -1] + Z[-1, -ncz] + Z[-nrz, -1] + Z[-nrz, -ncz]
+    # Recode facet z-values into color indices
+    colpal   <- colorRampPalette(colors)(nbcol)
+    facetcol <- cut(zfacet, nbcol)
+    
+    # Perspective Plot
+    persp(X, Y, Z, 
+          col = colpal[facetcol], 
+          phi = phi, 
+          theta = theta,
+          xlab = xlab,
+          ylab = ylab,
+          zlab = zlab,
+          border = border,
+          ticktype = ticktype,
+          ...)
+    
+  } else {
+    return(NULL)
+    
+  }
 }
 
 

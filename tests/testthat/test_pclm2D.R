@@ -1,4 +1,8 @@
-rm(list = ls())
+# --------------------------------------------------- #
+# Author: Marius D. PASCARIU
+# Last update: Wed Jun 23 22:12:24 2021
+# --------------------------------------------------- #
+remove(list = ls())
 library(testthat)
 library(ungroup)
 
@@ -11,6 +15,7 @@ test_pclm_2D <- function(M) {
     expect_s3_class(M, "pclm2D")
     expect_output(print(M))
     expect_output(print(summary(M)))
+    expect_false(is.null(plot(M)))
     expect_true(all(fv >= 0))
     expect_identical(dim(fv), dim(lower))
     expect_identical(dim(upper), dim(lower))

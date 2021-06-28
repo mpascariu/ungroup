@@ -1,7 +1,6 @@
 # --------------------------------------------------- #
-# Author: Marius D. Pascariu
-# License: MIT
-# Last update: Thu Nov 07 12:13:55 2019
+# Author: Marius D. PASCARIU
+# Last update: Mon Jun 28 15:07:03 2021
 # --------------------------------------------------- #
 
 #' Validate input values
@@ -25,6 +24,14 @@ pclm.input.check <- function(X, pclm.type) {
     if (any(y < 0)) {
       stop("'y' contains negative values. The counts are always positive.", 
            call. = FALSE)
+    }
+    if(any(y == 0)) {
+      message(
+        "Input data contains zeros. ",
+        "Replace zero values with a very small number to avoid erroneous results. ",
+        "If the input data contains small values, you might also want to ",
+        "transform it for the purpose of ungrouping. E.g. Multiplication by 100."
+      )
     }
     if (ci.level <= 50.1 || ci.level >= 99.9) {
       stop("'ci.level' must take values in the [50.1, 99.9] interval", 

@@ -6,60 +6,69 @@
 \usage{
 \method{plot}{pclm2D}(
   x,
-  color = c(1, 2),
-  alpha = c(1, 0.5),
-  axes = TRUE,
-  box = TRUE,
-  xlab = "x-axis",
-  ylab = "y-axis",
-  zlab = "z-axis",
-  main = "",
-  sub = "",
+  type = c("fitted", "observed"),
+  colors = c("#b6e3db", "#e5d9c2", "#b5ba61", "#725428"),
+  nbcol = 25,
+  xlab = "x",
+  ylab = "y",
+  zlab = "values",
+  phi = 30,
+  theta = 210,
+  border = "grey50",
+  ticktype = "simple",
   ...
 )
 }
 \arguments{
-\item{x}{an object of class \code{\link{pclm2D}}}
+\item{x}{an object of class \code{\link{pclm2D}}.}
 
-\item{color}{
-    vector of R color characters. Represents the diffuse component in case of lighting calculation (lit = TRUE),
-    otherwise it describes the solid color characteristics.
-  }
+\item{type}{chart type. Defines which data are plotted, \code{"fitted"} 
+values or \code{"observed"} input data. Default: \code{"fitted"}.}
 
-\item{alpha}{ 
-    vector of alpha values between 0.0 (fully transparent) .. 1.0 (opaque).
-  }
+\item{colors}{colors to interpolate; must be a valid argument to
+    \code{\link[grDevices]{col2rgb}()}.}
 
-\item{axes}{add axes to the plot. Logical. Default: \code{TRUE}.}
+\item{nbcol}{dimension of the color palette. Number of colors. Default: 25.}
 
-\item{box}{draw a box around the plot. Logical. Default: \code{TRUE}.}
+\item{xlab}{titles for the axes.  N.B. These must be
+    character strings; expressions are not accepted.  Numbers will be
+    coerced to character strings.}
 
-\item{xlab}{ the axis labels for the plot }
+\item{ylab}{titles for the axes.  N.B. These must be
+    character strings; expressions are not accepted.  Numbers will be
+    coerced to character strings.}
 
-\item{ylab}{ the axis labels for the plot }
+\item{zlab}{titles for the axes.  N.B. These must be
+    character strings; expressions are not accepted.  Numbers will be
+    coerced to character strings.}
 
-\item{zlab}{ the axis labels for the plot }
+\item{phi}{angles defining the viewing direction.
+    \code{theta} gives the azimuthal direction and \code{phi}
+    the colatitude.}
 
-\item{main}{ the main title for the plot }
+\item{theta}{angles defining the viewing direction.
+    \code{theta} gives the azimuthal direction and \code{phi}
+    the colatitude.}
 
-\item{sub}{ the subtitle for the plot }
+\item{border}{the color of the line drawn around the surface facets.
+    The default, \code{NULL}, corresponds to \code{par("fg")}.
+    A value of \code{NA} will disable the drawing of borders: this is
+    sometimes useful when the surface is shaded.}
 
-\item{...}{Any of the arguments above can be passed to 
-\code{\link{surface3d}}.}
+\item{ticktype}{character: \code{"simple"} draws just an arrow
+    parallel to the axis to indicate direction of increase;
+    \code{"detailed"} draws normal ticks as per 2D plots.}
+
+\item{...}{any other argument to be passed to 
+\code{\link[graphics]{persp}}.}
 }
 \description{
 The generic plot for a \code{pclm2D} object is constructed using 
-\code{\link{rgl}} package. And can be modified/improved using the \code{rgl} 
-tools implemented in the package like: \code{\link{surface3d}}, 
-\code{\link{axes3d}}, \code{\link{aspect3d}}, \code{\link{title3d}} or 
-\code{\link{snapshot3d}}.For A complete guide to 3D visualization using 
-\code{rgl} see 
-\href{http://www.sthda.com/english/wiki/a-complete-guide-to-3d-visualization-device-system-in-r-r-software-and-data-visualization}{this tutorial}.
+\code{\link[graphics]{persp}} method.
 }
 \examples{
 # See complete examples in pclm2D help page
 }
 \seealso{
-\code{\link{pclm2D}} \code{\link{surface3d}} \code{\link{axes3d}}
-\code{\link{aspect3d}} \code{\link{title3d}} \code{\link{snapshot3d}}
+\code{\link{pclm2D}}
 }
