@@ -88,13 +88,14 @@ trajectories of coarsely grouped distributions and time trends
 Dx <- ungroup.data$Dx
 Ex <- ungroup.data$Ex
 
-# Aggregate data to ungroup it in the examples below
+# Aggregate data to be ungrouped in the examples below
+# Select a 10y data frame
 x      <- c(0, 1, seq(5, 85, by = 5))
 nlast  <- 26
 n      <- c(diff(x), nlast)
 group  <- rep(x, n)
-y      <- aggregate(Dx, by = list(group), FUN = "sum")[, -1]
-offset <- aggregate(Ex, by = list(group), FUN = "sum")[, -1]
+y      <- aggregate(Dx, by = list(group), FUN = "sum")[, 2:10]
+offset <- aggregate(Ex, by = list(group), FUN = "sum")[, 2:10]
 
 # Example 1 ---------------------- 
 # Fit model and ungroup data using PCLM-2D
