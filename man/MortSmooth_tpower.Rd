@@ -7,11 +7,11 @@
 MortSmooth_tpower(x, tt, p)
 }
 \arguments{
+\item{x}{for the abscissa of data;}
+
 \item{tt}{vector of truncation points;}
 
 \item{p}{degree of the power}
-
-\item{vector}{for the abscissa of data;}
 }
 \description{
 This is an internal function of package MortalitySmooth which constructs a 

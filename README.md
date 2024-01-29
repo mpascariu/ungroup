@@ -1,7 +1,6 @@
 # <img src="inst/figures/ungroup_logo.png" align="right" width="150" height="150" /> Penalized Composite Link Model for Efficient Estimation of Smooth Distributions from Coarsely Binned Data 
 [![CRAN_Version](https://www.r-pkg.org/badges/version/ungroup)](https://cran.r-project.org/package=ungroup)
-[![Linux Build Status](https://travis-ci.org/mpascariu/ungroup.svg?branch=master)](https://travis-ci.org/mpascariu/ungroup)
-[![codecov](https://codecov.io/github/mpascariu/ungroup/branch/master/graphs/badge.svg)](https://codecov.io/github/mpascariu/ungroup)
+[![codecov](https://codecov.io/github/mpascariu/ungroup/branch/master/graphs/badge.svg)](https://app.codecov.io/github/mpascariu/ungroup)
 [![issues](https://img.shields.io/github/issues-raw/mpascariu/ungroup.svg)](https://github.com/mpascariu/ungroup/issues)
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00937/status.svg)](https://doi.org/10.21105/joss.00937)
 
@@ -39,7 +38,7 @@ You can track (and contribute to) the development of `ungroup` at https://github
    ```
 
 ## Intro
-Get started with `ungroup` by checking the [vignette](https://github.com/mpascariu/ungroup/blob/master/inst/doc/Intro.pdf) 
+Get started with `ungroup` by checking the vignette
  ```R
  browseVignettes(package = "ungroup") 
  ```
@@ -55,6 +54,3 @@ Rizzi S, Gampe J and Eilers PHC. 2015. [Efficient Estimation of Smooth Distribut
 
 Eilers PHC. 2007. [Ill-posed problems with counts, the composite link model and penalized likelihood.](https://doi.org/10.1177/1471082X0700700302) Statistical Modelling, Volume 7, Issue 3, Pages 239-254.
 
-
-## Support
-<a href="https://www.buymeacoffee.com/rpascariu" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: 30px !important;width: 100px !important;" ></a>
