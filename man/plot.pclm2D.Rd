@@ -30,23 +30,11 @@ values or \code{"observed"} input data. Default: \code{"fitted"}.}
 
 \item{nbcol}{dimension of the color palette. Number of colors. Default: 25.}
 
-\item{xlab}{titles for the axes.  N.B. These must be
+\item{xlab, ylab, zlab}{titles for the axes.  N.B. These must be
     character strings; expressions are not accepted.  Numbers will be
     coerced to character strings.}
 
-\item{ylab}{titles for the axes.  N.B. These must be
-    character strings; expressions are not accepted.  Numbers will be
-    coerced to character strings.}
-
-\item{zlab}{titles for the axes.  N.B. These must be
-    character strings; expressions are not accepted.  Numbers will be
-    coerced to character strings.}
-
-\item{phi}{angles defining the viewing direction.
-    \code{theta} gives the azimuthal direction and \code{phi}
-    the colatitude.}
-
-\item{theta}{angles defining the viewing direction.
+\item{theta, phi}{angles defining the viewing direction.
     \code{theta} gives the azimuthal direction and \code{phi}
     the colatitude.}
 

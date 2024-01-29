@@ -1,7 +1,7 @@
-# --------------------------------------------------- #
+# -------------------------------------------------------------- #
 # Author: Marius D. PASCARIU
-# Last update: Wed Jun 23 16:39:19 2021
-# --------------------------------------------------- #
+# Last Update: Mon Jan 29 15:09:21 2024
+# -------------------------------------------------------------- #
 
 #' @details 
 #' To learn more about the package, start with the vignettes:
@@ -18,6 +18,5 @@
 #' @importClassesFrom Matrix dgCMatrix
 #' @name ungroup
 #' @useDynLib ungroup
-#' @aliases NULL
 #' @docType package
 "_PACKAGE"

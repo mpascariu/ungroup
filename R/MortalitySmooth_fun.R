@@ -2,7 +2,7 @@
 # Script author: Marius D. Pascariu
 # Code author: Carlo G Camarda
 # License: MIT
-# Last update: Fri Jan 08 09:34:24 2021
+# Last Update: Mon Jan 29 15:11:52 2024
 # --------------------------------------------------- #
 
 # Here we bring two MortalitySmooth functions following the removal 
@@ -14,7 +14,7 @@
 #' This is an internal function of package MortalitySmooth which constructs a 
 #' truncated p-th power function along an abscissa within the function 
 #' MortSmooth_bbase
-#' @param vector for the abscissa of data;
+#' @param x for the abscissa of data;
 #' @param tt vector of truncation points;
 #' @param p degree of the power
 #' @details Internal function used in MortSmooth_bbase. 
