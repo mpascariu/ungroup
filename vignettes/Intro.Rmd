@@ -58,7 +58,7 @@ offset <- c(114, 440, 509, 492, 628, 618, 576, 580, 634, 657,
             631, 584, 573, 619, 530, 384, 303, 245, 249) * 1000
 # nlast: the size of the last age interval (usually open)
 nlast <- 26
-# This results in the last group being [85, 110).
+# This results in the last group being [85, 111).
 ```
 
 ### Fitting and ungrouping data using PCLM
