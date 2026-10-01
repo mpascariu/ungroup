@@ -13,7 +13,7 @@ SEXP asSparseMat(const Eigen::Map<Eigen::MatrixXd> X) {
 }
 
 // [[Rcpp::export]]
-SEXP pclm_loop(const Eigen::MappedSparseMatrix<double> C,
+SEXP pclm_loop(const Eigen::Map<Eigen::SparseMatrix<double>> C,
                const Eigen::Map<Eigen::MatrixXd> P,
                const Eigen::Map<Eigen::MatrixXd> B,
                const Eigen::Map<Eigen::VectorXd> y,
