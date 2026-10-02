@@ -1,3 +1,9 @@
+version 1.6.1 - "copper wire":
+- The project page shows its badges again, now describes the package as
+stable, and includes a chart of the method at work.
+- The instructions for installing the development version now use the
+recommended command.
+
 version 1.6.0 - "clear chart":
 - The documentation has been rewritten, with a new guide now published as a website.
 - Windows and macOS are now tested alongside Linux.

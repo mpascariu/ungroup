@@ -49,8 +49,18 @@ figures:
   fig.height: 4.2
   dpi: 96
 
+# Badge behaviour depends on this setting, so read before changing it.
+#   mode: release  pkgdown hides a sidebar Dev Status block. The shields
+#                  themselves are unaffected: they live in the README body as
+#                  plain lines and render inline.
+#   mode: devel    the whole site is written into a dev/ subdirectory, so no
+#                  root index.html is produced and Pages would serve nothing.
+#   mode: auto     resolves from the version, so a released version behaves
+#                  like release.
+# The site is published from the repository root, so release is the only
+# usable setting here.
 development:
-  mode: auto
+  mode: release
 
 authors:
   Marius D. Pascariu:

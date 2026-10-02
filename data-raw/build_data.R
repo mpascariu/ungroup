@@ -1,6 +1,6 @@
 # Code used for downloading and creating of the test data objects in the packages
 
-# devtools::install_github("mpascariu/MortalityLaws")
+# pak::pak("mpascariu/MortalityLaws")
 library(MortalityLaws)
 
 country = 'SWE'
@@ -27,7 +27,8 @@ dimnames(hmdDx) = dimnames(hmdEx) <- list(0:110, yr)
 out <- list(Dx = round(hmdDx, 0), Ex = round(hmdEx, 0))
 ungroup.data <- structure(class = "ungroup.data", out)
 
-devtools::use_data(ungroup.data, overwrite = TRUE)
+# devtools::use_data() was removed in devtools 2.0; usethis took it over.
+usethis::use_data(ungroup.data, overwrite = TRUE)
 
 
 
