@@ -1,6 +1,5 @@
 # --------------------------------------------------- #
 # Author: Marius D. PASCARIU
-# Last update: Wed Jun 23 22:12:24 2021
 # --------------------------------------------------- #
 remove(list = ls())
 library(testthat)
@@ -16,6 +15,8 @@ test_pclm_2D <- function(M) {
     expect_output(print(M))
     expect_output(print(summary(M)))
     expect_false(is.null(plot(M)))
+    # The observed surface works whatever resolution the offset was given on.
+    expect_false(is.null(plot(M, type = "observed")))
     expect_true(all(fv >= 0))
     expect_identical(dim(fv), dim(lower))
     expect_identical(dim(upper), dim(lower))
@@ -171,4 +172,28 @@ test_that("kr larger than the year axis is refused, not crashed", {
   )
   expect_s3_class(P, "pclm2D")
   expect_identical(dim(fitted(P)), c(111L, 5L))
+})
+
+test_that("the observed surface plots whatever grid the offset was given on", {
+  # The offset reaches input$offset on one of two grids: the input bins when it
+  # was passed grouped, the fine output grid when it was ungrouped first. Both
+  # must draw. The fine case used to reach the y/Ex division unchanged, where a
+  # 111-row offset against a 19-row y aborted in Ops.data.frame.
+  P_gr <- suppressWarnings(
+    pclm2D(x, y2, nlast, offset2, verbose = FALSE,
+           control = list(lambda = c(1, 1), max.iter = 200))
+  )
+  expect_false(is.null(plot(P_gr, type = "observed")))
+
+  # An ungrouped offset is what P4 in this file carries.
+  un_Ex <- suppressWarnings(
+    pclm2D(x, y = offset2, nlast, offset = NULL, verbose = FALSE,
+           control = list(lambda = c(1, 1), max.iter = 200))
+  )$fitted
+  P_un <- suppressWarnings(
+    pclm2D(x, y2, nlast, offset = un_Ex, verbose = FALSE,
+           control = list(lambda = c(1, 1), max.iter = 200))
+  )
+  expect_identical(nrow(P_un$input$offset), 111L)
+  expect_false(is.null(plot(P_un, type = "observed")))
 })

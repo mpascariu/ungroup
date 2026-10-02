@@ -283,6 +283,16 @@ test_that("omega stands in for nlast", {
   expect_error(pclm(x, y, 26, omega = 100), "not both")
   expect_error(pclm(x, y), "supply either")
   expect_error(pclm(x, y, omega = max(x)), "greater than max")
+  expect_error(pclm(x, y, omega = Inf), "single finite value")
+})
+
+test_that("verbose reports progress", {
+  expect_output(
+    suppressWarnings(
+      pclm(x, y, nlast, offset, verbose = TRUE, control = list(lambda = 100))
+    ),
+    "Ungrouping"
+  )
 })
 
 # ----------------------------------------------

@@ -114,14 +114,13 @@ SEXP pclm_loop(const Eigen::Map<Eigen::SparseMatrix<double>> C,
     
     // QmQP is symmetric positive definite here: QmQ is a Gram matrix and P is
     // the difference penalty. LDLT costs about half of a general QR solve.
+    // info() is set by the factorization alone; solve() is const and cannot
+    // change it, so one check covers the solve as well.
     Eigen::LDLT<Eigen::MatrixXd> ldlt(QmQP);
     if (ldlt.info() != Eigen::Success) {
       Rcpp::stop("pclm_loop: the penalized system could not be factorized");
     }
     VectorXd beta = ldlt.solve(Qz);
-    if (ldlt.info() != Eigen::Success) {
-      Rcpp::stop("pclm_loop: the penalized system could not be solved");
-    }
     
     eta = B * beta;
     eta = eta.array().min(ETA_MAX).max(-ETA_MAX).matrix();

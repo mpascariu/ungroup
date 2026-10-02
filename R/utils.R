@@ -67,10 +67,6 @@ pclm.input.check <- function(X, pclm.type) {
     if (is.unsorted(x, strictly = TRUE)) {
       stop("'x' must be strictly increasing", call. = FALSE)
     }
-    if (is.array(y)) {
-      stop("'y' argument should be a numeric vector or a data.frame.", 
-           call. = FALSE)
-    }
   })
   
   # Validate input in pclm.control
@@ -100,9 +96,6 @@ pclm.input.check <- function(X, pclm.type) {
       if (deg < 2 || frac(deg) != 0) 
         stop("'deg' must be a positive integer greater or equal than 2", 
              call. = FALSE)
-    }
-    if (!(opt.method[1] %in% c('BIC','AIC'))) {
-      stop("'AIC' or 'BIC' should be used as opt.method", call. = FALSE)
     }
     if (max.iter < 10) {
       stop("'max.iter' should be at least 10 for a decent run", call. = FALSE)

@@ -140,11 +140,9 @@ plot.pclm2D <- function(x,
                         ticktype = "simple",
                         ...) {
   
-  type   <- match.arg(type)
-  object <- x
-  Ex     <- x$input$offset
-  ok     <- TRUE
-  vsn    <- 0.000000001 # very small number
+  type <- match.arg(type)
+  Ex   <- x$input$offset
+  vsn  <- 0.000000001 # very small number
   
   if (type == "fitted") {
     out.step <- x$input$out.step
@@ -154,7 +152,7 @@ plot.pclm2D <- function(x,
     Z   <- if (is.null(Ex)) sweep(Z, 1, len, FUN = "/") else log(Z)
     X   <- seq_len(nrow(Z)) * out.step
     Y   <- seq_len(ncol(Z))
-  } 
+  }
   
   if (type == "observed") {
     
@@ -162,6 +160,16 @@ plot.pclm2D <- function(x,
     loc  <- x$bin.definition$input$location
     y    <- x$input$y
     n    <- ncol(y)
+    # The observed surface is the input counts, optionally as rates. A rate is
+    # y over the offset, and the two must share the input bins. An offset given
+    # on the fine output grid, which is what an ungrouped exposure passed as
+    # pclm2D(..., offset = ungrouped_Ex) leaves in input$offset, is summed back
+    # into the input bins here. pclm2D stores the offset on one of the two
+    # grids only, so no other shape reaches this point.
+    if (!is.null(Ex) && !identical(dim(Ex), dim(y))) {
+      grp <- findInterval(x$bin.definition$output$location[1, ], loc[1, ])
+      Ex  <- rowsum(as.matrix(Ex), group = grp)
+    }
     Z    <- if (is.null(Ex)) y else y/Ex
     Z    <- as.data.frame(Z)
     Z$ID <- seq_len(nrow(Z))
@@ -172,46 +180,28 @@ plot.pclm2D <- function(x,
     Z    <- if (is.null(Ex)) sweep(Z, 1, len, FUN = "/") else log(Z)
     X    <- sort(c(loc[1,], loc[2,] + vsn))
     Y    <- 1:n
-  } 
-  
-  # Check point
-  if (!is.null(Ex)) {
-    ok <- all(dim(Y) != dim(Ex))
-    
-    if (!ok) {
-      warning(paste0("Observed surface cannot be plotted because `y` and ",
-                     "`offset` have different dimensions."))
-    }
   }
   
-  # if all ok plot!
-  if(ok) {
-    
-    # Figure out colors.
-    # Compute the z-value at the facet centres
-    ncz <- ncol(Z)
-    nrz <- nrow(Z)
-    zfacet   <- Z[-1, -1] + Z[-1, -ncz] + Z[-nrz, -1] + Z[-nrz, -ncz]
-    # Recode facet z-values into color indices
-    colpal   <- colorRampPalette(colors)(nbcol)
-    facetcol <- cut(zfacet, nbcol)
-    
-    # Perspective Plot
-    persp(X, Y, Z, 
-          col = colpal[facetcol], 
-          phi = phi, 
-          theta = theta,
-          xlab = xlab,
-          ylab = ylab,
-          zlab = zlab,
-          border = border,
-          ticktype = ticktype,
-          ...)
-    
-  } else {
-    return(NULL)
-    
-  }
+  # Figure out colors.
+  # Compute the z-value at the facet centres
+  ncz <- ncol(Z)
+  nrz <- nrow(Z)
+  zfacet   <- Z[-1, -1] + Z[-1, -ncz] + Z[-nrz, -1] + Z[-nrz, -ncz]
+  # Recode facet z-values into color indices
+  colpal   <- colorRampPalette(colors)(nbcol)
+  facetcol <- cut(zfacet, nbcol)
+  
+  # Perspective Plot
+  persp(X, Y, Z, 
+        col = colpal[facetcol], 
+        phi = phi, 
+        theta = theta,
+        xlab = xlab,
+        ylab = ylab,
+        zlab = zlab,
+        border = border,
+        ticktype = ticktype,
+        ...)
 }
 
 

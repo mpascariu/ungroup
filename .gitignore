@@ -39,6 +39,9 @@ site/
 *.utf8.md
 *.knit.md
 
+# Default device output: plot() calls in tests with no open device write here
+Rplots.pdf
+
 
 # C++ files
 src/*.o

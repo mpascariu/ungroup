@@ -1,3 +1,7 @@
+version 1.6.3 - "quiet ledger":
+- Plotting the observed surface no longer fails when the exposures you supply are
+given on a finer grid than the counts.
+
 version 1.6.1 - "copper wire":
 - The project page shows its badges again, now describes the package as
 stable, and includes a chart of the method at work.
