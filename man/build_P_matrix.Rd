@@ -12,7 +12,10 @@ build_P_matrix(BA, BY, lambda, type)
 \item{BY}{B-spline basis object for year axis}
 
 \item{lambda}{Smoothing parameter to be used in pclm estimation.
-If \code{lambda = NA} an algorithm will find the optimal values.}
+If \code{lambda = NA} an algorithm will find the optimal values.
+\code{pclm} takes a single value. \code{pclm2D} takes two, one for the age
+axis and one for the year axis, and either may be \code{NA} to be found by
+optimisation while the other is held fixed.}
 
 \item{type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
 univariate and two-dimensional model respectively.}

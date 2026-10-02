@@ -7,9 +7,11 @@
 ^LICENSE\.md$
 ^\.git$
 ^\.github$
-^CODE_OF_CONDUCT.md$
-^CONTRIBUTING.md$
+^CODE_OF_CONDUCT\.md$
+^CONTRIBUTING\.md$
 ^doc$
+^site$
+^_pkgdown\.yml$
 ^Meta$
 
 \.fsrc$

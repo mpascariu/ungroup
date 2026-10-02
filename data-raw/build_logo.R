@@ -42,7 +42,7 @@ nlast <- 26 # the size of the last interval
 M1 <- pclm(x, y, nlast, control = list(kr = 2))
 plot_pclm(M1)
 
-fn <- paste0(getwd(), "/inst/figures/ungroup_logo.png")
+fn <- paste0(getwd(), "/man/figures/logo.png")
 sticker(expression(plot_pclm(M1)), s_width = 2, s_height = 1.5,
         package = "ungroup", p_color = 1,
         h_fill = "white", h_color = 1,

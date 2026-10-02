@@ -1,0 +1,59 @@
+url: https://mpascariu.github.io/ungroup/
+
+template:
+  bootstrap: 5
+  math-rendering: mathjax
+
+reference:
+  - title: Package
+    desc: Overview of the model and the bundled data.
+    contents:
+      - ungroup
+  - title: Ungroup binned data
+    desc: The two model fitting functions.
+    contents:
+      - pclm
+      - pclm2D
+      - ungroup.data
+  - title: Fitting control
+    desc: Low-level settings for the iterative fit.
+    contents:
+      - control.pclm
+      - control.pclm2D
+      - suggest.valid.out.step
+  - title: Methods
+    desc: S3 methods for the fitted objects.
+    contents:
+      - plot.pclm
+      - plot.pclm2D
+      - residuals.pclm
+      - residuals.pclm2D
+
+articles:
+  - title: Get started
+    navbar: ~
+    contents:
+      - Intro
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get started
+      href: articles/Intro.html
+
+figures:
+  fig.width: 7
+  fig.height: 4.2
+  dpi: 96
+
+development:
+  mode: auto
+
+authors:
+  Marius D. Pascariu:
+    href: https://github.com/mpascariu
+  Jonas Schöley:
+    href: https://github.com/jschoeley

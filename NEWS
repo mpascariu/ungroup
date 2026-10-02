@@ -1,3 +1,11 @@
+version 1.6.0 - "clear chart":
+- The documentation has been rewritten, with a new guide now published as a website.
+- Windows and macOS are now tested alongside Linux.
+- Fitting a short series of years no longer fails with a puzzling message.
+- Summaries now show the smoothing value instead of rounding it away.
+- Older versions of the packages this one relies on are no longer accepted, and
+R 4.4 or newer is required.
+
 version 1.5.1 - "steady keel":
 - Help pages rebuilt so the manual renders cleanly. Results are unchanged.
 

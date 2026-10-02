@@ -1,6 +1,6 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
-# Last update: Fri Oct 02 17:06:29 2026
+# Last update: Fri Oct 02 21:34:06 2026
 # --------------------------------------------------- #
 
 #' Fit PCLM Models
@@ -112,12 +112,22 @@ build_C_matrix <- function(x, y, nlast, offset, out.step, type) {
 #' @keywords internal
 build_B_spline_basis <- function(X, Y, kr, deg, diff, type) {
   # B-spline basis 
-  bsb <- function(Z, kr, deg, diff) {
+  bsb <- function(Z, kr, deg, diff, what) {
     zl   <- min(Z)
     zr   <- max(Z)
     zmin <- zl - 0.01 * (zr - zl)
     zmax <- zr + 0.01 * (zr - zl)
     ndx  <- trunc(length(Z)/kr) # number of internal knots
+    # With no internal knot the spacing is infinite and the basis cannot be
+    # built at all. It used to fail deep inside MortSmooth_bbase with "from
+    # must be a finite number", which says nothing about the cause. The short
+    # year axis of the 2D model reaches this whenever the panel has fewer
+    # years than kr.
+    if (ndx < 1) {
+      stop("'kr' = ", kr, " is too large for the ", what, " axis of length ",
+           length(Z), ". At least one internal knot is required, so use ",
+           "kr <= ", length(Z), ".", call. = FALSE)
+    }
     B    <- MortSmooth_bbase(x = Z, zmin, zmax, ndx, deg) 
     dg   <- diag(ncol(B))
     D    <- diff(dg, diff = diff)
@@ -125,8 +135,8 @@ build_B_spline_basis <- function(X, Y, kr, deg, diff, type) {
     list(B = B, tD = tD, dg = dg)
   }
   
-  BA  <- bsb(X, kr, deg, diff) # for ages
-  BY  <- bsb(Y, kr, deg, diff) # for years
+  BA  <- bsb(X, kr, deg, diff, "age")  # for ages
+  BY  <- bsb(Y, kr, deg, diff, "year") # for years
   B   <- if (type == "1D") BA$B else BY$B %x% BA$B
   out <- as.list(environment())
   return(out)

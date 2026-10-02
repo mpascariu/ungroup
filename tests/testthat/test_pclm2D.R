@@ -145,3 +145,30 @@ test_that("Missing cells work with an offset too", {
   expect_s3_class(P, "pclm2D")
   expect_true(all(is.finite(fitted(P))))
 })
+
+test_that("kr larger than the year axis is refused, not crashed", {
+  # The default kr = 7 needs at least 7 years. Fewer used to die inside
+  # MortSmooth_bbase with "'from' must be a finite number", which names
+  # nothing. This is reachable with the documented defaults, so it is pinned.
+  short <- y2[, 1:5]
+
+  expect_error(
+    pclm2D(x, short, nlast, verbose = FALSE,
+           control = list(lambda = c(1, 1))),
+    "'kr' = 7 is too large"
+  )
+  # The fine age grid is long, so kr bites on the short year axis first.
+  expect_error(
+    pclm2D(x, short, nlast, verbose = FALSE,
+           control = list(lambda = c(1, 1), kr = 20)),
+    "too large for the year axis"
+  )
+
+  # kr = 5 is the largest that works on a 5-year panel, and it must succeed.
+  P <- suppressWarnings(
+    pclm2D(x, short, nlast, verbose = FALSE,
+           control = list(lambda = c(1, 1), kr = 5))
+  )
+  expect_s3_class(P, "pclm2D")
+  expect_identical(dim(fitted(P)), c(111L, 5L))
+})

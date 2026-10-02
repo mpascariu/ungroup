@@ -29,34 +29,31 @@ should be equal with the length of \code{x}.}
 would be 5.}
 
 \item{offset}{Optional offset term to calculate smooth mortality rates. 
-A vector of the same length as x and y. See 
-\insertCite{rizzi2015;textual}{ungroup} for further details.}
+A vector of the same length as x and y, or one of the same length as the
+ungrouped output. See \insertCite{rizzi2015;textual}{ungroup} for further 
+details.}
 
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}
 
-\item{ci.level}{Level of significance for computing confidence intervals. 
-Default: \code{95}.}
+\item{ci.level}{Confidence level, as a percentage rather than a proportion,
+so \code{95} and not \code{0.95}. Values in \code{[50.1, 99.9]} are
+accepted. It sets the width of both interval pairs in \code{ci}: the
+pointwise \code{conf_lower} and \code{conf_upper}, and the mass-preserving
+\code{lower} and \code{upper} scenarios. Default: \code{95}.}
 
 \item{verbose}{Logical value. Indicates whether a progress bar should be 
 shown or not. Default: \code{TRUE}.}
 
-\item{control}{List with additional parameters: \itemize{
-\item{\code{lambda}} -- Smoothing parameter to be used in pclm estimation.
-If \code{lambda = NA} an algorithm will find the optimal values.
-\item{kr} -- Knot ratio. Number of internal intervals used for defining 
-1 knot in B-spline basis construction. See \code{\link{MortSmooth_bbase}}.
-\item{\code{deg}} -- Degree of the splines needed to create equally-spaced 
-B-splines basis over an abscissa of data.
-\item{\code{int.lambda}} -- If \code{lambda} is optimized an interval to be 
-searched needs to be specified. Format: vector containing the end-points.
-\item{\code{diff}} -- An integer indicating the order of differences of the 
-components of PCLM coefficients.
-\item{\code{opt.method}} -- Selection criterion of the model.
-Possible values are \code{"AIC"} and \code{"BIC"}.
-\item{\code{max.iter}} -- Maximal number of iterations used in fitting 
-procedure.
-\item{\code{tol}} -- Relative tolerance in PCLM fitting procedure.}}
+\item{control}{List of fitting controls, given by name. A misspelled entry
+is an error rather than being silently ignored. An unnamed entry is matched
+positionally, so \code{list(100)} sets \code{lambda} and nothing else;
+naming every entry is strongly preferred. Any setting not supplied takes
+its default from \code{\link{control.pclm}} for this function, or
+\code{\link{control.pclm2D}} for \code{pclm2D}. See those pages for the
+meaning and default of each of \code{lambda}, \code{kr}, \code{deg},
+\code{int.lambda}, \code{diff}, \code{opt.method}, \code{max.iter} and
+\code{tol}.}
 
 \item{omega}{Closing age of the distribution. An alternative to
 \code{nlast}: when it is given, the width of the last interval is taken as
@@ -88,8 +85,11 @@ scenarios, not pointwise bounds, and they carry no coverage level.
 table, the second as a pointwise error bar on the estimate.}
  \item{goodness.of.fit}{ A list containing goodness of fit measures: 
 standard errors, AIC and BIC.} 
- \item{smoothPar}{ Estimated smoothing parameters: \code{lambda, kr} 
-and \code{deg}.}
+ \item{smoothPar}{ Estimated smoothing parameters. In the univariate model
+ a named vector of \code{lambda}, \code{kr} and \code{deg}. In the
+ two-dimensional model \code{lambda} splits into \code{lambda.x} for the
+ age axis and \code{lambda.y} for the year axis, so the vector is
+ \code{lambda.x, lambda.y, kr, deg}.}
  \item{bin.definition}{ Additional values to identify the bins limits and
 location in input and output objects.}
  \item{deep}{ A list of objects created in the fitting process. Useful 

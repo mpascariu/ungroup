@@ -20,19 +20,23 @@ The following values are possible, for details, see plot: "p" for points,
 "l" for lines, "b" for both points and lines, "c" for empty points joined 
 by lines, "o" for overplotted points and lines, "s" and "S" for stair 
 steps and "h" for histogram-like vertical lines. Finally, "n" does not 
-produce any points or lines.}
+produce any points or lines. Default: \code{"l"}.}
 
 \item{lwd}{Line width, a positive number, defaulting to 2.}
 
-\item{col}{Three colours to be used in the plot for observed values, 
-fitted values and confidence intervals.}
+\item{col}{Three colors to be used in the plot for observed values, 
+fitted values and confidence intervals, in that order. The histogram
+default is \code{c("gold2", 2, 4)}; with an offset, which puts the plot on
+a log scale, it is \code{c(1, 2, 4)}.}
 
-\item{legend}{a character or \link{expression} vector
-    of length \eqn{\ge 1} to appear in the legend.  Other
-    objects will be coerced by \code{\link{as.graphicsAnnot}}.}
+\item{legend}{Labels for the legend. With three colors the default is
+\code{c("Input values", "Fitted values", "Conf. intervals")}.}
 
 \item{legend.position}{Legend position, or the x and y co-ordinates to be 
-used to position the legend.}
+used to position the legend. The default is chosen from the data: if the
+first few bins are taller than the last few the legend goes top right, and
+top left otherwise, which keeps it off the peak. The rate plot always
+defaults to top left.}
 
 \item{...}{other graphical parameters (see \link{par} for more details).}
 }

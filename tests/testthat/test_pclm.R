@@ -160,11 +160,55 @@ test_that("Control constructors return what they document", {
   expect_error(control.pclm(opt.method = "a"), "should be one of")
 })
 
+test_that("Control defaults match the values the help pages state", {
+  # Each of these was documented wrongly at some point: kr and int.lambda
+  # differ between the two models, and the shared param text said otherwise.
+  a <- control.pclm()
+  b <- control.pclm2D()
+
+  expect_identical(a$lambda, NA)
+  expect_identical(b$lambda, c(1, 1))
+  expect_identical(a$kr, 2)
+  expect_identical(b$kr, 7)
+  expect_identical(a$int.lambda, c(0.1, 1e5))
+  expect_identical(b$int.lambda, c(0.1, 1e3))
+  expect_identical(a$deg, 3)
+  expect_identical(b$deg, 3)
+  expect_identical(a$opt.method, "BIC")
+  expect_identical(a$tol, 1e-3)
+  expect_identical(a$max.iter, 1e3)
+
+  # Both models return the same eight names, in the same order.
+  expect_identical(names(a), names(b))
+})
+
+test_that("Misspelled control names are refused, unnamed ones are positional", {
+  # The help page makes both statements, so both are pinned here.
+  expect_error(pclm(x, y, nlast, control = list(maxiter = 500)),
+               "unused argument")
+
+  # list(100) matches lambda positionally and nothing else moves.
+  M <- suppressWarnings(pclm(x, y, nlast, control = list(100)))
+  expect_identical(unname(M$smoothPar), c(100, 2, 3))
+})
+
 test_that("suggest.valid.out.step returns exact divisors of the span", {
   expect_equal(
     suggest.valid.out.step(111),
     c(0.1, 0.2, 0.25, 0.37, 0.5, 0.6, 0.74, 0.75, 1)
   )
+})
+
+test_that("summary reports lambda without flattening it to an integer", {
+  # round() on the smoothing parameters printed lambda = 0.1 as 0, hiding the
+  # value the fit actually used. lambda is continuous; kr and deg are counts.
+  M <- pclm(x, y, nlast, control = list(lambda = 65.22826))
+  out <- capture.output(print(summary(M)))
+  expect_true(any(grepl("Smoothing parameter lambda   : 65.23", out, fixed = TRUE)))
+
+  M0 <- pclm(x, y, nlast)
+  out0 <- capture.output(print(summary(M0)))
+  expect_true(any(grepl("Smoothing parameter lambda   : 0.1", out0, fixed = TRUE)))
 })
 
 test_that("Information criteria honour k", {

@@ -1,3 +1,9 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+#
+# The vignette is HTML, so no LaTeX is needed on any runner. That is why no
+# platform installs a TeX distribution here. If the vignette ever goes back
+# to PDF output, every runner gains a LaTeX dependency at that point.
 name: R-CMD-check
 
 on:
@@ -5,6 +11,8 @@ on:
     branches: [master, main]
   pull_request:
     branches: [master, main]
+
+permissions: read-all
 
 jobs:
   R-CMD-check:
@@ -14,8 +22,10 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-latest, r: 'release'}
-          - {os: ubuntu-latest, r: 'devel', http-user-agent: 'release'}
+          - {os: macos-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-latest,  r: 'release'}
+          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes

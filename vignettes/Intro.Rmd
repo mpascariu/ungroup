@@ -1,146 +1,805 @@
 ---
-title: "Introduction to `ungroup`"
+title: "Introduction to ungroup"
+subtitle: "Ungrouping binned count data with the penalized composite link model"
 author: "Marius D. Pascariu, Maciej J. Dańko, Jonas Schöley and Silvia Rizzi"
-date: "September 1, 2018"
+date: "2026-10-02"
 output:
-  pdf_document:
-    highlight: tango
-    number_sections: yes
-    toc: no
-fontsize: 11pt
-geometry: margin=1.1in
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+    toc_depth: 3
+    number_sections: false
+    fig_width: 7
+    fig_height: 4.2
+    fig_align: center
+    code_folding: hide
 bibliography: REFERENCES.bib
-biblio-style: apalike
 link-citations: true
 vignette: >
-  %\VignetteIndexEntry{Introducing ungroup} 
-  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteIndexEntry{Introduction to ungroup}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-library(knitr)
-opts_chunk$set(collapse = TRUE)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse  = TRUE,
+  comment   = "#>",
+  fig.align = "center",
+  dpi       = 96,
+  out.width = "90%"
+)
 ```
 
-# Abstract
-
-The `ungroup` R package introduces a versatile method for ungrouping histograms (binned count data) assuming that counts are Poisson distributed and that the underlying sequence on a fine grid to be estimated is smooth. The method is based on the composite link model and estimation is achieved by maximizing a penalized likelihood. Smooth detailed sequences of counts and rates are so estimated from the binned counts. Ungrouping binned data can be desirable for many reasons: Bins can be too coarse to allow for accurate analysis; comparisons can be hindered when different grouping approaches are used in different histograms; and the last interval is often wide and open-ended and, thus, covers a lot of information in the tail area. Age-at-death distributions grouped in age classes and abridged life tables are examples of binned data. Because of modest assumptions, the approach is suitable for many demographic and epidemiological applications. For a detailed description of the method and applications see @rizzi2015.
-
-# Package Structure  
-The package has two top level functions `pclm` and `pclm2D`, two auxiliary functions (`control.pclm` and `control.pclm2D`), several generic functions (`plot`, `summary`, `fitted`, `residuals`). A dataset (`ungroup.data`) is provided as well for testing purposes.
-
-All functions are documented in the standard way, which means that once you load the package using `library(ungroup)` you can just type for example `?pclm` to see the help file.
-
-
-```{r}
-# Load the package
+```{r load}
 library(ungroup)
 ```
 
-# Usage
-## Univariate Penalized Composite Link Model (PCLM)
+# The problem
 
-The PCLM method [@eilers2007] is based on the composite link model [@thompson1981], which extends standard generalized linear models. It implements the idea that the observed counts, interpreted as realizations from Poisson distributions, are indirect observations of a finer (ungrouped) but latent sequence. This latent sequence represents the distribution of expected means on a fine resolution and has to be estimated from the aggregated data. Estimates are obtained by maximizing a penalized likelihood. This maximization is performed efficiently by a version of the iteratively reweighted least-squares algorithm. Optimal values of the smoothing parameter are chosen by minimizing Bayesian or Akaike's Information Criterion [@hastie1990].
+Demographers, actuaries, epidemiologists and criminologists all keep running
+into the same obstacle. The data are counts over intervals, and the intervals
+are too wide for the question being asked.
 
-This is an example of estimation of the smooth age at death distributions from grouped death counts. First we have to define some grouped data:
+* **The bins are too coarse.** Deaths are published in five-year age groups,
+  and you need single years of age to compute an average age at death or to
+  feed a model that expects an annual grid.
+* **Different sources bin differently.** One country publishes 5-year groups,
+  another 10-year groups, a third has a wide open interval at the top. Any
+  comparison between them is a comparison of the binning as much as of the
+  underlying mortality.
+* **The last interval is wide and open-ended.** Ages "85 and over" can hold a
+  third of the deaths in a low-mortality population. Treated as a single
+  point it drags the tail, and every summary measure built on it inherits the
+  distortion.
 
-```{r}
-# Input data  
-# x: Age groups
+Spreading each bin's count evenly over its width is the obvious move, and it
+is the one that goes wrong. It imposes a flat step on every interval, so the
+ungrouped sequence is a histogram of a histogram: no smoother than the input
+and wrong exactly where the data are most informative. The figure later in
+this vignette puts a number on that.
+
+`ungroup` instead treats the coarse counts as indirect observations of a
+smooth underlying sequence and recovers it.
+
+# The model in one page
+
+Write $y_i$ for the count in coarse interval $i$, $i = 1, \ldots, n$, and
+$\gamma_j$ for the expected mean on the fine grid $j = 1, \ldots, m$ that we
+want, with $m \gg n$. The observation is a sum, not a sample:
+
+$$
+y_i \sim \text{Poisson}\!\left(\sum_{j \in \mathcal{B}_i} \gamma_j\right)
+$$
+
+where $\mathcal{B}_i$ is the set of fine cells falling inside coarse interval
+$i$. In matrix form $y \sim \text{Poisson}(C\gamma)$, where $C$ is a
+composition matrix of ones and zeros that maps the fine grid onto the coarse
+one. This is the composite link model of @thompson1981; the link is no longer
+identity but a linear aggregation, which is what makes the problem
+ill-posed, and a standard GLM cannot solve it.
+
+@eilers2007 closes it with a penalty. We do not estimate the $m$ values of
+$\gamma$ directly, but a smaller number of B-spline coefficients $\beta$, with
+$\gamma = B\beta$; the fit is then driven by
+
+$$
+\ell(\beta) - \tfrac{1}{2}\lambda\,\beta' D'D \beta, \qquad
+\ell(\beta) = \sum_i \left(y_i \log \mu_i - \mu_i\right), \quad
+\mu = C B \beta
+$$
+
+The penalty on the second differences $D^2\beta$ prices roughness. $\lambda$
+sets the exchange rate between fit and smoothness: at $\lambda \to 0$ the
+estimate reproduces the coarse counts as closely as the spline basis allows,
+without the imposed flatness; as $\lambda \to \infty$ it goes to a straight
+line. Iteratively reweighted least squares solves the penalized system, and
+`ungroup` picks $\lambda$ by minimizing BIC (or AIC) unless you supply one.
+
+Two properties follow, and both are worth knowing before reading any output.
+
+* **The total is conserved exactly.** The fitted fine-grid values sum to the
+  observed coarse counts, `sum(fitted(M)) == sum(y)` to machine accuracy,
+  because the penalty only reshapes the distribution and never invents mass.
+  Individual bins are reproduced only approximately: the fit is penalized, so
+  a bin can come back a couple of counts away from what was observed.
+* **Between bins you get an estimate, not data.** A smoother can only
+  redistribute what the coarse counts contain. Any structure finer than the
+  widest bin, and anything the bins never recorded, is a modelling choice.
+
+When `na.action = "omit"` is in play, the first of these weakens: unobserved
+cells are filled in by the penalty, so the fitted total exceeds the observed
+total, by exactly the mass the model puts into the gaps.
+
+```{r overview-diagram, echo = FALSE, fig.height = 3.2, fig.width = 8}
+op <- par(mar = c(0.2, 0.2, 0.2, 0.2))
+plot.new()
+# Room on the left for the labels, or they are clipped at the margin.
+plot.window(xlim = c(-3.4, 10.4), ylim = c(0, 3.6))
+
+# Observed bins: unequal widths, the last one wide and open-ended.
+bin_width <- c(1, 1, 3, 5, 10, 10) / 3   # scaled so the total span is 10
+bin_counts <- c(294, 66, 32, 170, 284, 998)
+left <- cumsum(c(0, head(bin_width, -1)))
+
+for (i in seq_along(bin_counts)) {
+  rect(left[i], 2.4, left[i] + bin_width[i], 3.0,
+       col = "grey80", border = "white")
+  text(left[i] + bin_width[i] / 2, 3.15, bin_counts[i], cex = 0.7)
+}
+text(-0.25, 2.7, "observed counts", adj = 1, cex = 0.8)
+
+text(5, 2.05, expression(y %~% Poisson(C * gamma)), cex = 1.1)
+arrows(5, 1.9, 5, 1.55, length = 0.1)
+
+# The fine grid the model estimates, spanning exactly the same range.
+n_cell <- 40
+cw <- 10 / n_cell
+for (i in seq_len(n_cell)) {
+  rect((i - 1) * cw, 0.9, i * cw, 1.5,
+       col = if (i %% 2) "steelblue" else "lightsteelblue", border = "white")
+}
+text(-0.25, 1.2, "estimated", adj = 1, cex = 0.8)
+
+text(5, 0.45, "fine grid, one value per cell", cex = 0.8)
+text(5, 0.1, "C aggregates the fine grid back onto the coarse bins",
+     cex = 0.75, col = "grey30")
+par(op)
+```
+
+# Quick start
+
+The classic case: deaths in five-year age groups with an open final interval,
+which we want at single years of age.
+
+```{r data}
+# x: start of each input interval. The last interval runs [85, 85 + nlast).
 x <- c(0, 1, seq(5, 85, by = 5))
-x
-# y: Death counts in the age group
-y <- c(294, 66, 32, 44, 170, 284, 287, 293, 361, 600, 998,  
+
+# y: deaths in each interval
+y <- c(294, 66, 32, 44, 170, 284, 287, 293, 361, 600, 998,
        1572, 2529, 4637, 6161, 7369, 10481, 15293, 39016)
-# offset: Population exposed to risk in the age group
-offset <- c(114, 440, 509, 492, 628, 618, 576, 580, 634, 657, 
-            631, 584, 573, 619, 530, 384, 303, 245, 249) * 1000
-# nlast: the size of the last age interval (usually open)
+
+# nlast: width of the open final interval, so [85, 111)
 nlast <- 26
-# This results in the last group being [85, 111).
 ```
 
-### Fitting and ungrouping data using PCLM
-The model can be fitted using `pclm` function:
-```{r, message=FALSE, results='hide'}
-M1 <- pclm(x, y, nlast)
+Note the first two intervals are one year wide and the last is 26. Nothing
+requires the input bins to be equal, and this is the shape real published
+tables have. The width of the last interval is the only thing the model
+cannot infer from the data, because the count `39016` does not say where
+those deaths sit between 85 and 111.
+
+```{r quickstart}
+M1 <- pclm(x = x, y = y, nlast = nlast)
+M1
 ```
 
-### Output
-It generates different types of output stored in the created object. See `pclm` help page for detailed information about the output list (`?pclm`). 
-```{r}
-ls(M1)
+The default search picked `lambda = 0.1`, `kr = 2`, `deg = 3`. The fit has
+111 values against 19 input bins.
+
+```{r quickstart-plot}
+plot(M1, xlab = "Age, x", ylab = "Deaths")
 ```
 
-### Summary
-```{r}
+Keep that figure in mind, because the rest of the vignette is about the
+decisions embedded in it: the last interval's width, the smoothing parameter,
+the scale of the counts, and the two kinds of interval the output carries.
+
+## What comes back
+
+```{r object}
+names(M1)
+```
+
+| element | what it holds |
+|---|---|
+| `input` | the arguments, as supplied. `input$x`, `input$y`, even the transformed ones. |
+| `fitted` | the ungrouped sequence. A named vector, names are the interval labels. |
+| `ci` | four vectors, explained under [Reading the intervals](#intervals). |
+| `goodness.of.fit` | `AIC`, `BIC`, and `standard.errors` for the fitted values. |
+| `smoothPar` | the `lambda`, `kr`, `deg` actually used. |
+| `bin.definition` | the input and output interval boundaries, so nothing has to be rebuilt by hand. |
+| `deep` | the internals of the fit: `C`, `B`, `dev`, `trace`, `H0`. For diagnosis. |
+| `call` | the matched call. |
+
+`summary()` reports the headline numbers:
+
+```{r object-summary}
 summary(M1)
 ```
 
-### plot.pclm
-Generic plot:
-```{r, fig.align='center', fig.asp=0.8, out.width = '60%'}
-plot(M1)
+and `fitted()`, `residuals()` and `plot()` are the generics you would expect.
+`residuals()` returns the difference between the observed coarse count and
+the estimate re-aggregated to the coarse grid, so it lives on the input scale:
 
-# Print first 6 fitted values
-fitted(M1)[1:6]
+```{r residuals}
+head(residuals(M1), 5)
+max(abs(residuals(M1)))
 ```
 
-### out.step
+A maximum absolute residual of about 2.4 deaths on a bin of 294 is a good
+sign, and it is the honest reading of what the penalty does: the fit smooths
+*through* the observation rather than interpolating it. Note that residuals
+are available for counts only. With an `offset` the fit is on the rate scale
+and `residuals()` refuses rather than returning something that looks
+meaningful and is not.
 
-By default `pclm` ungroups data in intervals of length `1`. If higher granularity is required `out.step` argument can be used to specify this. For example, obtaining groups 222 groups of length 0.5 one can try: 
+# The width of the last interval
 
-```{r, message=FALSE, results='hide', fig.align='center', fig.asp=0.8, out.width = '60%'}
-M2 <- pclm(x, y, nlast, out.step = 0.5)
-plot(M2)
+`nlast` is the one input the data cannot supply. Get it wrong and the tail is
+wrong, so it is worth stating plainly what the argument means.
+
+For the Swedish male deaths used throughout, the last observed interval
+starts at 85. If that interval is really 85+ with everyone dying by 111, then
+`nlast = 26`. If the table was compiled with an upper bound of 95, `nlast =
+10`. The package cannot tell, and will happily produce a smooth curve under
+either assumption.
+
+`omega` exists to say the same thing from the other end, which is often the
+natural way to state it: not "the last interval is 26 years wide" but "the
+distribution closes at age 111".
+
+```{r omega}
+M_omega <- pclm(x = x, y = y, omega = 111, control = list(lambda = 100))
+M_nlast <- pclm(x = x, y = y, nlast = 26,  control = list(lambda = 100))
+all.equal(unname(fitted(M_omega)), unname(fitted(M_nlast)))
 ```
 
-```{r}
-# Print first 6 fitted values
-fitted(M2)[1:6]
-# Number of fitted values
+The two calls agree exactly. They are alternatives, and the package refuses
+both and neither:
+
+```{r omega-errors, error = TRUE}
+pclm(x = x, y = y, nlast = 26, omega = 111)  # both given
+pclm(x = x, y = y)                           # neither given
+pclm(x = x, y = y, omega = 85)               # not past max(x)
+```
+
+A wide-open final interval is where the model has the least to work with, and
+the estimated tail is the most fragile part of any result. If the raw data
+are available at a finer resolution for the last interval, use them.
+
+# Choosing the resolution of the output
+
+`out.step` sets the width of the output intervals, anywhere from 0.1 to 1.
+The default is 1, one-year intervals for age data.
+
+```{r outstep}
+M2 <- pclm(x = x, y = y, nlast = nlast, out.step = 0.5)
 length(fitted(M2))
+head(names(fitted(M2)), 4)
 ```
 
-### control.pclm
+Twice as many values, half as wide, and the same total mass:
 
-For controlling the PCLM fitting process `control.pclm` provides several options. The list of arguments needs to be specified using the `control` argument. For example, if we want to optimize the smoothing parameters in order to obtain a fit characterized by the small `AIC` level one can write:
-
-```{r, eval=FALSE}
-# Optimise smoothing parameter: lambda, kr and deg
-M3 <- pclm(x, y, nlast, 
-           control = list(lambda = NA, opt.method = "AIC"))
+```{r outstep-mass}
+c(same_mass = all.equal(sum(fitted(M2)), sum(y)))
 ```
 
-### Offset
-The `offset` argument can be used to estimate smooth death rates. `offset` must be a vector of the same length as `y`. 
+`out.step` changes the resolution of the *reporting* grid, not the amount of
+information. Asking for 0.5 does not recover the within-year structure that
+one-year bins never recorded; it interpolates the fitted curve at a finer
+spacing. Use it to line the output up with another data source, not in the
+hope that a smaller number makes the estimate sharper.
 
-```{r, message=FALSE, results='hide'}
-M5 <- pclm(x, y, nlast, offset)
+If the requested step does not divide the total span evenly, the last
+interval is widened by a hair and you are told, together with the nearby
+values that would have divided cleanly:
+
+```{r outstep-warning}
+M2b <- pclm(x = x, y = y, nlast = nlast, out.step = 0.32,
+            control = list(lambda = 100))
 ```
 
-Generic plot:
-```{r, fig.align='center', fig.asp=0.8, out.width = '60%'}
-plot(M5, type = "s")
+```{r outstep-suggest}
+suggest.valid.out.step(max(x) + nlast - min(x))
 ```
 
+# What a penalty buys
 
-## Two-dimensional Penalized Composite Link Model 
+The single most useful sanity check is to compare the PCLM fit against the
+uniform spread, which is what you get with no model at all. We can build the
+ground truth here because the bundled data set holds deaths by single year of
+age, so we can aggregate to coarse bins, ungroup with each method, and see
+which one gets back to the truth.
 
-The PCLM can be extended to a two-dimensional regression problem. The two-dimensional Penalized Composite Link Model to ungroup simultaneously coarse distributions for adjacent years can be fitted using `pclm2D` function, and the structure of the functions works as `pclm`. See the examples provided in the help page. Note that `pclm2D` might be slower, depending on the data and model specification provided in the functions.
+```{r e0-setup}
+# Average years lived, from a vector of deaths by single year of age.
+e0 <- function(dx) {
+  n <- length(dx)
+  l <- rev(cumsum(rev(dx)))
+  l <- l / l[1]
+  L <- c((l[-1] + l[-n]) / 2, l[n])
+  sum(L) / l[1]
+}
 
-The two-dimensional regression analysis combines two approaches: the PCLM for ungrouping in one dimension and two-dimensional smoothing with P-splines [@currie2004]. As an example we can ungroup age-specific distributions from the coarsely grouped data and smooth across adjacent calendar years to estimate both detailed age-at-death distributions and mortality time trends.
+# Aggregate single-age deaths into the same coarse bins used above.
+grp <- rep(x, c(diff(x), nlast))
+bin_deaths <- function(j) {
+  as.numeric(tapply(as.numeric(ungroup.data$Dx[, j]), grp, sum))
+}
+```
 
-# Acknowledgment
-We thank Paul H.C. Eilers who provided insight and expertise that greatly supported the creation of this R package; and Catalina Torres and Tim Riffe for testing and offering feedback on the early versions of the software. 
+For one year, 1980:
 
-The authors are also grateful to the following institutions for their support:
+```{r e0-1980}
+truth <- as.numeric(ungroup.data$Dx[, 1])
+coarse <- bin_deaths(1)
+widths <- c(diff(x), nlast)
 
- * University of Southern Denmark;
- * Max-Planck Institute for Demographic Research;
- * SCOR Corporate Foundation for Science.
+uniform <- rep(coarse / widths, times = widths)
+fit1980 <- pclm(x, coarse, nlast, control = list(lambda = 100))
+
+round(c(truth     = e0(truth),
+        uniform   = e0(uniform),
+        pclm      = e0(unname(fitted(fit1980)))), 3)
+```
+
+The uniform spread overstates life expectancy by more than one and a half
+years. PCLM lands within about two hundredths. Across all 35 years in the
+data set the difference is systematic rather than lucky:
+
+```{r e0-all}
+errors <- t(vapply(1:35, function(j) {
+  truth  <- as.numeric(ungroup.data$Dx[, j])
+  coarse <- bin_deaths(j)
+  uniform <- rep(coarse / widths, times = widths)
+  fit <- pclm(x, coarse, nlast, control = list(lambda = 100))
+  c(uniform = e0(uniform) - e0(truth),
+    pclm    = e0(unname(fitted(fit))) - e0(truth))
+}, numeric(2)))
+
+round(apply(abs(errors), 2, function(z) c(mean = mean(z), max = max(z))), 3)
+```
+
+```{r e0-plot}
+plot(1980:2014, errors[, "uniform"], type = "b", pch = 19, col = "grey60",
+     ylim = range(errors) * 1.1,
+     xlab = "Year", ylab = "Error in e0, years")
+lines(1980:2014, errors[, "pclm"], type = "b", pch = 19, col = 2)
+abline(h = 0, lty = 3)
+legend("topleft", legend = c("uniform spread", "pclm"),
+       col = c("grey60", 2), lty = 1, pch = 19, bty = "n")
+```
+
+The uniform spread is biased upward by 2.5 years on average and by more than
+three in the worst year, always in the same direction: flat bins put too much
+mass at the young end of every interval, including the open one. The PCLM
+error averages under a tenth of a year.
+
+## The smoothing parameter
+
+`lambda` is the knob that decides how much structure the estimate is allowed
+to have. Too small and the fit chases noise and the artificial wiggles
+introduced by the bin edges; too large and real features flatten out. Here is
+the Old Faithful geyser, 272 eruptions binned into four one-minute intervals
+[@azzalini1990]. The data have nothing to do with mortality, which is the
+point: nothing in the model is demographic.
+
+```{r faithful}
+faithful_counts <- hist(datasets::faithful$eruptions,
+                        breaks = seq(1.5, 5.5, by = 1),
+                        plot   = FALSE)$counts
+faithful_counts
+
+Mf <- pclm(x = 1.5:4.5, y = faithful_counts, nlast = 1,
+           out.step = 0.1)
+Mf$smoothPar[1]
+```
+
+```{r faithful-plot}
+plot(Mf, xlab = "Eruption length, minutes", ylab = "Eruptions")
+```
+
+Two modes, and they are real: geologists classify Old Faithful eruptions as
+short or long. The dip between them is the feature to watch, since it is what
+a penalty that is too heavy will erase first.
+
+```{r faithful-lambda}
+valley <- function(L) {
+  fv <- as.numeric(fitted(pclm(1.5:4.5, faithful_counts, 1, out.step = 0.1,
+                               control = list(lambda = L))))
+  round(c(valley = min(fv[11:20]), peak = max(fv)), 2)
+}
+rbind(lambda_1   = valley(1),
+      lambda_auto = valley(Mf$smoothPar[1]),
+      lambda_1e6  = valley(1e6))
+```
+
+At `lambda = 1e6` the valley is nearly gone, its minimum lifted from about 1
+to 5 eruptions per 0.1-minute cell. The automatic choice sits between the two
+extremes, and the ordering of `BIC` agrees that it is the better compromise:
+
+```{r faithful-bic}
+sapply(c(1, Mf$smoothPar[1], 1e6), function(L) {
+  M <- pclm(1.5:4.5, faithful_counts, 1, out.step = 0.1,
+            control = list(lambda = L))
+  round(c(BIC = BIC(M), AIC = AIC(M)), 2)
+})
+```
+
+Two cautions about letting the package choose. First, the search interval is
+finite, `int.lambda` defaults to `c(0.1, 1e5)`, and the optimum does
+sometimes land on the boundary. When it does, the answer is the boundary
+value rather than the true optimum:
+
+```{r lambda-bound}
+M_auto <- pclm(x, y, nlast, control = list(lambda = NA))
+M_wide <- pclm(x, y, nlast,
+               control = list(lambda = NA, int.lambda = c(1e-4, 1e5)))
+c(default_search = M_auto$smoothPar[1], wider_search = M_wide$smoothPar[1])
+```
+
+Second, select with `BIC` (the default) unless you have a reason not to
+[@hastie1990]. It penalizes complexity harder and is the safer choice for a
+distribution where a spurious bump in the tail is costly. `AIC` will
+occasionally prefer a visibly wiggly fit.
+
+Both criteria, and the fitted values themselves, are returned so the choice
+can be checked rather than trusted:
+
+```{r lambda-bic}
+M_bic <- pclm(x, y, nlast, control = list(lambda = NA, opt.method = "BIC"))
+M_aic <- pclm(x, y, nlast, control = list(lambda = NA, opt.method = "AIC"))
+c(bic_choice = M_bic$smoothPar[1],
+  aic_choice = M_aic$smoothPar[1])
+```
+
+Fixing `lambda` by hand is much faster than searching, roughly a factor of
+thirty on this example, so once a value is known to work it is worth passing
+it in. The full set of fitting controls is in `?control.pclm`.
+
+# Estimating rates, not counts
+
+Pass an `offset` and the model estimates a rate rather than a count. The
+offset is the population exposed to risk, one value per input bin, and it is
+ungrouped internally on the same grid so the fitted rates line up with the
+fitted counts.
+
+```{r offset}
+Ex <- c(114, 440, 509, 492, 628, 618, 576, 580, 634, 657,
+        631, 584, 573, 619, 530, 384, 303, 245, 249) * 1000
+
+M3 <- pclm(x = x, y = y, nlast = nlast, offset = Ex)
+fitted(M3)[1:5]
+```
+
+The values are now central death rates on a log scale when plotted:
+
+```{r offset-plot}
+plot(M3, type = "s", xlab = "Age, x", ylab = "m(x), log scale")
+```
+
+There are two accepted forms, and they give slightly different answers.
+
+* **Exposures on the coarse grid**, the same length as `y`. This is the usual
+  case and the one to reach for. The exposures are ungrouped inside the model,
+  on the same fine grid as the counts.
+* **Exposures already ungrouped**, the same length as the output. They are
+  then taken as fixed, which is what you want when the exposures come from a
+  source with a genuinely finer resolution.
+
+```{r offset-two-forms}
+Ex_fine <- fitted(pclm(x = x, y = Ex, nlast = nlast))   # 111 values
+
+M_coarse <- pclm(x = x, y = y, nlast = nlast, offset = Ex)
+M_fine   <- pclm(x = x, y = y, nlast = nlast, offset = Ex_fine)
+
+# Same rates to within a few percent through the bulk of the distribution,
+# and further apart in the extreme tail where the counts are thin.
+round(range(fitted(M_fine) / fitted(M_coarse)), 3)
+```
+
+Do not mix them up: the two lengths mean different things and both are
+accepted, so a mistake here produces a plausible curve rather than an error.
+
+## Small counts and zeros
+
+Poisson counts of zero are informative, and in the extreme ages they are also
+routine. The model handles them, but tiny counts make a large response to a
+small change, so the package warns and suggests a fix.
+
+```{r zeros}
+small <- c(0, 0, 1, 0, 2, 1, 0, 3, 2, 1)
+M_small <- pclm(x = 0:9, y = small, nlast = 1,
+                control = list(lambda = 10))
+```
+
+Multiplying by a constant is the recommended move. It changes nothing about
+the relative fit, because the penalty acts on the spline coefficients and the
+Poisson likelihood absorbs the scale, but it keeps the internal arithmetic
+away from underflow in the tail:
+
+```{r zeros-scaled}
+M_scaled <- pclm(x = 0:9, y = small * 100, nlast = 1,
+                 control = list(lambda = 10))
+c(total_in   = sum(small * 100),
+  total_out  = sum(fitted(M_scaled)),
+  head_fit   = round(head(fitted(M_scaled), 3), 1))
+```
+
+# Reading the intervals {#intervals}
+
+The `ci` element holds four vectors and they are **not** interchangeable.
+Getting this wrong is the easiest way to publish a wrong statement, so it is
+worth being precise.
+
+```{r ci-names}
+names(M1$ci)
+```
+
+**`lower` and `upper` are scenarios, not bounds.** They answer a specific
+question: what does the distribution look like if everyone's hazard is
+uniformly lower (or higher)? The curves are built by scaling the whole
+hazard, then rescaled so that each scenario still totals `sum(fitted)`. That
+mass constraint is what makes them useful as low and high inputs to a life
+table, and also what makes them cross the point estimate in the tail: the low
+scenario has the same total mass but pushes it toward older ages, so past
+some age it lies above the fit.
+
+```{r ci-crossing}
+diff <- fitted(M1) - M1$ci$lower
+c(totals_equal = isTRUE(all.equal(sum(M1$ci$lower), sum(y))),
+  first_age_above = names(fitted(M1))[min(which(diff < 0))])
+```
+
+**`conf_lower` and `conf_upper` are pointwise intervals** around each fitted
+value, at the level given by `ci.level` (default 95). They always bracket the
+estimate, and they do not total anything in particular.
+
+```{r ci-table}
+i <- c(1, 30, 70, 100, 111)
+data.frame(
+  bin       = names(fitted(M1))[i],
+  fitted    = round(fitted(M1)[i], 1),
+  conf_lo   = round(M1$ci$conf_lower[i], 1),
+  conf_up   = round(M1$ci$conf_upper[i], 1),
+  scen_lo   = round(M1$ci$lower[i], 1),
+  scen_up   = round(M1$ci$upper[i], 1)
+)
+```
+
+Read the last three rows: at ages 99 and above the scenario lower curve sits
+*above* the fit, while the pointwise interval still brackets it. Two
+different objects, two different jobs.
+
+```{r ci-plot}
+lo <- M1$ci$conf_lower
+up <- M1$ci$conf_upper
+f  <- fitted(M1)
+age <- seq(0, 110, length.out = length(f))
+
+plot(age, f, type = "l", lwd = 2, ylim = c(0, max(up) * 1.05),
+     xlab = "Age, x", ylab = "Deaths")
+polygon(c(age, rev(age)), c(lo, rev(up)),
+        col = adjustcolor("steelblue", 0.25), border = NA)
+lines(age, f, lwd = 2)
+lines(age, M1$ci$lower, lwd = 2, lty = 2, col = 2)
+lines(age, M1$ci$upper, lwd = 2, lty = 2, col = 2)
+legend("topright", bty = "n", lty = c(1, 1, 2), lwd = 2,
+       col = c(1, "steelblue", 2),
+       legend = c("fitted", "pointwise 95%", "mass-preserving scenarios"))
+```
+
+Neither interval covers the region where nothing was observed in the sense of
+a sampling guarantee; see the next section. Both are computed from the
+sandwich estimator of the spline coefficients and inherit its assumptions,
+one of which is that the model is correctly specified.
+
+# Missing data and an open interval that moves
+
+Two problems in published data led to the `na.action` argument, and both are
+common enough to deserve a worked example.
+
+The first is an open age group that changes over time. A country may close
+its tables at 65+ for a few years, then at 80+, then at 85+. For a
+two-dimensional fit the surface has to be rectangular, so the cells above the
+early ceiling are simply unobserved.
+
+```{r ragged}
+grp2 <- rep(x, c(diff(x), nlast))
+years <- 1:12
+y2d <- aggregate(ungroup.data$Dx[, years], by = list(grp2), FUN = "sum")[, -1]
+
+# The top of the surface is unobserved in the early years: the oldest ages
+# were folded into the open interval at a lower ceiling then.
+y_ragged <- y2d
+y_ragged[17:19, 1:4] <- NA
+y_ragged[c(1:3, 16:19), 1:5]
+```
+
+The default `na.action = "fail"` rejects it, exactly as the package always
+did:
+
+```{r ragged-fail, error = TRUE}
+pclm2D(x = x, y = y_ragged, nlast = nlast, verbose = FALSE)
+```
+
+`na.action = "omit"` drops those cells from the likelihood and lets the
+penalty bridge the gap. The output grid is untouched, so the surface comes
+back whole.
+
+```{r ragged-omit}
+P_ragged <- pclm2D(x = x, y = y_ragged, nlast = nlast,
+                   na.action = "omit", verbose = FALSE,
+                   control = list(lambda = c(1, 1), kr = 5))
+dim(fitted(P_ragged))
+all(is.finite(fitted(P_ragged)))
+```
+
+The second problem is a year with no exposure. Deaths recorded annually,
+population only every third year, which is the case that prompted issue #6.
+
+```{r missing-year}
+Ex2d <- aggregate(ungroup.data$Ex[, years], by = list(grp2), FUN = "sum")[, -1]
+Ex2d[, c(2, 3, 5, 6, 8, 9, 11, 12)] <- NA
+```
+
+Omission applies to the offset too, so the same call recovers a rate in every
+year:
+
+```{r missing-year-fit}
+P_missing <- pclm2D(x = x, y = y2d, nlast = nlast, offset = Ex2d,
+                    na.action = "omit", verbose = FALSE,
+                    control = list(lambda = c(1, 1), kr = 5))
+dim(fitted(P_missing))
+all(is.finite(fitted(P_missing)))
+```
+
+Two things to be honest about. Only `NA` counts as unobserved; `Inf` remains
+an error under `"omit"`, so "missing" and "invalid" stay distinguishable. And
+an interpolated year is an estimate from its neighbours, borrowing strength
+from both axes. It is not a recovered measurement, and the confidence
+intervals around it are as wide as the penalty allows and no wider.
+
+The totals make the same point. With every cell observed the fit conserves
+mass exactly, but under omission the gaps are filled in by the penalty and
+the fitted total exceeds the observed one:
+
+```{r omit-mass}
+c(
+  observed_cells   = sum(y_ragged, na.rm = TRUE),
+  fitted_all_cells = sum(fitted(P_ragged))
+)
+```
+
+# Two dimensions
+
+The model extends to a surface. `pclm2D` ungroups coarse age distributions
+for several adjacent years at once and smooths across them, so the age
+profile borrows strength from neighbouring years and the time trend borrows
+strength from neighbouring ages. This is the setting of @rizzi2019 and, as
+the previous section showed, the setting where data are most often ragged.
+
+The input response is a matrix or data frame: rows are age intervals, columns
+are years, with the same `x` and `nlast` as before.
+
+```{r two-dimensional}
+years10 <- 1:10
+y10  <- aggregate(ungroup.data$Dx[, years10], by = list(grp2), FUN = "sum")[, -1]
+Ex10 <- aggregate(ungroup.data$Ex[, years10], by = list(grp2), FUN = "sum")[, -1]
+dim(y10)
+
+P_counts <- pclm2D(x = x, y = y10, nlast = nlast, verbose = FALSE,
+                   control = list(lambda = c(1, 1), kr = 5))
+dim(fitted(P_counts))
+
+P_rates <- pclm2D(x = x, y = y10, nlast = nlast, offset = Ex10,
+                  verbose = FALSE, control = list(lambda = c(1, 1), kr = 5))
+summary(P_rates)
+```
+
+Note `kr = 5` in both calls. This matters. The default for `pclm2D` is
+`kr = 7`, and `kr` sets how many values along an axis share one spline
+interval, so a panel with fewer than seven years leaves the year axis with no
+internal knot at all. The package now says so instead of failing deep in the
+basis construction:
+
+```{r kr-error, error = TRUE}
+pclm2D(x = x, y = y10[, 1:5], nlast = nlast, verbose = FALSE,
+       control = list(lambda = c(1, 1)))
+```
+
+`kr` is the main cost knob for the two-dimensional fit, since it fixes the
+number of spline coefficients in each direction. A smaller `kr` means more
+coefficients, a more flexible fit, and a slower one:
+
+```{r kr-cost}
+basis_size <- vapply(c(2, 3, 5, 7), function(k) {
+  P <- pclm2D(x = x, y = y10, nlast = nlast, verbose = FALSE,
+              control = list(lambda = c(1, 1), kr = k))
+  ncol(P$deep$B)
+}, numeric(1))
+setNames(basis_size, paste0("kr=", c(2, 3, 5, 7)))
+```
+
+That is the number of coefficients the penalty is applied to, and it drives
+both the flexibility and the runtime.
+
+```{r two-dimensional-plots, fig.height = 4.8}
+plot(P_counts, xlab = "Age", ylab = "Year", zlab = "Deaths")
+```
+
+```{r two-dimensional-rates-plot, fig.height = 4.8}
+plot(P_rates, xlab = "Age", ylab = "Year", zlab = "log m(x)")
+```
+
+The observed input can be plotted on the same axes, which is the honest
+comparison, because it shows how much of the picture is the data and how much
+is the smoother:
+
+```{r two-dimensional-observed, fig.height = 4.8}
+plot(P_counts, type = "observed", xlab = "Age", ylab = "Year",
+     zlab = "Deaths per year of age")
+```
+
+The plot method takes `phi` and `theta` for the viewing angle, `nbcol` and
+`colors` for the palette, and passes anything else to `persp()`. If the
+rotated view is awkward in a static document, extract the matrix and plot it
+flat:
+
+```{r two-dimensional-heatmap, fig.height = 4.4}
+Z <- fitted(P_rates)
+image(x = as.numeric(sub("^\\[([0-9.]+),.*$", "\\1", rownames(Z))),
+      y = years10, z = log(Z), col = hcl.colors(64, "YlOrBr", rev = TRUE),
+      xlab = "Age, x", ylab = "Year")
+contour(x = as.numeric(sub("^\\[([0-9.]+),.*$", "\\1", rownames(Z))),
+        y = years10, z = log(Z), add = TRUE, col = "grey30", labcex = 0.7)
+```
+
+## Cost
+
+The two-dimensional fit is meaningfully slower than the one-dimensional one,
+and it is worth knowing the shape of the cost before pointing it at a large
+panel. Roughly:
+
+* the fit is iterative per column of the surface, so cost grows close to
+  linearly in the number of years;
+* a smaller `kr` multiplies that by enlarging the basis;
+* fitting rates costs several times what fitting counts does, because the
+  offset is itself ungrouped with a full one-dimensional fit on each column;
+* asking for `lambda = c(NA, NA)` starts a search over two parameters and can
+  take minutes on a wide surface.
+
+For interactive work, fix `lambda`, and choose `kr` from the panel size. The
+default `kr = 7` is a reasonable compromise for a surface spanning decades;
+shorten it for a handful of years.
+
+# How to get it wrong
+
+Three traps, all of which produce output that looks fine.
+
+**Passing the wrong `nlast`.** Nothing detects it, and the whole tail is
+wrong. If the estimate at the oldest ages looks implausible, this is the
+first thing to check.
+
+**Treating `ci$lower` and `ci$upper` as a confidence band.** They are
+mass-preserving scenarios and they cross the fit. Use `conf_lower` and
+`conf_upper` for an error bar, `lower` and `upper` as life table inputs.
+
+**Reading a fine `out.step` as extra information.** It is interpolation of
+the fitted curve. The information content is set by the input bins.
+
+To these we can add the statistical caveats that come with any penalized
+likelihood: the intervals rely on the model being right, the choice of
+`lambda` is data-driven and so the coverage is approximate, and the estimate
+in a region that was never observed is extrapolation from the penalty alone.
+
+# Where to go next
+
+* `?pclm` and `?pclm2D` document every argument and the full return value.
+* `?control.pclm` and `?control.pclm2D` list the fitting controls and their
+  defaults.
+* @rizzi2015 is the reference for the one-dimensional method, @rizzi2019 for
+  the two-dimensional extension with time, and @eilers2007 for the
+  penalized-likelihood machinery. @rizzi2016 compares ungrouping methods
+  against one another.
+* The `MortalityLaws` package downloads mortality data from the Human
+  Mortality Database in a form that can be fed straight into `pclm`.
+
+```{r session}
+sessionInfo()
+```
 
 # References
-
-

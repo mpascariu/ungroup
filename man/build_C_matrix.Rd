@@ -18,8 +18,9 @@ as \code{x}.}
 would be 5.}
 
 \item{offset}{Optional offset term to calculate smooth mortality rates. 
-A vector of the same length as x and y. See 
-\insertCite{rizzi2015;textual}{ungroup} for further details.}
+A vector of the same length as x and y, or one of the same length as the
+ungrouped output. See \insertCite{rizzi2015;textual}{ungroup} for further 
+details.}
 
 \item{out.step}{Length of estimated intervals in output. 
 Values between 0.1 and 1 are accepted. Default: 1.}

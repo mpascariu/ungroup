@@ -25,8 +25,9 @@
 \item{type}{chart type. Defines which data are plotted, \code{"fitted"} 
 values or \code{"observed"} input data. Default: \code{"fitted"}.}
 
-\item{colors}{colors to interpolate; must be a valid argument to
-    \code{\link[grDevices]{col2rgb}()}.}
+\item{colors}{Colors to interpolate for the surface palette; must be a valid
+argument to \code{\link[grDevices]{colorRampPalette}}. Default:
+\code{c("#b6e3db", "#e5d9c2", "#b5ba61", "#725428")}.}
 
 \item{nbcol}{dimension of the color palette. Number of colors. Default: 25.}
 

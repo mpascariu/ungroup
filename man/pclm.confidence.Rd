@@ -17,15 +17,19 @@ as \code{x}.}
 
 \item{SE}{Standard Errors}
 
-\item{ci.level}{Level of significance for computing confidence intervals. 
-Default: \code{95}.}
+\item{ci.level}{Confidence level, as a percentage rather than a proportion,
+so \code{95} and not \code{0.95}. Values in \code{[50.1, 99.9]} are
+accepted. It sets the width of both interval pairs in \code{ci}: the
+pointwise \code{conf_lower} and \code{conf_upper}, and the mass-preserving
+\code{lower} and \code{upper} scenarios. Default: \code{95}.}
 
 \item{type}{Type of PCLM model. Options: \code{"1D", "2D"} for 
 univariate and two-dimensional model respectively.}
 
 \item{offset}{Optional offset term to calculate smooth mortality rates. 
-A vector of the same length as x and y. See 
-\insertCite{rizzi2015;textual}{ungroup} for further details.}
+A vector of the same length as x and y, or one of the same length as the
+ungrouped output. See \insertCite{rizzi2015;textual}{ungroup} for further 
+details.}
 }
 \description{
 Compute Confidence Intervals for PCLM output

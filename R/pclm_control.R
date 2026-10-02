@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: MIT
-# Last update: Thu Nov 07 11:46:49 2019
+# Last update: Fri Oct 02 21:34:06 2026
 # --------------------------------------------------- #
 
 
@@ -19,19 +19,38 @@
 #'              
 #' @param lambda Smoothing parameter to be used in pclm estimation.
 #' If \code{lambda = NA} an algorithm will find the optimal values.
+#' \code{pclm} takes a single value. \code{pclm2D} takes two, one for the age
+#' axis and one for the year axis, and either may be \code{NA} to be found by
+#' optimisation while the other is held fixed.
 #' @param kr Knot ratio. Number of internal intervals used for defining 1 knot in 
 #' B-spline basis construction. See \code{\link{MortSmooth_bbase}}.
+#' Default \code{2} in \code{control.pclm} and \code{7} in
+#' \code{control.pclm2D}. In the two-dimensional model \code{kr} applies to
+#' both axes, so it must not exceed the length of the shorter one: a panel of
+#' fewer than \code{kr} years has no internal knot and is rejected.
 #' @param deg Degree of the splines needed to create equally-spaced B-splines 
-#' basis over an abscissa of data.
+#' basis over an abscissa of data. Default: 3, a cubic spline. Must be an
+#' integer of at least 2.
 #' @param int.lambda If \code{lambda} is optimized an interval to be searched 
 #' needs to be specified. Format: vector containing the end-points.
+#' Default \code{c(0.1, 1e5)} in \code{control.pclm} and
+#' \code{c(0.1, 1e3)} in \code{control.pclm2D}. The optimum does sometimes
+#' land on a boundary; widen the interval if \code{lambda} comes back equal to
+#' an end-point.
 #' @param diff An integer indicating the order of differences of the components 
 #' of PCLM coefficients. Default value: 2.
 #' @param opt.method Selection criterion of the model.
 #' Possible values are \code{"AIC"} and \code{"BIC"}. Default: \code{"BIC"}.
 #' @param max.iter Maximal number of iterations used in fitting procedure.
-#' @param tol Relative tolerance in PCLM fitting procedure. Default: 0.1\% i.e. 
-#' the estimated aggregate bins should be in the 0.1\% error margin.
+#' @param tol Relative tolerance in PCLM fitting procedure. The iteration stops
+#' when the mean absolute relative error of the fitted bin totals falls below
+#' \code{tol}, or when that error stops changing by more than 0.1\%, whichever
+#' comes first. Default: \code{1e-3}. Note that it is a convergence tolerance
+#' on the fit, not an accuracy guarantee on the result. With a large
+#' \code{lambda} the penalty holds the fit away from the observed bins and the
+#' realized mean relative error can be several percent, because the second
+#' stopping rule fires long before \code{tol} is reached. Set
+#' \code{tol = 1e-12} to see this: the fit does not move.
 #' @seealso \code{\link{pclm}}
 #' @return A list with exactly eight control parameters.
 #' @examples 

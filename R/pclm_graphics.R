@@ -1,24 +1,30 @@
 # --------------------------------------------------- #
 # Author: Marius D. PASCARIU
-# Last update: Fri Oct 02 17:06:29 2026
+# Last update: Fri Oct 02 21:34:06 2026
 # --------------------------------------------------- #
 
 #' Generic Plot for pclm Class
 #' 
 #' @inheritParams graphics::plot.default
-#' @inheritParams graphics::legend
+#' @param legend Labels for the legend. With three colors the default is
+#' \code{c("Input values", "Fitted values", "Conf. intervals")}.
 #' @param x An object of class \code{\link{pclm}}
 #' @param lwd Line width, a positive number, defaulting to 2. 
-#' @param col Three colours to be used in the plot for observed values, 
-#' fitted values and confidence intervals.
+#' @param col Three colors to be used in the plot for observed values, 
+#' fitted values and confidence intervals, in that order. The histogram
+#' default is \code{c("gold2", 2, 4)}; with an offset, which puts the plot on
+#' a log scale, it is \code{c(1, 2, 4)}.
 #' @param legend.position Legend position, or the x and y co-ordinates to be 
-#' used to position the legend. 
+#' used to position the legend. The default is chosen from the data: if the
+#' first few bins are taller than the last few the legend goes top right, and
+#' top left otherwise, which keeps it off the peak. The rate plot always
+#' defaults to top left.
 #' @param type 1-character string giving the type of plot desired. 
 #' The following values are possible, for details, see plot: "p" for points, 
 #' "l" for lines, "b" for both points and lines, "c" for empty points joined 
 #' by lines, "o" for overplotted points and lines, "s" and "S" for stair 
 #' steps and "h" for histogram-like vertical lines. Finally, "n" does not 
-#' produce any points or lines.
+#' produce any points or lines. Default: \code{"l"}.
 #' @param ... other graphical parameters (see \link{par} for more details).
 #' @seealso \code{\link{pclm}}
 #' @examples 
@@ -109,10 +115,12 @@ plot.pclm <- function(x,
 #' 
 #' @param x an object of class \code{\link{pclm2D}}.
 #' @param nbcol dimension of the color palette. Number of colors. Default: 25.
+#' @param colors Colors to interpolate for the surface palette; must be a valid
+#' argument to \code{\link[grDevices]{colorRampPalette}}. Default:
+#' \code{c("#b6e3db", "#e5d9c2", "#b5ba61", "#725428")}.
 #' @param type chart type. Defines which data are plotted, \code{"fitted"} 
 #' values or \code{"observed"} input data. Default: \code{"fitted"}.
 #' @inheritParams graphics::persp
-#' @inheritParams grDevices::colorRampPalette
 #' @param ... any other argument to be passed to 
 #' \code{\link[graphics]{persp}}.
 #' @seealso \code{\link{pclm2D}}
