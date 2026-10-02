@@ -13,7 +13,7 @@
 
 \item{ylab}{a label for the y axis, defaults to a description of \code{y}.}
 
-\item{ylim}{the y limits of the plot.}
+\item{ylim}{the y limits of the plot; see \code{xlim} for default and details.}
 
 \item{type}{1-character string giving the type of plot desired. 
 The following values are possible, for details, see plot: "p" for points, 

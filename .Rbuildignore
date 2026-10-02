@@ -5,11 +5,10 @@
 ^checks$
 ^joss$
 ^LICENSE\.md$
-^.git$
-^\.travis\.yml$
+^\.git$
+^\.github$
 ^CODE_OF_CONDUCT.md$
 ^CONTRIBUTING.md$
-^appveyor\.yml$
 ^doc$
 ^Meta$
 

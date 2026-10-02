@@ -29,6 +29,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Marius D. Pascariu \email{rpascariu@outlook.com} (\href{https://orcid.org/0000-0002-2568-6489}{ORCID})
   \item Silvia Rizzi \email{srizzi@health.sdu.dk}
   \item Jonas Schoeley (\href{https://orcid.org/0000-0002-3340-8518}{ORCID})
   \item Maciej J. Danko \email{Danko@demogr.mpg.de} (\href{https://orcid.org/0000-0002-7924-9022}{ORCID})

@@ -2,9 +2,7 @@
 % Please edit documentation in R/pclm_2D.R
 \name{summary.pclm2D}
 \alias{summary.pclm2D}
-\title{Summary method for pclm2D
-Generic function used to produce result summaries of the results produced 
-by \code{\link{pclm2D}}.}
+\title{Summary method for pclm2D}
 \usage{
 \method{summary}{pclm2D}(object, ...)
 }
@@ -14,8 +12,7 @@ by \code{\link{pclm2D}}.}
 \item{...}{additional arguments affecting the summary produced.}
 }
 \description{
-Summary method for pclm2D
-Generic function used to produce result summaries of the results produced 
+Generic function used to produce result summaries of the results produced
 by \code{\link{pclm2D}}.
 }
 \keyword{internal}

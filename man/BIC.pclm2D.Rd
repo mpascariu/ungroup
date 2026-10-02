@@ -2,9 +2,9 @@
 % Please edit documentation in R/pclm_CI.R
 \name{BIC.pclm2D}
 \alias{BIC.pclm2D}
-\title{PCLM-2D Akaike Information Criterion}
+\title{PCLM-2D Bayes Information Criterion}
 \usage{
-\method{BIC}{pclm2D}(object, ..., k = 2)
+\method{BIC}{pclm2D}(object, ...)
 }
 \arguments{
 \item{object}{a fitted model object for which there exists a
@@ -12,9 +12,6 @@
     an object inheriting from class \code{logLik}.}
 
 \item{...}{optionally more fitted model objects.}
-
-\item{k}{numeric, the \emph{penalty} per parameter to be used; the
-    default \code{k = 2} is the classical AIC.}
 }
 \value{
 If just one object is provided, a numeric value with the corresponding
@@ -32,7 +29,7 @@ Generic function calculating Akaike's \sQuote{An Information Criterion} for
   where \eqn{n_{par}}{npar} represents the number of parameters in the
   fitted model, and \eqn{k = 2} for the usual AIC, or
   \eqn{k = \log(n)}{k = log(n)}
-  (\eqn{n} being the number of observations) for the so-called BIC or SBC
+  (\eqn{n} being the number of observations) for the so-called BIC or \abbr{SBC}
   (Schwarz's Bayesian criterion).
 }
 \details{
@@ -73,8 +70,9 @@ When comparing models fitted by maximum likelihood to the same data,
   generic, and if neither succeed returns BIC as \code{NA}.
 }
 \references{
-Sakamoto, Y., Ishiguro, M., and Kitagawa G. (1986).
-  \emph{Akaike Information Criterion Statistics}.
-  D. Reidel Publishing Company.
+Sakamoto Y, Ishiguro M, Kitagawa G (1986).
+\emph{Akaike Information Criterion Statistics}.
+KTK Scientific Publishers.
+ISBN 9027722536.
 }
 \keyword{internal}

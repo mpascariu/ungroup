@@ -1,14 +1,14 @@
 # --------------------------------------------------- #
 # Author: Marius D. PASCARIU
-# Last update: Mon Jun 28 15:07:03 2021
+# Last update: Fri Oct 02 17:06:29 2026
 # --------------------------------------------------- #
 
 #' Validate input values
 #' 
 #' @param X A list with input arguments provided in \code{\link{pclm}} function
-#' @inheritParams pclm.fit
+#' @param pclm.type Either \code{"1D"} or \code{"2D"}. Selects which shape
+#'   rules apply to \code{y} and how many smoothing parameters are expected.
 #' @keywords internal
-#' @export
 pclm.input.check <- function(X, pclm.type) {
   # Validate the other arguments
   with(X, {
@@ -18,14 +18,25 @@ pclm.input.check <- function(X, pclm.type) {
     if (any(is.na(x))) {
       stop("'x' contains NA values", call. = FALSE)
     }
-    if (any(is.na(y))) {
-      stop("'y' contains NA values", call. = FALSE)
+    if (any(!is.finite(x))) {
+      stop("'x' contains non-finite values", call. = FALSE)
     }
-    if (any(y < 0)) {
-      stop("'y' contains negative values. The counts are always positive.", 
+    # unlist() so a data.frame response in the 2D model is covered too.
+    yv <- unlist(y)
+    # NA means "not observed". Under na.action = "omit" those rows are dropped
+    # and the penalty bridges the gap; anything else non-finite is still wrong.
+    if (identical(na.action, "fail") && any(is.na(yv))) {
+      stop("'y' contains NA values. Use na.action = \"omit\" to smooth over them.",
            call. = FALSE)
     }
-    if(any(y == 0)) {
+    if (any(!is.finite(yv) & !is.na(yv))) {
+      stop("'y' contains non-finite values", call. = FALSE)
+    }
+    if (any(yv < 0, na.rm = TRUE)) {
+      stop("'y' contains negative values. The counts are always positive.",
+           call. = FALSE)
+    }
+    if (any(yv == 0, na.rm = TRUE)) {
       message(
         "Input data contains zeros. ",
         "Replace zero values with a very small number to avoid erroneous results. ",
@@ -53,6 +64,9 @@ pclm.input.check <- function(X, pclm.type) {
         stop("length(x) must be equal to nrow(y)", call. = FALSE)
       }
     }
+    if (is.unsorted(x, strictly = TRUE)) {
+      stop("'x' must be strictly increasing", call. = FALSE)
+    }
     if (is.array(y)) {
       stop("'y' argument should be a numeric vector or a data.frame.", 
            call. = FALSE)
@@ -61,8 +75,22 @@ pclm.input.check <- function(X, pclm.type) {
   
   # Validate input in pclm.control
   with(X$control, {
-    if (any(!is.na(lambda)) && any(lambda < 0)) {
-      stop("'lambda' must be a positive scalar", call. = FALSE)
+    # Shape before values. The 1D model has one smoothing parameter and the 2D
+    # model has two, and a wrong length used to be recycled into the penalty
+    # matrix and return an all-NaN fit without a word.
+    n.lambda <- if (pclm.type == "1D") 1L else 2L
+    if (length(lambda) != n.lambda) {
+      stop("'lambda' must have length ", n.lambda, " in the ", pclm.type,
+           " model", call. = FALSE)
+    }
+    # NA is a legal lambda: it marks one to be found by optimisation, so a
+    # partial vector such as c(5, NA) is meaningful in the 2D model. NaN is
+    # not. Mask what is to be optimised before comparing, otherwise the test
+    # itself evaluates to NA and aborts with "missing value where TRUE/FALSE
+    # needed".
+    to_optimise <- is.na(lambda) & !is.nan(lambda)
+    if (any(!to_optimise & (!is.finite(lambda) | lambda <= 0))) {
+      stop("'lambda' must be NA or a positive, finite value", call. = FALSE)
     }
     if (!is.na(kr)) {
       if (kr <= 0 || frac(kr) != 0) stop("'kr' must be a positive integer", 
@@ -86,11 +114,41 @@ pclm.input.check <- function(X, pclm.type) {
 }
 
 
-#' Check if \code{nlast} needs to be adjusted in order to accommodate 
+#' Resolve the width of the last interval
+#'
+#' @description
+#' A caller may state either the width of the last interval or the closing age
+#' of the distribution. This turns the second into the first.
+#' @param x Vector containing the starting values of the input intervals/bins.
+#' @param nlast The width of the last interval. See \code{\link{pclm}}.
+#' @param omega The closing age of the distribution, an alternative to
+#'   \code{nlast}.
+#' @keywords internal
+resolve_nlast <- function(x, nlast, omega) {
+  if (is.null(nlast) && is.null(omega)) {
+    stop("supply either 'nlast' or 'omega'", call. = FALSE)
+  }
+  if (!is.null(nlast) && !is.null(omega)) {
+    stop("supply 'nlast' or 'omega', not both", call. = FALSE)
+  }
+  if (is.null(nlast)) {
+    if (length(omega) != 1 || !is.finite(omega)) {
+      stop("'omega' must be a single finite value", call. = FALSE)
+    }
+    nlast <- omega - max(x)
+    if (nlast <= 0) {
+      stop("'omega' must be greater than max(x)", call. = FALSE)
+    }
+  }
+
+  return(nlast)
+}
+
+
+#' Check if \code{nlast} needs to be adjusted in order to accommodate
 #' \code{out.step}
 #' @inheritParams pclm
 #' @keywords internal
-#' @export
 validate.nlast <- function(x, nlast, out.step) {
   if (length(nlast) != 1) {
     stop("'nlast' has to be a scalar. length(nlast) must be equal to 1.", 
@@ -123,8 +181,7 @@ validate.nlast <- function(x, nlast, out.step) {
 #' 
 #' @inheritParams base::seq
 #' @keywords internal
-#' @export 
-seqlast <- function(from, to, by) 
+seqlast <- function(from, to, by)
 {
   vec <- do.call(what = seq, args = list(from, to, by))
   if ( tail(vec, 1) != to ) {
@@ -138,7 +195,6 @@ seqlast <- function(from, to, by)
 #' Extract Fractional Part of a Number
 #' @param x A numeric value, vector or matrix
 #' @keywords internal
-#' @export
 frac <- function(x) {
   x - trunc(x)
 }

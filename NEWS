@@ -1,3 +1,14 @@
+version 1.5.1 - "steady keel":
+- Help pages rebuilt so the manual renders cleanly. Results are unchanged.
+
+version 1.5.0 - "patched sails":
+- Missing values can now be smoothed over instead of ending the run.
+- You can say where the age range ends instead of how wide the last group is.
+- Estimates now come with intervals that always sit either side of them.
+- Fitting is much faster when some groups hold no observations.
+- Inputs that used to crash or return empty results are now refused with a clear message.
+- Some low-level helpers are no longer available directly.
+
 version 1.4.6 - "steady bridge":
 - Internal update so the package keeps building with the upcoming version
 of its numerical dependency. Results are unchanged.

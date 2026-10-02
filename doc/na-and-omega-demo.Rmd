@@ -1,0 +1,192 @@
+---
+title: "Missing data and the closing age in `ungroup`"
+subtitle: "Behaviour before and after, for issues #4 and #6"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+# Run against the dev tree. devtools::load_all() from the repository root works
+# just as well if the package is not installed.
+library(ungroup)
+```
+
+Two open issues ask for the same underlying thing: the ability to fit a
+PCLM surface when parts of it were never observed.
+
+* **#4** "NA's not allowed": the open age group moves over time, so a
+  rectangular surface has unobserved cells in the top of the early years.
+* **#6** "Allow for missing years": exposures are on a coarser time grid than
+  deaths, so whole years of exposure are absent.
+
+Both were hard errors. The fixes add two arguments, both appended after
+`control` so every existing call keeps working:
+
+| argument | default | meaning |
+|---|---|---|
+| `na.action` | `"fail"` | `"fail"` rejects `NA` exactly as before. `"omit"` drops those rows and lets the penalty bridge the gap. |
+| `omega` | `NULL` | Closing age of the distribution. An alternative to `nlast`: `nlast` is taken as `omega - max(x)`. |
+
+Only `NA` counts as unobserved. `Inf` stays an error under `"omit"`, so
+"missing" and "invalid" remain distinguishable.
+
+```{r surface}
+x     <- c(0, 5, 10, 15, 20)   # five age groups; the last runs [20, 45)
+nlast <- 25
+years <- 1980:1989
+
+base <- c(120, 65, 50, 45, 35)
+y <- round(outer(base, seq(1, 0.8, length.out = length(years))))
+colnames(y) <- years
+y
+```
+
+---
+
+## Issue #4: the open age group moves over time
+
+The Bangladesh case in one line of history: 1980 to 1982 were closed at 10+,
+1983 and 1984 at 15+, and only later years reach 20+. The surface has to be
+rectangular, so the top left corner is simply unobserved.
+
+```{r ragged}
+y_ragged <- y
+y_ragged[4:5, 1:3] <- NA    # 1980-82 closed at 10+
+y_ragged[5,   4:5] <- NA    # 1983-84 closed at 15+
+y_ragged
+```
+
+### Before
+
+`na.action` defaults to `"fail"`, which is the old behaviour preserved
+verbatim. This is what v1.4.5 did, and what a caller who never hears about
+these arguments still gets.
+
+```{r before4, error=TRUE}
+pclm2D(x = x, y = y_ragged, nlast = nlast, verbose = FALSE)
+```
+
+The only options were to truncate every year to the smallest common open age
+group, throwing away the rest of the data.
+
+### After
+
+```{r after4}
+fit4 <- pclm2D(x = x, y = y_ragged, nlast = nlast,
+               na.action = "omit",
+               control = list(lambda = c(1, 1)),
+               verbose = FALSE)
+
+round(fitted(fit4), 1)
+```
+
+The unobserved cells come back as estimates rather than gaps. The fine grid is
+untouched by the omission, so the shape of the output is exactly what a
+complete surface would have produced.
+
+```{r after4-plot, fig.width=7, fig.height=5}
+plot(fit4, type = "fitted")
+```
+
+The whole surface is still one smooth estimate, because the age and year
+penalties borrow strength across the gap rather than fitting the hole in
+isolation.
+
+### The closing age
+
+Issue #4 also asked for an `omega`, a fixed closing age, instead of `nlast`.
+The distinction matters when the last age group starts in different places:
+`nlast` describes a width, `omega` describes where the life table ends.
+
+```{r omega}
+# These say the same thing from opposite ends.
+a <- pclm(x = x, y = y[, 8], nlast = 25,
+          control = list(lambda = 100), verbose = FALSE)
+b <- pclm(x = x, y = y[, 8], omega = 45,
+          control = list(lambda = 100), verbose = FALSE)
+
+all.equal(unname(fitted(a)), unname(fitted(b)))
+```
+
+`omega` and `nlast` are alternatives, and the guard rails say so:
+
+```{r omega-errors, error=TRUE}
+pclm(x = x, y = y[, 8], nlast = 25, omega = 45)   # both
+pclm(x = x, y = y[, 8])                           # neither
+pclm(x = x, y = y[, 8], omega = 20)               # not past max(x)
+```
+
+---
+
+## Issue #6: a year with no exposure
+
+Deaths are observed every year. Exposures are not: here only every third year
+was counted.
+
+```{r exposures}
+ex <- round(outer(c(3200, 3100, 3000, 2600, 2100),
+                  seq(1, 1.05, length.out = length(years))))
+ex[, setdiff(seq_along(years), seq(1, 10, by = 3))] <- NA
+colnames(ex) <- years
+ex
+```
+
+### Before
+
+```{r before6, error=TRUE}
+pclm2D(x = x, y = y, nlast = nlast, offset = ex, verbose = FALSE)
+```
+
+### After
+
+The exposure is ungrouped on its own first pass, so it needs the same
+treatment as the counts. `na.action` is carried into that pass.
+
+```{r after6}
+fit6 <- pclm2D(x = x, y = y, nlast = nlast, offset = ex,
+               na.action = "omit",
+               control = list(lambda = c(1, 1)),
+               verbose = FALSE)
+
+# Rates, so the display needs more than one decimal.
+signif(fitted(fit6), 3)
+```
+
+Every year now has a rate, including the seven that were never counted. The
+estimate at those years is interpolation from the neighbours, not a
+resurrection of the underlying counts. `fitted()` returns rates here because an
+offset was supplied.
+
+```{r after6-plot, fig.width=7, fig.height=5}
+plot(fit6, type = "fitted")
+```
+
+---
+
+## Where omission and redistribution part company
+
+Issue #4 proposed a different treatment for the ragged top: recode the
+trailing `NA` series to zero and redistribute the last observed `Dx` and `Nx`
+over `[last observed x, omega]`. Omission and redistribution agree everywhere
+the data is dense and disagree in one specific place.
+
+When a cohort dies out before reaching the closing age, redistribution forces
+those deaths into the tail by construction. Omission leaves the tail to the
+smoothing penalty, which is **extrapolation**, and it carries no coverage
+guarantee.
+
+That is what a smoother should do, and it is what the issue asked for in its
+general form ("you can simply smooth over them"), but it is worth stating
+plainly: the tail of an omitted fit is a model estimate with the weakest
+support in the whole surface.
+
+The confidence bands make no promise about that region either. `ci$conf_lower`
+and `ci$conf_upper` are pointwise marginal intervals around the fit; where
+nothing was observed they are as wide as the penalty allows and no wider.
+
+```{r session}
+sessionInfo()
+```

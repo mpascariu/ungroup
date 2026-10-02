@@ -20,8 +20,7 @@ Extract PCLM-2D Deviance Residuals
 }
 \examples{
 
-Dx <- ungroup.data$Dx
-Ex <- ungroup.data$Ex
+Dx <- ungroup.data$Dx[, 1:10]
 
 # Aggregate data to ungroup it in the example below
 x      <- c(0, 1, seq(5, 85, by = 5))

@@ -1,7 +1,6 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
-# License: MIT
-# Last update: Thu Nov 07 11:50:34 2019
+# Last update: Fri Oct 02 17:06:29 2026
 # --------------------------------------------------- #
 
 
@@ -36,9 +35,11 @@ ofun <- function(L, I, type) {
 
 
 #' Optimize Smoothing Parameters
-#' This function optimize searches of \code{lambda, kr} and \code{deg}. 
-#' See \code{\link{control.pclm}} to see what is their meaning. 
-#' The optimization process works in steps. Simultaneous optimization was 
+#'
+#' @description
+#' This function optimize searches of \code{lambda, kr} and \code{deg}.
+#' See \code{\link{control.pclm}} to see what is their meaning.
+#' The optimization process works in steps. Simultaneous optimization was
 #' tested and found inefficient.
 #' @param I Input object from pclm function
 #' @inheritParams pclm.fit
@@ -87,7 +88,7 @@ optimize_par <- function(I, type) {
     if (lambda.hat[1] == int.lambda[2]) {
       warning(paste0("'lambda' has reached the upper limit of ", int.lambda[2],
                      ". Maybe it is a good idea to extend interval. ",
-                     "See 'int.lambda' argument in 'pclm2D.control'."), 
+                     "See 'int.lambda' argument in 'control.pclm2D'."), 
               call. = FALSE)
     } 
     return(lambda.hat)

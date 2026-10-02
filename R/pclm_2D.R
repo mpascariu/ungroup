@@ -1,6 +1,6 @@
 # --------------------------------------------------- #
 # Author: Marius D. PASCARIU
-# Last update: Mon Jun 28 17:53:08 2021
+# Last update: Fri Oct 02 17:06:29 2026
 # --------------------------------------------------- #
 
 #' Two-Dimensional Penalized Composite Link Model (PCLM-2D)
@@ -62,25 +62,38 @@
 #' plot(P2, type = "fitted")
 #' plot(P2, type = "fitted", colors = c("blue", "red"))
 #' @export
-pclm2D <- function(x, 
-                   y, 
-                   nlast, 
-                   offset = NULL, 
-                   out.step = 1, 
-                   ci.level = 95, 
-                   verbose = TRUE, 
-                   control = list()) {
-  
+pclm2D <- function(x,
+                   y,
+                   nlast      = NULL,
+                   offset = NULL,
+                   out.step = 1,
+                   ci.level = 95,
+                   verbose = TRUE,
+                   control = list(),
+                   omega    = NULL,
+                   na.action = c("fail", "omit")) {
+
   if(is.matrix(y)) y <- as.data.frame(y)
   if(is.matrix(offset)) offset <- as.data.frame(offset)
-  
+
   # Check input
+  na.action <- match.arg(na.action)
   control <- do.call("control.pclm2D", control)
   input   <- I <- as.list(environment()) # save all the input for later use
-  I$nlast <- validate.nlast(x, nlast, out.step)
   type    <- "2D"
+  # Validate before validate.nlast touches x, so the x-type and x-NA guards
+  # are actually reachable.
   pclm.input.check(input, type)
-  
+  # Resolving nlast afterwards keeps those guards reachable on the omega path,
+  # which is the one that reads max(x).
+  nlast    <- resolve_nlast(x, nlast, omega)
+  input$nlast <- nlast
+  I$nlast <- validate.nlast(x, nlast, out.step)
+  # create.artificial.bin() below replaces I$nlast with out.step, the width of
+  # the bin it appends. Keep the validated width of the real last bin for the
+  # map.bins() call at the end, which labels the original bins.
+  nlast.adj <- I$nlast
+
   # Preliminary; start the clock
   if (verbose) {pb <- startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
   I[c("x", "y", "nlast", "offset")] <- create.artificial.bin(I) # ***
@@ -89,8 +102,15 @@ pclm2D <- function(x,
   if (!is.null(offset)) {
     if (all(dim(offset) == dim(y))) {
       if (verbose) { setpb(pb, 5); cat("   Ungrouping offset")}
-      I$offset <- pclm2D(x = I$x, y = I$offset, I$nlast, offset = NULL, 
-                         out.step, ci.level, verbose = FALSE, control)$fitted
+      I$offset <- pclm2D(x        = I$x,
+                         y        = I$offset,
+                         nlast    = I$nlast,
+                         offset   = NULL,
+                         out.step = out.step,
+                         ci.level = ci.level,
+                         verbose  = FALSE,
+                         control  = control,
+                         na.action = na.action)$fitted
     }
   }
   
@@ -101,18 +121,25 @@ pclm2D <- function(x,
   # solve the PCLM 
   M <- with(control, pclm.fit(I$x, I$y, I$nlast, I$offset, out.step, verbose,
                               lambda = L, kr, deg, diff, max.iter, tol, type))
-  SE <- with(M, compute_standard_errors(B, QmQ, QmQP))
+  SE <- with(M, compute_standard_errors(B, QmQ, H0))
   R  <- with(M, pclm.confidence(fit, out.step, y, SE, ci.level, type, offset))
   R  <- delete.artificial.bin(R) # ***
-  G  <- map.bins(x, nlast, out.step)
+  G  <- map.bins(x, nlast.adj, out.step)
   dn <- list(G$output$names, colnames(y))
   dimnames(R$fit)<- dimnames(R$lower)<- dimnames(R$upper) <-dimnames(R$SE) <- dn
-  
+
+  # Pointwise marginal interval for the fitted values. See the ci item in
+  # ?pclm for how it differs from the scenario curves in R$lower and R$upper.
+  R$conf_lower <- R$fit * exp(-R$qn * R$SE)
+  R$conf_upper <- R$fit * exp( R$qn * R$SE)
+  dimnames(R$conf_lower) <- dimnames(R$conf_upper) <- dn
+
   # Output
   Fcall <- match.call()
   Par <- with(control, c(lambda.x = L[1], lambda.y = L[2], kr = kr, deg = deg))
   gof <- list(AIC = AIC.pclm(M), BIC = BIC.pclm(M), standard.errors = R$SE)
-  ci  <- list(upper = R$upper, lower = R$lower)
+  ci  <- list(upper = R$upper, lower = R$lower,
+              conf_lower = R$conf_lower, conf_upper = R$conf_upper)
   out <- list(input = input, fitted = R$fit, ci = ci, goodness.of.fit = gof,
               smoothPar = Par, bin.definition = G, deep = M, call = Fcall)
   out <- structure(class = "pclm2D", out)
@@ -128,9 +155,8 @@ pclm2D <- function(x,
 #' @inherit stats::residuals params return
 #' @examples 
 #' 
-#' Dx <- ungroup.data$Dx
-#' Ex <- ungroup.data$Ex
-#' 
+#' Dx <- ungroup.data$Dx[, 1:10]
+#'
 #' # Aggregate data to ungroup it in the example below
 #' x      <- c(0, 1, seq(5, 85, by = 5))
 #' nlast  <- 26
@@ -176,7 +202,9 @@ print.pclm2D <- function(x, ...){
 
 
 #' Summary method for pclm2D
-#' Generic function used to produce result summaries of the results produced 
+#'
+#' @description
+#' Generic function used to produce result summaries of the results produced
 #' by \code{\link{pclm2D}}.
 #' @inheritParams base::summary
 #' @keywords internal
