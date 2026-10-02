@@ -2,11 +2,7 @@
 % Please edit documentation in R/pclm_optim.R
 \name{optimize_par}
 \alias{optimize_par}
-\title{Optimize Smoothing Parameters
-This function optimize searches of \code{lambda, kr} and \code{deg}. 
-See \code{\link{control.pclm}} to see what is their meaning. 
-The optimization process works in steps. Simultaneous optimization was 
-tested and found inefficient.}
+\title{Optimize Smoothing Parameters}
 \usage{
 optimize_par(I, type)
 }
@@ -17,10 +13,9 @@ optimize_par(I, type)
 univariate and two-dimensional model respectively.}
 }
 \description{
-Optimize Smoothing Parameters
-This function optimize searches of \code{lambda, kr} and \code{deg}. 
-See \code{\link{control.pclm}} to see what is their meaning. 
-The optimization process works in steps. Simultaneous optimization was 
+This function optimize searches of \code{lambda, kr} and \code{deg}.
+See \code{\link{control.pclm}} to see what is their meaning.
+The optimization process works in steps. Simultaneous optimization was
 tested and found inefficient.
 }
 \keyword{internal}

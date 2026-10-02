@@ -2,9 +2,7 @@
 % Please edit documentation in R/pclm_fit.R
 \name{build_B_spline_basis}
 \alias{build_B_spline_basis}
-\title{Construct B-spline basis
-This is an internal function which constructs B-spline basis to be used in 
-pclm estimation}
+\title{Construct B-spline basis}
 \usage{
 build_B_spline_basis(X, Y, kr, deg, diff, type)
 }
@@ -26,8 +24,7 @@ of PCLM coefficients. Default value: 2.}
 univariate and two-dimensional model respectively.}
 }
 \description{
-Construct B-spline basis
-This is an internal function which constructs B-spline basis to be used in 
+This is an internal function which constructs B-spline basis to be used in
 pclm estimation
 }
 \seealso{

@@ -1,7 +1,6 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
-# License: MIT
-# Last update: Thu Nov 07 11:21:49 2019
+# Last update: Fri Oct 02 17:06:29 2026
 # --------------------------------------------------- #
 
 #' Univariate Penalized Composite Link Model (PCLM)
@@ -52,17 +51,37 @@
 #'   \item{\code{max.iter}} -- Maximal number of iterations used in fitting 
 #'   procedure.
 #'   \item{\code{tol}} -- Relative tolerance in PCLM fitting procedure.}
-#' 
+#' @param omega Closing age of the distribution. An alternative to
+#'   \code{nlast}: when it is given, the width of the last interval is taken as
+#'   \code{omega - max(x)}. Give one of the two, not both.
+#' @param na.action What to do with unobserved cells in \code{y}.
+#'   \code{"fail"}, the default, rejects them. \code{"omit"} drops the matching
+#'   rows and lets the smoothing penalty bridge the gap, which is how a surface
+#'   with interior gaps or a missing year is handled. Only \code{NA} counts as
+#'   unobserved; infinite values are always an error.
+#'
 #' @return The output is a list with the following components:
 #'  \item{input}{ A list with arguments provided in input. Saved for 
 #'  convenience.}
 #'  \item{fitted}{ The fitted values of the PCLM model.}
-#'  \item{ci}{ Confidence intervals around fitted values.}
+#'  \item{ci}{ A list with two kinds of interval and they are not
+#' interchangeable. \code{lower} and \code{upper} are the two mass-conserving
+#' scenarios: the distribution implied by a uniformly lower and a uniformly
+#' higher hazard, each rescaled so that it totals \code{sum(fitted)}. Because
+#' the total is held fixed, the low scenario moves deaths towards older ages
+#' and the two curves cross \code{fitted} in the tail. They are therefore
+#' scenarios, not pointwise bounds, and they carry no coverage level.
+#' \code{conf_lower} and \code{conf_upper} are the pointwise marginal
+#' \code{ci.level} interval for the fitted values, computed as
+#' \code{fitted * exp(-/+ qnorm * SE)}. These do satisfy
+#' \code{conf_lower <= fitted <= conf_upper} and they do not total
+#' \code{sum(fitted)}. Use the first pair as low and high inputs to a life
+#' table, the second as a pointwise error bar on the estimate.}
 #'  \item{goodness.of.fit}{ A list containing goodness of fit measures: 
 #' standard errors, AIC and BIC.} 
 #'  \item{smoothPar}{ Estimated smoothing parameters: \code{lambda, kr} 
 #' and \code{deg}.}
-#'  \item{bins.definition}{ Additional values to identify the bins limits and 
+#'  \item{bin.definition}{ Additional values to identify the bins limits and
 #' location in input and output objects.}
 #'  \item{deep}{ A list of objects created in the fitting process. Useful 
 #' in diagnosis of possible issues.}
@@ -92,8 +111,8 @@
 #' # Example 2 ----------------------
 #' # ungroup even in smaller intervals
 #' M2 <- pclm(x, y, nlast, out.step = 0.5)
-#' head(fitted(M1))
-#' plot(M1, type = "s")
+#' head(fitted(M2))
+#' plot(M2, type = "s")
 #' # Note, in example 1 we are estimating intervals of length 1. In example 2 
 #' # we are estimating intervals of length 0.5 using the same aggregate data.
 #' 
@@ -118,20 +137,33 @@
 #' 
 #' M5 <- pclm(x, y, nlast, offset = ungroupped_Ex)
 #' @export
-pclm <- function(x, y, nlast, 
-                 offset   = NULL, 
-                 out.step = 1, 
-                 ci.level = 95, 
-                 verbose  = FALSE, 
-                 control  = list()){
+pclm <- function(x, y, nlast      = NULL,
+                 offset   = NULL,
+                 out.step = 1,
+                 ci.level = 95,
+                 verbose  = FALSE,
+                 control  = list(),
+                 omega    = NULL,
+                 na.action = c("fail", "omit")){
   # Check input
-  y       <- as.numeric(y)
-  control <- do.call("control.pclm", control)
-  input   <- I <- as.list(environment()) # save all the input for later use
-  I$nlast <- validate.nlast(x, nlast, out.step)
-  type    <- "1D"
+  y        <- as.numeric(y)
+  na.action <- match.arg(na.action)
+  control  <- do.call("control.pclm", control)
+  input    <- I <- as.list(environment()) # save all the input for later use
+  type     <- "1D"
+  # Validate before validate.nlast touches x, so the x-type and x-NA guards
+  # are actually reachable.
   pclm.input.check(input, type)
-  
+  # Resolving nlast afterwards keeps those guards reachable on the omega path,
+  # which is the one that reads max(x).
+  nlast    <- resolve_nlast(x, nlast, omega)
+  input$nlast <- nlast
+  I$nlast <- validate.nlast(x, nlast, out.step)
+  # create.artificial.bin() below replaces I$nlast with out.step, the width of
+  # the bin it appends. Keep the validated width of the real last bin for the
+  # map.bins() call at the end, which labels the original bins.
+  nlast.adj <- I$nlast
+
   # Preliminary; start the clock
   if (verbose) {pb <- startpb(0, 100); on.exit(closepb(pb)); setpb(pb, 1)}
   I[c("x", "y", "nlast", "offset")] <- create.artificial.bin(I) # ***
@@ -140,14 +172,15 @@ pclm <- function(x, y, nlast,
   if (!is.null(offset)) {
     if (length(offset) == length(y)) {
       if (verbose) { setpb(pb, 5); cat("   Ungrouping offset")}
-      I$offset <- pclm(x        = I$x, 
-                       y        = I$offset, 
-                       nlast    = I$nlast, 
-                       offset   = NULL, 
-                       out.step = out.step, 
-                       ci.level = ci.level, 
-                       verbose  = FALSE, 
-                       control  = control)$fitted
+      I$offset <- pclm(x        = I$x,
+                       y        = I$offset,
+                       nlast    = I$nlast,
+                       offset   = NULL,
+                       out.step = out.step,
+                       ci.level = ci.level,
+                       verbose  = FALSE,
+                       control  = control,
+                       na.action = na.action)$fitted
     } 
   }
   
@@ -170,21 +203,31 @@ pclm <- function(x, y, nlast,
                               tol      = tol, 
                               type     = type))
   
-  SE <- with(M, compute_standard_errors(B, QmQ, QmQP))
+  SE <- with(M, compute_standard_errors(B, QmQ, H0))
   R  <- with(M, pclm.confidence(fit, out.step, y, SE, ci.level, type, offset))
   R  <- delete.artificial.bin(R) # ***
-  G  <- map.bins(x, nlast, out.step)
+  G  <- map.bins(x, nlast.adj, out.step)
   dn <- G$output$names
   names(R$fit) <- names(R$lower) <- names(R$upper) <- names(R$SE) <- dn
-  
+
+  # Pointwise marginal interval for the fitted values. log(fitted) is Gaussian
+  # in the spline coefficients, so this is the exact marginal interval and it
+  # brackets the fit by construction. See the ci item in ?pclm for how it
+  # differs from the scenario curves in R$lower and R$upper.
+  R$conf_lower <- R$fit * exp(-R$qn * R$SE)
+  R$conf_upper <- R$fit * exp( R$qn * R$SE)
+  names(R$conf_lower) <- names(R$conf_upper) <- dn
+
   # Output
   Fcall <- match.call()
   Par <- with(control, c(lambda = L, kr = kr, deg = deg))
-  gof <- list(AIC = AIC.pclm(M), 
-              BIC = BIC.pclm(M), 
+  gof <- list(AIC = AIC.pclm(M),
+              BIC = BIC.pclm(M),
               standard.errors = R$SE)
-  ci  <- list(upper = R$upper, 
-              lower = R$lower)
+  ci  <- list(upper      = R$upper,
+              lower      = R$lower,
+              conf_lower = R$conf_lower,
+              conf_upper = R$conf_upper)
   
   # exit
   out <- list(input           = input, 

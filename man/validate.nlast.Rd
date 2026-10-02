@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{validate.nlast}
 \alias{validate.nlast}
-\title{Check if \code{nlast} needs to be adjusted in order to accommodate 
+\title{Check if \code{nlast} needs to be adjusted in order to accommodate
 \code{out.step}}
 \usage{
 validate.nlast(x, nlast, out.step)
@@ -19,7 +19,7 @@ would be 5.}
 Values between 0.1 and 1 are accepted. Default: 1.}
 }
 \description{
-Check if \code{nlast} needs to be adjusted in order to accommodate 
+Check if \code{nlast} needs to be adjusted in order to accommodate
 \code{out.step}
 }
 \keyword{internal}

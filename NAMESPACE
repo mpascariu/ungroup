@@ -15,43 +15,36 @@ S3method(residuals,pclm)
 S3method(residuals,pclm2D)
 S3method(summary,pclm)
 S3method(summary,pclm2D)
-export(build_B_spline_basis)
-export(build_C_matrix)
-export(build_P_matrix)
 export(control.pclm)
 export(control.pclm2D)
-export(create.artificial.bin)
-export(delete.artificial.bin)
-export(frac)
 export(pclm)
-export(pclm.fit)
-export(pclm.input.check)
 export(pclm2D)
-export(seqlast)
 export(suggest.valid.out.step)
-export(validate.nlast)
 import(Rdpack)
 importClassesFrom(Matrix,dgCMatrix)
-importFrom(Rcpp,sourceCpp)
+importFrom(Rcpp,evalCpp)
 importFrom(grDevices,colorRampPalette)
-importFrom(graphics,abline)
-importFrom(graphics,axis)
-importFrom(graphics,barplot)
-importFrom(graphics,legend)
-importFrom(graphics,lines)
-importFrom(graphics,par)
-importFrom(graphics,persp)
-importFrom(graphics,plot.default)
-importFrom(pbapply,closepb)
-importFrom(pbapply,setpb)
-importFrom(pbapply,startpb)
-importFrom(stats,AIC)
-importFrom(stats,BIC)
-importFrom(stats,aggregate)
-importFrom(stats,fitted)
-importFrom(stats,nlminb)
-importFrom(stats,optimise)
-importFrom(stats,qnorm)
-importFrom(stats,quantile)
+importFrom(graphics,
+  axis,
+  barplot,
+  legend,
+  lines,
+  persp,
+  plot.default
+)
+importFrom(pbapply,
+  closepb,
+  setpb,
+  startpb
+)
+importFrom(stats,
+  AIC,
+  BIC,
+  aggregate,
+  fitted,
+  nlminb,
+  optimise,
+  qnorm
+)
 importFrom(utils,tail)
 useDynLib(ungroup)

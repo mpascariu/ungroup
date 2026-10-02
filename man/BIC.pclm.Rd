@@ -29,7 +29,7 @@ Generic function calculating Akaike's \sQuote{An Information Criterion} for
   where \eqn{n_{par}}{npar} represents the number of parameters in the
   fitted model, and \eqn{k = 2} for the usual AIC, or
   \eqn{k = \log(n)}{k = log(n)}
-  (\eqn{n} being the number of observations) for the so-called BIC or SBC
+  (\eqn{n} being the number of observations) for the so-called BIC or \abbr{SBC}
   (Schwarz's Bayesian criterion).
 }
 \details{
@@ -70,8 +70,9 @@ When comparing models fitted by maximum likelihood to the same data,
   generic, and if neither succeed returns BIC as \code{NA}.
 }
 \references{
-Sakamoto, Y., Ishiguro, M., and Kitagawa G. (1986).
-  \emph{Akaike Information Criterion Statistics}.
-  D. Reidel Publishing Company.
+{\if{html}{\out{<span id="reference+AIC.Rd+R+3ASakamoto+2BIshiguro+2BKitagawa+3A1986"></span>}}Sakamoto Y, Ishiguro M, Kitagawa G (1986).
+\emph{Akaike Information Criterion Statistics}.
+KTK Scientific Publishers.
+ISBN 9027722536.}
 }
 \keyword{internal}

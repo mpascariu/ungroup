@@ -12,23 +12,23 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // asSparseMat
-SEXP asSparseMat(const Eigen::Map<Eigen::MatrixXd> X);
+SEXP asSparseMat(SEXP X);
 RcppExport SEXP _ungroup_asSparseMat(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type X(XSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type X(XSEXP);
     rcpp_result_gen = Rcpp::wrap(asSparseMat(X));
     return rcpp_result_gen;
 END_RCPP
 }
 // pclm_loop
-SEXP pclm_loop(const Eigen::MappedSparseMatrix<double> C, const Eigen::Map<Eigen::MatrixXd> P, const Eigen::Map<Eigen::MatrixXd> B, const Eigen::Map<Eigen::VectorXd> y, double maxiter, double tol);
+SEXP pclm_loop(const Eigen::Map<Eigen::SparseMatrix<double>> C, const Eigen::Map<Eigen::MatrixXd> P, const Eigen::Map<Eigen::MatrixXd> B, const Eigen::Map<Eigen::VectorXd> y, double maxiter, double tol);
 RcppExport SEXP _ungroup_pclm_loop(SEXP CSEXP, SEXP PSEXP, SEXP BSEXP, SEXP ySEXP, SEXP maxiterSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Eigen::MappedSparseMatrix<double> >::type C(CSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::SparseMatrix<double>> >::type C(CSEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type P(PSEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type B(BSEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd> >::type y(ySEXP);

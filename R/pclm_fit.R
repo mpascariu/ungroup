@@ -1,7 +1,6 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
-# License: MIT
-# Last update: Wed Dec 04 19:17:56 2019
+# Last update: Fri Oct 02 17:06:29 2026
 # --------------------------------------------------- #
 
 #' Fit PCLM Models
@@ -13,7 +12,6 @@
 #' @param type Type of PCLM model. Options: \code{"1D", "2D"} for 
 #' univariate and two-dimensional model respectively.
 #' @keywords internal
-#' @export
 pclm.fit <- function(x, 
                      y, 
                      nlast, 
@@ -40,15 +38,25 @@ pclm.fit <- function(x,
   P    <- build_P_matrix(BM$BA, BM$BY, lambda, type) # penalty
   C    <- CM$C
   B    <- BM$B
-  y_   <- as.vector(unlist(y))
-  ny_  <- length(y_)
-  K    <- pclm_loop(asSparseMat(C), P, B, y_, max.iter, tol)
+  # as.double() so integer counts reach the mapped vector, which is what
+  # pclm2D produces and what the Eigen boundary refuses.
+  y_all <- as.double(unlist(y))
+  # Rows with no observation contribute no likelihood. Dropping them lets the
+  # penalty bridge the gap, which is what na.action = "omit" buys. The full C is
+  # kept so residuals() still lines up with the input row for row.
+  keep  <- !is.na(y_all)
+  y_    <- y_all[keep]
+  ny_   <- length(y_)
+  K     <- pclm_loop(asSparseMat(C[keep, , drop = FALSE]), P, B, y_,
+                     max.iter, tol)
   QmQ  <- K$QmQ
   QmQP <- K$QmQP
   fit  <- as.numeric(K$mu)
-  
-  # Regression diagnostics
-  H     <- solve(QmQP, QmQ)
+
+  # Regression diagnostics. H0 is kept because the standard errors need the
+  # same inverse, and solving one system twice per fit is avoidable.
+  H0    <- solve(QmQP)
+  H     <- H0 %*% QmQ
   trace <- sum(diag(H))
   y_[y_ == 0] <- 10^-4
   dev   <- 2 * sum(y_ * log(y_ / K$muA), na.rm = TRUE)
@@ -60,13 +68,14 @@ pclm.fit <- function(x,
 #' Build Composition Matrices
 #' @inheritParams pclm.fit
 #' @keywords internal
-#' @export
 build_C_matrix <- function(x, y, nlast, offset, out.step, type) {
   # Build C matrix in the age direction
   nx <- length(x)
   gx <- seq(min(x), max(x) + nlast - out.step, by = out.step)
-  gu <- c(diff(x), nlast)/out.step
-  CA <- matrix(0, nrow = nx, ncol = sum(gu), dimnames = list(x, gx))
+  # Column count comes from the grid itself. The equivalent sum of
+  # c(diff(x), nlast)/out.step is the same number in exact arithmetic but
+  # disagrees in floating point, and then the dimnames assignment below aborts.
+  CA <- matrix(0, nrow = nx, ncol = length(gx), dimnames = list(x, gx))
   xr <- c(x[-1], max(x) + nlast)
   
   for (j in 1:nx) CA[j, which(gx >= x[j] & gx < xr[j])] <- 1
@@ -92,14 +101,15 @@ build_C_matrix <- function(x, y, nlast, offset, out.step, type) {
 
 
 #' Construct B-spline basis
-#' This is an internal function which constructs B-spline basis to be used in 
+#'
+#' @description
+#' This is an internal function which constructs B-spline basis to be used in
 #' pclm estimation
 #' @param X vector with ages
 #' @param Y vector with years
 #' @inheritParams pclm.fit
 #' @seealso \code{\link{MortSmooth_bbase}}
 #' @keywords internal
-#' @export
 build_B_spline_basis <- function(X, Y, kr, deg, diff, type) {
   # B-spline basis 
   bsb <- function(Z, kr, deg, diff) {
@@ -128,7 +138,6 @@ build_B_spline_basis <- function(X, Y, kr, deg, diff, type) {
 #' @param BY B-spline basis object for year axis
 #' @inheritParams pclm.fit
 #' @keywords internal
-#' @export
 build_P_matrix <- function(BA, BY, lambda, type){
   L  <- sqrt(lambda)
   if (type == "1D") {
@@ -150,7 +159,6 @@ build_P_matrix <- function(BA, BY, lambda, type){
 #' @param vo Numerical values of the bin created for \code{offset} input 
 #' (if the case).
 #' @keywords internal
-#' @export
 create.artificial.bin <- function(i, vy = 1, vo = 1.01){
   with(i, {
     x     <- c(x, max(x) + nlast)
@@ -167,7 +175,6 @@ create.artificial.bin <- function(i, vy = 1, vo = 1.01){
 #' Delete from results the last group added artificially in pclm and pclm2D 
 #' @param M A pclm.fit object
 #' @keywords internal
-#' @export
 delete.artificial.bin <- function(M){
   n <- 1
   N <- 1:n

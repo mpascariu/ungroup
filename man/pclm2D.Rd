@@ -7,12 +7,14 @@
 pclm2D(
   x,
   y,
-  nlast,
+  nlast = NULL,
   offset = NULL,
   out.step = 1,
   ci.level = 95,
   verbose = TRUE,
-  control = list()
+  control = list(),
+  omega = NULL,
+  na.action = c("fail", "omit")
 )
 }
 \arguments{
@@ -55,18 +57,40 @@ Possible values are \code{"AIC"} and \code{"BIC"}.
 \item{\code{max.iter}} -- Maximal number of iterations used in fitting 
 procedure.
 \item{\code{tol}} -- Relative tolerance in PCLM fitting procedure.}}
+
+\item{omega}{Closing age of the distribution. An alternative to
+\code{nlast}: when it is given, the width of the last interval is taken as
+\code{omega - max(x)}. Give one of the two, not both.}
+
+\item{na.action}{What to do with unobserved cells in \code{y}.
+\code{"fail"}, the default, rejects them. \code{"omit"} drops the matching
+rows and lets the smoothing penalty bridge the gap, which is how a surface
+with interior gaps or a missing year is handled. Only \code{NA} counts as
+unobserved; infinite values are always an error.}
 }
 \value{
 The output is a list with the following components:
  \item{input}{ A list with arguments provided in input. Saved for 
  convenience.}
  \item{fitted}{ The fitted values of the PCLM model.}
- \item{ci}{ Confidence intervals around fitted values.}
+ \item{ci}{ A list with two kinds of interval and they are not
+interchangeable. \code{lower} and \code{upper} are the two mass-conserving
+scenarios: the distribution implied by a uniformly lower and a uniformly
+higher hazard, each rescaled so that it totals \code{sum(fitted)}. Because
+the total is held fixed, the low scenario moves deaths towards older ages
+and the two curves cross \code{fitted} in the tail. They are therefore
+scenarios, not pointwise bounds, and they carry no coverage level.
+\code{conf_lower} and \code{conf_upper} are the pointwise marginal
+\code{ci.level} interval for the fitted values, computed as
+\code{fitted * exp(-/+ qnorm * SE)}. These do satisfy
+\code{conf_lower <= fitted <= conf_upper} and they do not total
+\code{sum(fitted)}. Use the first pair as low and high inputs to a life
+table, the second as a pointwise error bar on the estimate.}
  \item{goodness.of.fit}{ A list containing goodness of fit measures: 
 standard errors, AIC and BIC.} 
  \item{smoothPar}{ Estimated smoothing parameters: \code{lambda, kr} 
 and \code{deg}.}
- \item{bins.definition}{ Additional values to identify the bins limits and 
+ \item{bin.definition}{ Additional values to identify the bins limits and
 location in input and output objects.}
  \item{deep}{ A list of objects created in the fitting process. Useful 
 in diagnosis of possible issues.}

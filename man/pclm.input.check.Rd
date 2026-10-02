@@ -8,6 +8,9 @@ pclm.input.check(X, pclm.type)
 }
 \arguments{
 \item{X}{A list with input arguments provided in \code{\link{pclm}} function}
+
+\item{pclm.type}{Either \code{"1D"} or \code{"2D"}. Selects which shape
+rules apply to \code{y} and how many smoothing parameters are expected.}
 }
 \description{
 Validate input values

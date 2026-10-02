@@ -1,6 +1,6 @@
 # --------------------------------------------------- #
 # Author: Marius D. PASCARIU
-# Last update: Wed Jun 23 16:38:17 2021
+# Last update: Fri Oct 02 17:06:29 2026
 # --------------------------------------------------- #
 
 #' Generic Plot for pclm Class
@@ -171,8 +171,8 @@ plot.pclm2D <- function(x,
     ok <- all(dim(Y) != dim(Ex))
     
     if (!ok) {
-      warning("Observed surface cannot be plotted because `y` and `offset`", 
-              "have different dimensions.")
+      warning(paste0("Observed surface cannot be plotted because `y` and ",
+                     "`offset` have different dimensions."))
     }
   }
   
